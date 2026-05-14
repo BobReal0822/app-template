@@ -23,7 +23,7 @@ function pickDirectUrl(): string {
   const url = process.env.POSTGRES_URL_NON_POOLING;
   if (!url) {
     throw new Error(
-      '[@app/db tests] missing `POSTGRES_URL_NON_POOLING` in env. ' +
+      '[@repo/db tests] missing `POSTGRES_URL_NON_POOLING` in env. ' +
         'Set it in `.env.local` (pointing to a Neon dev branch) before running tests.',
     );
   }

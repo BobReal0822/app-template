@@ -4,7 +4,7 @@
 
 > **当前阶段：MVP**
 
-> **运行时（2026）**：计费、credits、Stripe webhook 与定价读取均在 **Next.js**（`src/app/api/**`、`src/server/**`）与 **Neon + `@app/db`** 上运行。
+> **运行时（2026）**：计费、credits、Stripe webhook 与定价读取均在 **Next.js**（`src/app/api/**`、`src/server/**`）与 **Neon + `@repo/db`** 上运行。
 
 ---
 

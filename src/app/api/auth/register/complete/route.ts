@@ -1,10 +1,10 @@
+import { getDbHttp } from '@repo/db';
+import { authAuditLogs, authUser } from '@repo/db/schema';
 import { eq } from 'drizzle-orm';
 
 import { isStrongPassword } from '@/lib/auth/password-policy';
 import { auth } from '@/lib/auth/server';
 import { verifyRegistrationToken } from '@/server/auth/registration-token';
-import { getDbHttp } from '@app/db';
-import { authAuditLogs, authUser } from '@app/db/schema';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

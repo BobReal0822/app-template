@@ -1,10 +1,10 @@
+import { getDbHttp } from '@repo/db';
+import { pendingRegistrations } from '@repo/db/schema';
 import { lt } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 import { requireCronAuth } from '@/server/api/auth';
 import * as logger from '@/server/lib/logger';
-import { getDbHttp } from '@app/db';
-import { pendingRegistrations } from '@app/db/schema';
 
 export const runtime = 'nodejs';
 

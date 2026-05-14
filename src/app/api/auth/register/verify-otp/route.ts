@@ -1,10 +1,10 @@
+import { getDbHttp } from '@repo/db';
+import { authAuditLogs, authUser, pendingRegistrations } from '@repo/db/schema';
 import { and, eq, lt, sql } from 'drizzle-orm';
 
 import { verifyOtpHash } from '@/server/auth/otp';
 import { issueRegistrationToken } from '@/server/auth/registration-token';
 import { AUTH_RUNTIME } from '@/server/config/runtime';
-import { getDbHttp } from '@app/db';
-import { authAuditLogs, authUser, pendingRegistrations } from '@app/db/schema';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

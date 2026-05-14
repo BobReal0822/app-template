@@ -27,7 +27,7 @@ alwaysApply: true
 ```
 Database Schema (Source of Truth)
     ↓
-Drizzle schema (`@app/db/schema`) / SQL migrations
+Drizzle schema (`@repo/db/schema`) / SQL migrations
     ↓
 Backend Response (Route Handlers + `src/server/**`)
     ↓
@@ -49,8 +49,8 @@ Frontend Component Props
 // Frontend: Uses same structure
 
 // Server Component (illustrative)
-import { getDbHttp } from '@app/db';
-import { projects } from '@app/db/schema';
+import { getDbHttp } from '@repo/db';
+import { projects } from '@repo/db/schema';
 import { desc } from 'drizzle-orm';
 
 export default async function ProjectsPage() {
@@ -118,8 +118,8 @@ export function ProjectCard({ project }: { project: Project }) {
 ### Pattern 3: Using inferred types from Drizzle selects
 
 ```typescript
-// ✅ GOOD: Infer row types from `@app/db/schema` + queries
-import { projects } from '@app/db/schema';
+// ✅ GOOD: Infer row types from `@repo/db/schema` + queries
+import { projects } from '@repo/db/schema';
 import type { InferSelectModel } from 'drizzle-orm';
 
 type Project = InferSelectModel<typeof projects>;
@@ -353,7 +353,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
 
 ```typescript
 // ✅ GOOD: Infer row types from Drizzle table objects
-import { projects } from '@app/db/schema';
+import { projects } from '@repo/db/schema';
 import type { InferSelectModel } from 'drizzle-orm';
 
 type Project = InferSelectModel<typeof projects>;
@@ -390,7 +390,7 @@ interface Project {
 
 1. **Update SQL / migration** (source of truth)
 2. **Update Drizzle schema** in `packages/db/src/schema/*`
-3. **Run `pnpm -F @app/db generate` (or project migrate workflow)** so migrations stay ordered
+3. **Run `pnpm -F @repo/db generate` (or project migrate workflow)** so migrations stay ordered
 4. **Update backend + frontend** to use the new column names as-is
 5. **No transformation layer needed** — direct mapping
 

@@ -1,63 +1,23 @@
 'use client';
 
-import { Home, FolderOpen } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { CreditsBadge } from '@/components/app/credits-badge';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { useErrorHandler } from '@/components/providers/error-handler-provider';
 
-import { getFeatureById, type FeatureId } from '@/config/features';
 import { useUserData } from '@/hooks/use-user-data';
 import { Link, usePathname } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 
-const mainNavKeys = ['home', 'projects'] as const;
+const mainNavKeys = ['home'] as const;
 const mainNavigation = [
   { key: mainNavKeys[0], href: '/app', icon: Home },
-  { key: mainNavKeys[1], href: '/app/projects', icon: FolderOpen },
 ];
-
-type SidebarFeatureItem = {
-  key: 'urlToVideo' | 'productVideo' | 'productPhoto' | 'videoAnalysis';
-  id: FeatureId;
-};
-
-const createNavigation: SidebarFeatureItem[] = [
-  { key: 'urlToVideo', id: 'urlToVideo' },
-  { key: 'productVideo', id: 'productVideo' },
-  { key: 'productPhoto', id: 'productPhoto' },
-];
-
-const analyzeNavigation: SidebarFeatureItem[] = [
-  { key: 'videoAnalysis', id: 'videoAnalysis' },
-];
-
-type SidebarResolvedItem = {
-  key: SidebarFeatureItem['key'];
-  href: string;
-  icon: ReturnType<typeof getFeatureById>['icon'];
-};
-
-const createNavigationResolved: SidebarResolvedItem[] = createNavigation.map(
-  (item) => ({
-    key: item.key,
-    href: getFeatureById(item.id).route,
-    icon: getFeatureById(item.id).icon,
-  }),
-);
-
-const analyzeNavigationResolved: SidebarResolvedItem[] = analyzeNavigation.map(
-  (item) => ({
-    key: item.key,
-    href: getFeatureById(item.id).route,
-    icon: getFeatureById(item.id).icon,
-  }),
-);
 
 export function AppSidebar() {
   const t = useTranslations('appSidebar.nav');
-  const tFeatureNames = useTranslations('featureNames');
   const pathname = usePathname();
   const { showUpgradeModal } = useErrorHandler();
   const { userData } = useUserData();
@@ -83,7 +43,6 @@ export function AppSidebar() {
         </div>
         {/* Navigation */}
         <nav className="flex flex-1 flex-col px-3 py-1 pb-6">
-          {/* Main Navigation */}
           <div className="mb-6">
             <ul className="space-y-1.5">
               {mainNavigation.map((item) => (
@@ -107,72 +66,6 @@ export function AppSidebar() {
                       )}
                     />
                     {t(item.key)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Create Navigation */}
-          <div className="mb-6">
-            <div className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
-              {t('create')}
-            </div>
-            <ul className="space-y-1.5">
-              {createNavigationResolved.map((item) => (
-                <li key={item.key}>
-                  <Link
-                    href={item.href}
-                    prefetch
-                    className={cn(
-                      'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-[background-color,color,box-shadow] duration-150',
-                      isActive(item.href)
-                        ? 'bg-white text-foreground dark:bg-sidebar-accent dark:text-sidebar-accent-foreground'
-                        : 'text-muted-foreground hover:bg-white/90 hover:text-foreground dark:text-sidebar-foreground/70 dark:hover:bg-sidebar-accent dark:hover:text-sidebar-accent-foreground',
-                    )}
-                  >
-                    <item.icon
-                      className={cn(
-                        'h-[18px] w-[18px]',
-                        isActive(item.href)
-                          ? 'text-foreground dark:text-sidebar-accent-foreground'
-                          : 'text-muted-foreground dark:text-sidebar-foreground/70',
-                      )}
-                    />
-                    {tFeatureNames(item.key)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Analyze Navigation */}
-          <div className="mb-6">
-            <div className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
-              {t('analyze')}
-            </div>
-            <ul className="space-y-1.5">
-              {analyzeNavigationResolved.map((item) => (
-                <li key={item.key}>
-                  <Link
-                    href={item.href}
-                    prefetch
-                    className={cn(
-                      'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-[background-color,color] duration-150',
-                      isActive(item.href)
-                        ? 'bg-white text-foreground dark:bg-sidebar-accent dark:text-sidebar-accent-foreground'
-                        : 'text-muted-foreground hover:bg-white/90 hover:text-foreground dark:text-sidebar-foreground/70 dark:hover:bg-sidebar-accent dark:hover:text-sidebar-accent-foreground',
-                    )}
-                  >
-                    <item.icon
-                      className={cn(
-                        'h-[18px] w-[18px]',
-                        isActive(item.href)
-                          ? 'text-foreground dark:text-sidebar-accent-foreground'
-                          : 'text-muted-foreground dark:text-sidebar-foreground/70',
-                      )}
-                    />
-                    {tFeatureNames(item.key)}
                   </Link>
                 </li>
               ))}

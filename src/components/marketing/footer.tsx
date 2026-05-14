@@ -13,21 +13,7 @@ export async function Footer(props: { locale: string }) {
   const { locale: localeRaw } = props;
   const locale = localeRaw as Locale;
   const t = await getTranslations({ locale, namespace: 'marketingFooter' });
-  const tFeatureNames = await getTranslations({
-    locale,
-    namespace: 'featureNames',
-  });
-
   const footerLinks = {
-    [t('columns.products')]: [
-      { label: tFeatureNames('urlToVideo'), href: '/features/url-to-video' },
-      {
-        label: tFeatureNames('videoAnalysis'),
-        href: '/features/video-insight',
-      },
-      { label: tFeatureNames('productVideo'), href: '/features/product-video' },
-      { label: tFeatureNames('productPhoto'), href: '/features/product-photo' },
-    ],
     [t('columns.resources')]: [
       { label: t('links.blog'), href: '/blog' },
       { label: t('links.pricing'), href: '/pricing' },

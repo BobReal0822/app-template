@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 //   notFound();
 // }
 
-import { pathnameWithLocale } from '@/i18n/routing';
+import { pathnameWithLocale, type Locale } from '@/i18n/routing';
 
 export default async function CatchAllPage({
   params,

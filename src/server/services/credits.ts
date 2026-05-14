@@ -1,7 +1,7 @@
 /**
  * Credits management service for the Next.js app server (Vercel runtime).
  *
- * Uses atomic Postgres `UPDATE … RETURNING` via `@app/db/credits`:
+ * Uses atomic Postgres `UPDATE … RETURNING` via `@repo/db/credits`:
  *
  *   UPDATE users
  *      SET credits = credits - $amount
@@ -28,16 +28,16 @@
  * (e.g. `'Invalid user ID'`, `'Amount must be positive'`).
  */
 
-import { z } from 'zod';
-
-import * as logger from '@/server/lib/logger';
-import { getDbHttp } from '@app/db';
+import { getDbHttp } from '@repo/db';
 import {
   addCredits,
   atomicDeductCredits,
   setCredits,
   type CreditUpdateOutcome,
-} from '@app/db/credits';
+} from '@repo/db/credits';
+import { z } from 'zod';
+
+import * as logger from '@/server/lib/logger';
 
 /** Result of a credit operation (stable wire shape for handlers). */
 export interface CreditOperationResult {

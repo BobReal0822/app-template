@@ -3,6 +3,8 @@
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import type { Locale } from '@/i18n/routing';
+
 import { CtaSection } from './_components/cta-section';
 import { FeaturesSection } from './_components/features-section';
 import { HeroSection } from './_components/hero-section';
@@ -17,13 +19,14 @@ import {
 
 import type { Metadata } from 'next';
 
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'home' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'home' });
 
   return buildMarketingPageMetadata({
     locale,
@@ -43,7 +46,7 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  setRequestLocale(locale);
+  setRequestLocale(locale as Locale);
 
   return (
     <>

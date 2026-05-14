@@ -10,9 +10,10 @@
  *     ops tooling distinguish "wrote" from "swallowed".
  */
 
+import { getDbHttp } from '@repo/db';
+import { loginLogs } from '@repo/db/schema';
+
 import { buildSuccess, type ApiResponse } from '@/server/api/response';
-import { getDbHttp } from '@app/db';
-import { loginLogs } from '@app/db/schema';
 
 export interface VerifyInfoResult {
   recorded: boolean;

@@ -21,7 +21,7 @@
  *   - `triggerRef` is the only nullable column.
  */
 
-import type { CreditGrant } from '@app/db/schema';
+import type { CreditGrant } from '@repo/db/schema';
 
 // ---------------------------------------------------------------------------
 // Canonical entity DTO

@@ -1,3 +1,5 @@
+import { getDbHttp } from '@repo/db';
+import { users } from '@repo/db/schema';
 import { eq } from 'drizzle-orm';
 
 import {
@@ -6,8 +8,6 @@ import {
   type BillingCycle,
   type PlanCode,
 } from '@/lib/billing/types';
-import { getDbHttp } from '@app/db';
-import { users } from '@app/db/schema';
 
 type PlanType = PlanCode;
 

@@ -71,7 +71,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const siteOrigin = getSiteOrigin();
   const isZh = locale.toLowerCase().startsWith('zh');
-  const t = await getTranslations({ locale, namespace: 'rootMeta' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'rootMeta' });
 
   const title = t('title');
   const description = t('description');
@@ -160,14 +160,14 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  setRequestLocale(locale);
+  setRequestLocale(locale as Locale);
   const messages = await getMessages();
 
   const isPreview = isPreviewEnv();
   const isVercelProduction = isVercelProductionEnv();
   const isZh = locale.toLowerCase().startsWith('zh');
   const siteOrigin = getSiteOrigin();
-  const t = await getTranslations({ locale, namespace: 'rootMeta' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'rootMeta' });
   const brandDescription = t('description');
 
   const allowVercelLiveToolbar = isVercelPreviewOrDevRuntime();
@@ -203,6 +203,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html
       className={`h-full ${geistSans.variable} ${geistMono.variable}`}
       lang={locale}
+      suppressHydrationWarning
     >
       <head>
         <meta
@@ -235,7 +236,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Theme className="font-sans" style={themeFontStyle}>
             <QueryClientProviderWrapper>
               <AuthProvider>
-                <NextIntlClientProvider locale={locale} messages={messages}>
+                <NextIntlClientProvider locale={locale as Locale} messages={messages}>
                   <SkipToMainLink />
                   {children}
                   <Toaster position="top-right" duration={2000} />

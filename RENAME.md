@@ -13,7 +13,7 @@ Fill these in once and use them when you walk the list.
 | ---------------------- | ------------------------------------------------ | ---------------- |
 | `app-template`         | npm + folder name (kebab-case)                   | `acme-app`       |
 | `App Template`         | display name (Title Case)                        | `Acme`           |
-| `@app/db`              | DB workspace name (any pnpm scope works)         | `@acme/db`       |
+| `@repo/db`              | DB workspace name (any pnpm scope works)         | `@acme/db`       |
 | `app.example.com`      | production hostname                              | `app.acme.com`   |
 | `your-bucket-prod`     | R2 bucket name (production)                      | `acme-prod`      |
 | `your-bucket-staging`  | R2 bucket name (preview / dev)                   | `acme-staging`   |

@@ -65,7 +65,7 @@ function readPooledUrl(): string {
   const url = getEnv().POSTGRES_URL;
   if (!url) {
     throw new Error(
-      '@app/db: missing `POSTGRES_URL`. Set the pooled Neon connection string ' +
+      '@repo/db: missing `POSTGRES_URL`. Set the pooled Neon connection string ' +
         'in `.env.local` (per-developer dev branch) or in Vercel project Env vars ' +
         '(per-environment, pointing at the right Neon branch).',
     );
@@ -77,7 +77,7 @@ function readDirectUrl(): string {
   const url = getEnv().POSTGRES_URL_NON_POOLING;
   if (!url) {
     throw new Error(
-      '@app/db: missing `POSTGRES_URL_NON_POOLING`. Set the direct (non-pooling) ' +
+      '@repo/db: missing `POSTGRES_URL_NON_POOLING`. Set the direct (non-pooling) ' +
         'Neon connection string in `.env.local` or in Vercel project Env vars. ' +
         'Required for long transactions, the WebSocket pool driver, and migrations.',
     );
@@ -135,7 +135,7 @@ export type DbTransaction = ReturnType<typeof getDbTransaction>['db'];
 // Test-only internals.
 //
 // These are exported from `client.ts` but intentionally NOT re-exported from
-// `index.ts`, so the public `@app/db` surface stays clean. Application code
+// `index.ts`, so the public `@repo/db` surface stays clean. Application code
 // must NOT import these — vitest specs in `packages/db/test/` import them via
 // the relative path `../src/client.js`.
 // ---------------------------------------------------------------------------

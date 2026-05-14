@@ -1,9 +1,10 @@
+import { getDbHttp } from '@repo/db';
+import { users } from '@repo/db/schema';
+
 import { sendWelcomeEmail } from '@/server/email';
 import { addUtcMonths } from '@/server/lib/date-utc';
 import * as logger from '@/server/lib/logger';
 import type { UserCreatedWorkPayload } from '@/server/queue/enqueue';
-import { getDbHttp } from '@app/db';
-import { users } from '@app/db/schema';
 
 /**
  * Worker payload handler for user-created async processing.

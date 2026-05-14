@@ -135,12 +135,12 @@ function makeStubDb() {
 
 let stubDb = makeStubDb();
 
-jest.mock('@app/db', () => ({
+jest.mock('@repo/db', () => ({
   __esModule: true,
   getDbHttp: jest.fn(() => stubDb),
 }));
 
-jest.mock('@app/db/schema', () => ({
+jest.mock('@repo/db/schema', () => ({
   __esModule: true,
   users: {
     uid: '__users_uid__',

@@ -1,3 +1,10 @@
+import { getDbTransaction } from '@repo/db/client';
+import {
+  authAccount,
+  authSession,
+  authUser,
+  authVerification,
+} from '@repo/db/schema';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { toNextJsHandler } from 'better-auth/next-js';
@@ -10,13 +17,6 @@ import {
   sendVerificationOtpEmail,
 } from '@/server/email';
 import { enqueue } from '@/server/queue/enqueue';
-import { getDbTransaction } from '@app/db/client';
-import {
-  authAccount,
-  authSession,
-  authUser,
-  authVerification,
-} from '@app/db/schema';
 
 // Better-auth's Drizzle adapter binds to a Drizzle instance, not a raw Pool.
 // We use `getDbTransaction()` (WebSocket pool via `drizzle-orm/neon-serverless`)
@@ -24,7 +24,7 @@ import {
 //   1. better-auth wraps the user + account insert in a transaction when
 //      `transaction: true` is set, and the Neon HTTP driver does not support
 //      multi-statement transactions.
-//   2. The WebSocket pool is already cached as a singleton in `@app/db`,
+//   2. The WebSocket pool is already cached as a singleton in `@repo/db`,
 //      so this adds no extra connection overhead.
 const { db } = getDbTransaction();
 

@@ -4,10 +4,12 @@ import { getTranslations } from 'next-intl/server';
 
 import { BrandLogo } from '@/components/brand/brand-logo';
 
+import type { Locale } from '@/i18n/routing';
 import { getCurrentYear } from '@/lib/utils/time';
 
 import { AuthRedirect } from './_components/auth-redirect';
 import { AuthShowcasePanel } from './_components/auth-showcase-panel';
+
 
 export default async function AuthLayout({
   children,
@@ -17,7 +19,7 @@ export default async function AuthLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'auth.layout' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'auth.layout' });
 
   return (
     <AuthRedirect>

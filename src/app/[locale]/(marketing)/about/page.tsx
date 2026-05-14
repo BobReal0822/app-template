@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { routing } from '@/i18n/routing';
+import { routing, type Locale } from '@/i18n/routing';
 import { getSiteOrigin } from '@/lib/site-url';
 
 import { getMarketingOgImagePath } from '../_shared/seo';
@@ -26,7 +26,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'about' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'about' });
 
   const title = t('title');
   const description = t('description');
@@ -83,7 +83,7 @@ export default async function AboutPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'about' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'about' });
 
   const siteOrigin = getSiteOrigin();
   const jsonLd = {

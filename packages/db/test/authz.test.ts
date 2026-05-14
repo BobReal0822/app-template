@@ -3,7 +3,7 @@
 // Coverage map (five application-level authz patterns):
 //
 //   1. AUTH_REQUIRED            — handler-layer concern (`requireUser`); not
-//                                 in @app/db. Covered by handler / auth tests.
+//                                 in @repo/db. Covered by handler / auth tests.
 //   2. OWNER_SCOPED             — `withUserScope(uid, db => db.where(uidEq(...)))`;
 //                                 the helper itself is unit-tested below. The
 //                                 application-level pattern is exercised in
@@ -13,7 +13,7 @@
 //   3. OWNER_SCOPED_VIA_PARENT  — the same `requireOwnership` shape with a
 //                                 fetch that joins through a parent table;
 //                                 covered in handler-level tests.
-//   4. ADMIN_ONLY               — handler-layer concern; not in @app/db.
+//   4. ADMIN_ONLY               — handler-layer concern; not in @repo/db.
 //   5. PUBLIC_NO_AUTH           — no authz to test.
 //
 // Plus the indistinguishability invariant: "not found" and "owned by another

@@ -1,10 +1,10 @@
+import { getDbHttp } from '@repo/db';
+import { pendingRegistrations } from '@repo/db/schema';
 import { and, eq, lt } from 'drizzle-orm';
 
 import { generateOtp, hashOtp } from '@/server/auth/otp';
 import { AUTH_RUNTIME } from '@/server/config/runtime';
 import { type EmailLocale, sendVerificationOtpEmail } from '@/server/email';
-import { getDbHttp } from '@app/db';
-import { pendingRegistrations } from '@app/db/schema';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

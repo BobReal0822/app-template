@@ -3,7 +3,7 @@ import type React from 'react';
 import { redirect } from 'next/navigation';
 
 import { UserDataProvider } from '@/contexts/user-data-context';
-import { pathnameWithLocale } from '@/i18n/routing';
+import { pathnameWithLocale, type Locale } from '@/i18n/routing';
 import { getCurrentUser } from '@/lib/auth/server-session';
 import { getOrCreateUserData } from '@/server/services/user-data';
 

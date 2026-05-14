@@ -1,4 +1,4 @@
-# `@app/db`
+# `@repo/db`
 
 Drizzle ORM schema, Neon Postgres clients, and authorization helpers.
 
@@ -18,8 +18,8 @@ import {
   getDbTransaction,
   withUserScope,
   requireOwnership,
-} from '@app/db';
-import { users, creditGrants, feedbacks } from '@app/db/schema';
+} from '@repo/db';
+import { users, creditGrants, feedbacks } from '@repo/db/schema';
 ```
 
 | Module                    | Use it for                                                     |
@@ -59,11 +59,11 @@ them from `src/schema/index.ts`.
 
 | Script                           | Purpose                                                 |
 | -------------------------------- | ------------------------------------------------------- |
-| `pnpm -F @app/db generate`       | Generate a SQL migration from schema diff.              |
-| `pnpm -F @app/db migrate`        | Apply pending migrations against `POSTGRES_URL_NON_POOLING`. |
-| `pnpm -F @app/db studio`         | Launch Drizzle Studio.                                  |
-| `pnpm -F @app/db check`          | Type-check this package.                                |
-| `pnpm -F @app/db test`           | Vitest (unit + optional integration against a Neon dev branch). |
+| `pnpm -F @repo/db generate`       | Generate a SQL migration from schema diff.              |
+| `pnpm -F @repo/db migrate`        | Apply pending migrations against `POSTGRES_URL_NON_POOLING`. |
+| `pnpm -F @repo/db studio`         | Launch Drizzle Studio.                                  |
+| `pnpm -F @repo/db check`          | Type-check this package.                                |
+| `pnpm -F @repo/db test`           | Vitest (unit + optional integration against a Neon dev branch). |
 
 For day-to-day work prefer the root scripts (`pnpm db:generate`, etc.) which
 load `.env.local` automatically via `dotenv-cli`.
@@ -106,7 +106,7 @@ load `.env.local` automatically via `dotenv-cli`.
 5. Optional, for tests against a real branch:
 
    ```bash
-   pnpm -F @app/db test
+   pnpm -F @repo/db test
    ```
 
 ## Branch convention

@@ -87,7 +87,7 @@ export function Chat() {
 ## Notes
 
 - For credit metering, deduct *before* the request fires (atomic) and
-  refund on stream error. The credits primitives in `@app/db/credits`
+  refund on stream error. The credits primitives in `@repo/db/credits`
   already give you the safe SQL for both directions.
 - Don't forget `export const runtime = 'nodejs'` on the route — Edge
   loses streaming response back-pressure on long generations.

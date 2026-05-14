@@ -16,7 +16,7 @@
  *     no email is provided.
  */
 
-import type { Feedback } from '@app/db/schema';
+import type { Feedback } from '@repo/db/schema';
 
 // ---------------------------------------------------------------------------
 // Canonical entity DTO

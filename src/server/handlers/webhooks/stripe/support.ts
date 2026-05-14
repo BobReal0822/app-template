@@ -23,7 +23,7 @@ export interface HandlerResult {
   reason?: string;
 }
 
-/** Must match `users.plan` allowed values in `@app/db` schema. */
+/** Must match `users.plan` allowed values in `@repo/db` schema. */
 export const PLAN_CODE_VALUES: Record<PlanCode, PlanCode> = {
   free: 'free',
   starter: 'starter',

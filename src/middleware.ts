@@ -56,23 +56,8 @@ function isCacheableMarketingPath(pathname: string): boolean {
 }
 
 export default function middleware(request: NextRequest) {
-  // TIP: insert canonical-host redirects here if you have multiple domains
-  // pointing at the same deployment. Example:
-  //
-  //   const hostname = (request.headers.get('host') ?? '').toLowerCase();
-  //   if (hostname === 'www.legacy.example.com') {
-  //     const url = request.nextUrl.clone();
-  //     url.hostname = 'www.canonical.example.com';
-  //     return NextResponse.redirect(url, 301);
-  //   }
-
   const response = intlMiddleware(request);
 
-  // Post-process responses for cacheable marketing pages: strip the
-  // `NEXT_LOCALE` cookie that next-intl otherwise sets on every request
-  // (Set-Cookie disables Vercel CDN caching) and override the dynamic-by-
-  // default `cache-control: private, no-store` with a CDN-friendly value.
-  // Skip redirects (3xx) — they should not be long-cached.
   if (
     response &&
     response.status < 300 &&
@@ -89,10 +74,6 @@ export const config = {
   matcher: [
     '/',
     '/(en|zh)/:path*',
-    // Exclusions: api, _vercel, _next/static, _next/image, favicon.ico,
-    // static assets. (If you add Vercel Workflow DevKit later, also exclude
-    // `\\.well-known/workflow/` so next-intl never proxies workflow's
-    // internal POSTs.)
     '/((?!api|_vercel|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|webmanifest|xml|txt|ico)$).*)',
   ],
 };

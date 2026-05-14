@@ -1,11 +1,11 @@
+import { getDbHttp } from '@repo/db';
+import { users } from '@repo/db/schema';
 import { and, asc, eq, isNotNull, lte } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 import { requireCronAuth } from '@/server/api/auth';
 import * as logger from '@/server/lib/logger';
 import { catchUpFreeMonthlyCreditsFromDueDate } from '@/server/services/free-monthly-credits';
-import { getDbHttp } from '@app/db';
-import { users } from '@app/db/schema';
 
 export const runtime = 'nodejs';
 

@@ -27,7 +27,7 @@ type ScopeDeps = {
    * column of any table to enforce row-level ownership in the WHERE clause.
    *
    * Example:
-   *   await deps.db.select().from(projects).where(deps.uidEq(projects.uid))
+   *   await deps.db.select().from(someTable).where(deps.uidEq(someTable.uid))
    */
   uidEq: (column: PgColumn) => ReturnType<typeof eq>;
   uid: string;
@@ -60,8 +60,7 @@ export async function withUserScope<T>(
 /**
  * Load a single resource and require ownership in one call.
  *
- * `fetch` MUST already constrain by both id and uid (e.g.
- * `db.select().from(projects).where(and(eq(projects.id, id), eq(projects.uid, uid)))`).
+ * `fetch` MUST already constrain by both id and uid.
  * The helper does not add any predicate of its own — it only converts a
  * "no row" result into `NotFoundOrForbiddenError`, which intentionally does
  * not distinguish between "not found" and "owned by another user" to prevent

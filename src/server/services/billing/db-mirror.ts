@@ -14,10 +14,10 @@
  * `updated_at` is bumped by the `bump_updated_at_*` trigger; app code does not set it.
  */
 
-import { eq } from 'drizzle-orm';
 
-import { getDbHttp } from '@app/db';
-import { creditGrants, users } from '@app/db/schema';
+import { getDbHttp } from '@repo/db';
+import { creditGrants, users } from '@repo/db/schema';
+import { eq } from 'drizzle-orm';
 
 // ---------------------------------------------------------------------------
 // users — Stripe customer cache (read + lazy write-back)

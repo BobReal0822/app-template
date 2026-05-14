@@ -10,7 +10,7 @@
 import { useEffect, useState } from 'react';
 import Image, { ImageProps } from 'next/image';
 
-import { isExternalMediaUrl, isFalMediaUrl } from '@/lib/utils/media-url';
+import { isExternalMediaUrl } from '@/lib/utils/media-url';
 import { cn } from '@/lib/utils';
 import { Skeleton } from './skeleton';
 
@@ -60,7 +60,7 @@ export function ImageWithSkeleton({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const shouldBypassOptimizer =
-    typeof src === 'string' && (isFalMediaUrl(src) || isExternalMediaUrl(src));
+    typeof src === 'string' && isExternalMediaUrl(src);
   const shouldShowDefaultErrorFallback = hasError && !onError;
 
   useEffect(() => {

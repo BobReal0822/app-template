@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 
-type BannerNamespace = 'latestModels' | 'stunningAds' | 'urlToVideo';
+type BannerNamespace = 'welcome';
 
 interface BannerItem {
   id: number;
@@ -25,37 +25,13 @@ interface BannerItem {
 
 const banners: BannerItem[] = [
   {
-    id: 2,
-    titleKey: 'stunningAds.title',
-    descriptionKey: 'stunningAds.description',
-    // image:
-    //   'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&h=400&fit=crop',
-    image: '/images/banners/banner-2-v0.png',
-    ctaKey: 'stunningAds.cta',
-    href: '/app/product-video',
-    badgeKey: 'stunningAds.badge',
-  },
-  {
-    id: 3,
-    titleKey: 'urlToVideo.title',
-    descriptionKey: 'urlToVideo.description',
-    // image:
-    //   'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=400&fit=crop',
-    image: '/images/banners/banner-3-v0.png',
-    ctaKey: 'urlToVideo.cta',
-    href: '/app/url-to-video',
-    badgeKey: 'urlToVideo.badge',
-  },
-  {
     id: 1,
-    titleKey: 'latestModels.title',
-    descriptionKey: 'latestModels.description',
-    // image:
-    //   'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&h=400&fit=crop',
+    titleKey: 'welcome.title',
+    descriptionKey: 'welcome.description',
     image: '/images/banners/banner-1-v0.png',
-    ctaKey: 'latestModels.cta',
-    href: '/app/video-generator',
-    badgeKey: 'latestModels.badge',
+    ctaKey: 'welcome.cta',
+    href: '/app',
+    badgeKey: 'welcome.badge',
   },
 ];
 
@@ -66,6 +42,7 @@ export function HomeBanner() {
   const totalBanners = banners.length;
 
   useEffect(() => {
+    if (banners.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % banners.length);
     }, 5000);
@@ -118,7 +95,6 @@ export function HomeBanner() {
                 'linear-gradient(90deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.14) 28%, rgba(0,0,0,0) 45%)',
             }}
           />
-          {/* <DarkImageOverlay strength="soft" /> */}
 
           <div className="absolute inset-0 flex items-center px-16">
             <div className="max-w-xl">
@@ -147,46 +123,49 @@ export function HomeBanner() {
         </div>
       ))}
 
-      {/* Navigation Arrows */}
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={goToPrev}
-        className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
-        aria-label={t('a11y.previousSlide')}
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={goToNext}
-        className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
-        aria-label={t('a11y.nextSlide')}
-      >
-        <ChevronRight className="h-5 w-5" />
-      </Button>
-
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
-        {banners.map((_, index) => (
+      {banners.length > 1 && (
+        <>
           <Button
-            key={index}
             variant="ghost"
-            onClick={() => setCurrentIndex(index)}
-            aria-label={t('a11y.goToSlide', {
-              index: index + 1,
-              total: totalBanners,
-            })}
-            aria-current={index === currentIndex ? 'true' : undefined}
-            className={cn(
-              'h-1.5 rounded-full transition-[width,background-color] p-0 hover:bg-transparent',
-              index === currentIndex
-                ? 'w-6 bg-white'
-                : 'w-1.5 bg-white/50 hover:bg-white/70',
-            )}
-          />
-        ))}
-      </div>
+            size="icon"
+            onClick={goToPrev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+            aria-label={t('a11y.previousSlide')}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={goToNext}
+            className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+            aria-label={t('a11y.nextSlide')}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+            {banners.map((_, index) => (
+              <Button
+                key={index}
+                variant="ghost"
+                onClick={() => setCurrentIndex(index)}
+                aria-label={t('a11y.goToSlide', {
+                  index: index + 1,
+                  total: totalBanners,
+                })}
+                aria-current={index === currentIndex ? 'true' : undefined}
+                className={cn(
+                  'h-1.5 rounded-full transition-[width,background-color] p-0 hover:bg-transparent',
+                  index === currentIndex
+                    ? 'w-6 bg-white'
+                    : 'w-1.5 bg-white/50 hover:bg-white/70',
+                )}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { LegalDocument } from '@/components/legal-document';
 
 import { LEGAL_CONFIG } from '@/config/legal';
-import { routing } from '@/i18n/routing';
+import { routing, type Locale } from '@/i18n/routing';
 import {
   legalMarketingAbsoluteUrl,
   legalMarketingWebPageJsonLd,
@@ -560,7 +560,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'privacy' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'privacy' });
   const title = t('title');
   const description = t('description');
   const keywords = t('keywords');
@@ -602,9 +602,9 @@ export default async function PrivacyPage(props: {
 }) {
   const { locale } = await props.params;
 
-  setRequestLocale(locale);
+  setRequestLocale(locale as Locale);
 
-  const tLegal = await getTranslations({ locale, namespace: 'legalDocument' });
+  const tLegal = await getTranslations({ locale: locale as Locale, namespace: 'legalDocument' });
 
   const jsonLd = legalMarketingWebPageJsonLd({
     name: 'Privacy Policy',

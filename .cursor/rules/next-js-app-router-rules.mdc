@@ -21,7 +21,7 @@ Use Next.js API Routes (`/app/api/**/route.ts`) for:
 - **Frontend integration**: Tight integration with Next.js features (caching, middleware, Server Components)
 - **AI/Streaming**: Vercel AI SDK integration for streaming responses (see `src/app/api/chat/route.ts`)
 - **Simple third-party GET queries**: Third-party API calls that only serve the current Next.js frontend (use `process.env.API_KEY` with non-`NEXT_PUBLIC_` prefix)
-- **Simple operations**: Basic CRUD scoped to the signed-in user via Drizzle (`@app/db`) in Route Handlers or Server Actions
+- **Simple operations**: Basic CRUD scoped to the signed-in user via Drizzle (`@repo/db`) in Route Handlers or Server Actions
 - **SEO/Metadata**: Dynamic generation of sitemap, robots.txt, or metadata
 
 **Prefer a separate worker or queue** (instead of a Route Handler) when **all** of the following apply: long-running CPU work beyond platform timeouts, always-on background consumers, or strict isolation from the web tier. Otherwise implement in `src/app/api/**` or `src/server/handlers/**` with `maxDuration` and idempotency as needed.
@@ -42,7 +42,7 @@ Use Next.js API Routes (`/app/api/**/route.ts`) for:
 ## API Route Best Practices
 
 - Keep API routes focused on frontend integration and Next.js-specific features
-- Use Drizzle + `@app/db` for database access from Route Handlers (enforce ownership in code)
+- Use Drizzle + `@repo/db` for database access from Route Handlers (enforce ownership in code)
 - Auth at the route boundary via `requireAuth` / `tryAuth` from `@/server/api/auth`
 - Leverage Next.js caching strategies (`revalidate`, `cache`, `fetch` options)
 - Export `maxDuration` for long-running operations (e.g., `export const maxDuration = 30`)

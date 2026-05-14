@@ -35,7 +35,7 @@ function readBlockedHosts() {
   return new Set(configured);
 }
 
-// Align with @app/db: only canonical names, no Marketplace `DB_*` fallback.
+// Align with @repo/db: only canonical names, no Marketplace `DB_*` fallback.
 loadEnvFile('.env.development.local');
 loadEnvFile('.env.local');
 

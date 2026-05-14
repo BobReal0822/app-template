@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { routing } from '@/i18n/routing';
+import { routing, type Locale } from '@/i18n/routing';
 import { getSiteOrigin } from '@/lib/site-url';
 
 import { FeedbackForm } from './feedback-form';
@@ -19,9 +19,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const translator = await getTranslations({
-    locale,
-    namespace: 'feedback',
+  const translator = await getTranslations({ locale: locale as Locale, namespace: 'feedback',
   }).catch(() => null);
 
   const title = translator ? translator('title') : 'feedback.title';
@@ -64,7 +62,7 @@ export async function generateMetadata({
           url: '/share/og/default.jpg',
           width: 1200,
           height: 630,
-          alt: 'App Template - Create Professional AI Videos for Cross-Border E-Commerce',
+          alt: 'App Template - Feedback',
         },
       ],
     },
@@ -77,7 +75,7 @@ export async function generateMetadata({
           url: '/share/og/default.jpg',
           width: 1200,
           height: 630,
-          alt: 'App Template - Create Professional AI Videos for Cross-Border E-Commerce',
+          alt: 'App Template - Feedback',
         },
       ],
     },
@@ -85,11 +83,11 @@ export async function generateMetadata({
 }
 
 export default async function FeedbackPage(props: {
-  params: Promise<{ locale: 'en' | 'zh' }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await props.params;
   const locale = localeParam || 'en';
-  const t = await getTranslations({ locale, namespace: 'feedback' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'feedback' });
   const siteOrigin = getSiteOrigin();
   const feedbackUrl =
     locale === 'en'

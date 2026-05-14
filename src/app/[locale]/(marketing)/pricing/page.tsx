@@ -1,5 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
+import type { Locale } from '@/i18n/routing';
+
 import {
   buildMarketingPageMetadata,
   getMarketingOgImagePath,
@@ -9,13 +11,14 @@ import { PricingPageContent } from './pricing-page-content';
 
 import type { Metadata } from 'next';
 
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'pricingPage' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'pricingPage' });
 
   return buildMarketingPageMetadata({
     locale,

@@ -3,6 +3,8 @@ import type React from 'react';
 import { Footer } from '@/components/marketing/footer';
 import { Navbar } from '@/components/marketing/navbar';
 
+import type { Locale } from '@/i18n/routing';
+
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;

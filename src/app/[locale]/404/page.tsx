@@ -49,7 +49,7 @@ export async function generateMetadata({
           url: '/share/og/default.jpg',
           width: 1200,
           height: 630,
-          alt: '404 - App Template, Create Professional AI Videos for Cross-Border E-Commerce',
+          alt: '404 - Page Not Found',
         },
       ],
     },
@@ -62,7 +62,7 @@ export async function generateMetadata({
           url: '/share/og/default.jpg',
           width: 1200,
           height: 630,
-          alt: '404 - App Template, Create Professional AI Videos for Cross-Border E-Commerce',
+          alt: '404 - Page Not Found',
         },
       ],
     },
@@ -82,10 +82,6 @@ export default async function NotFoundPage({
   const tNav = await getTranslations({
     locale,
     namespace: 'marketingNav',
-  });
-  const tFeatureNames = await getTranslations({
-    locale,
-    namespace: 'featureNames',
   });
   const tFooter = await getTranslations({
     locale,
@@ -171,12 +167,6 @@ export default async function NotFoundPage({
           <span id="not-found-quick-label" className="text-muted-foreground">
             {t('quickLinks')}
           </span>
-          <Link
-            href="/features/url-to-video"
-            className="inline-flex min-h-11 items-center rounded-md px-1 py-2 font-medium text-muted-foreground transition-colors hover:text-primary"
-          >
-            {tFeatureNames('urlToVideo')}
-          </Link>
           <Link
             href="/pricing"
             className="inline-flex min-h-11 items-center rounded-md px-1 py-2 font-medium text-muted-foreground transition-colors hover:text-primary"

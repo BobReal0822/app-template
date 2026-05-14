@@ -1,6 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 
+import type { Locale } from '@/i18n/routing';
+
 import { ForgotPasswordForm } from '../_components/forgot-password/forgot-password-form';
+
 
 export async function generateMetadata({
   params,
@@ -8,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'auth.forgotPassword' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'auth.forgotPassword' });
   return {
     title: t('title'),
     description: t('description'),

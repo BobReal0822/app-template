@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Play, Sparkles, Sun } from 'lucide-react';
+import { Check, Play, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
@@ -18,7 +18,6 @@ const HOME_HERO_RESULT = '/images/marketing/home-hero-result-v2.webp';
 
 export function HeroPreview() {
   const t = useTranslations('home.hero.preview');
-  const tPreset = useTranslations('productPhotoPanel.presetLabels');
 
   return (
     <BrowserFrame
@@ -45,11 +44,6 @@ export function HeroPreview() {
           <p className="line-clamp-2 text-xs leading-relaxed text-foreground/85 sm:text-[13px]">
             {t('brief')}
           </p>
-
-          <span className="inline-flex w-fit items-center gap-1.5 rounded-md bg-card px-2 py-1 text-[10px] font-medium text-foreground/80 ring-1 ring-border/50 sm:text-[11px]">
-            <Sun className="h-3 w-3" />
-            {tPreset('outdoor')}
-          </span>
 
           <div
             aria-hidden

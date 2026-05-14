@@ -1,7 +1,7 @@
-import { eq } from 'drizzle-orm';
 
-import { getDbHttp } from '@app/db';
-import { idempotencyKeys } from '@app/db/schema';
+import { getDbHttp } from '@repo/db';
+import { idempotencyKeys } from '@repo/db/schema';
+import { eq } from 'drizzle-orm';
 
 import * as logger from './logger';
 

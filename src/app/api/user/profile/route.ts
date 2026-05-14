@@ -1,8 +1,8 @@
+import { getDbHttp } from '@repo/db';
+import { users } from '@repo/db/schema';
 import { eq } from 'drizzle-orm';
 
 import { requireAuth } from '@/server/api/auth';
-import { getDbHttp } from '@app/db';
-import { users } from '@app/db/schema';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

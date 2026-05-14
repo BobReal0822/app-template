@@ -14,7 +14,7 @@ pattern for any new data access or backend logic.
 | --- | --- |
 | Rendering | Next.js App Router, React Server Components |
 | Auth | Better Auth — Route Handlers via `@/server/api/auth`, RSC via `@/lib/auth/server-session` |
-| DB | Drizzle ORM on Neon Postgres (`@app/db`) |
+| DB | Drizzle ORM on Neon Postgres (`@repo/db`) |
 | Storage | Cloudflare R2 (`@/server/lib/r2`); GCS (`@/server/lib/gcs`) for Gemini video-insight only |
 | AI | Vercel AI SDK v6 + AI Gateway (`@ai-sdk/react`, `ai`) |
 | Cache / rate-limit / idempotency | Upstash Redis via `@/server/lib/redis` (REST) |
@@ -51,8 +51,8 @@ Components and SSR pages, read directly from Drizzle, and return DTOs.
 ```typescript
 // src/server/loaders/gen-task-history.ts
 import { and, desc, eq, isNull } from 'drizzle-orm';
-import { getDbHttp } from '@app/db';
-import { genTasks } from '@app/db/schema';
+import { getDbHttp } from '@repo/db';
+import { genTasks } from '@repo/db/schema';
 import { genTaskRowToDto } from '@/server/dto/gen-task';
 
 export async function listGenTasksForHistory(input: {

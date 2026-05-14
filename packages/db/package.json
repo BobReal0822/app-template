@@ -1,5 +1,5 @@
 {
-  "name": "@app/db",
+  "name": "@repo/db",
   "version": "0.0.0",
   "private": true,
   "description": "Drizzle ORM schema, client, and authz helpers for Neon Postgres. Consumed by the Next.js app (`src/`) and any Node tooling in this repo.",

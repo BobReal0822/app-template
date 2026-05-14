@@ -10,11 +10,12 @@
  *   live with the validation rules they enforce.
  */
 
+import { getDbHttp } from '@repo/db';
+import { feedbacks } from '@repo/db/schema';
+
 import { ErrorCode, buildError, buildSuccess } from '@/server/api/response';
 import type { ApiResponse } from '@/server/api/response';
 import * as logger from '@/server/lib/logger';
-import { getDbHttp } from '@app/db';
-import { feedbacks } from '@app/db/schema';
 
 export interface CreateFeedbackInput {
   content: unknown;

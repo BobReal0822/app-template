@@ -1,6 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import type { Locale } from '@/i18n/routing';
+
 import { LoginForm } from '../_components/login-form';
+
 
 export async function generateMetadata({
   params,
@@ -8,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'auth.login' });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'auth.login' });
   return {
     title: t('title'),
     description: t('description'),
@@ -21,6 +24,6 @@ export default async function LoginPage(props: {
 }) {
   const { locale } = await props.params;
 
-  setRequestLocale(locale);
+  setRequestLocale(locale as Locale);
   return <LoginForm />;
 }

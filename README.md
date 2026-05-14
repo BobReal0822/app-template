@@ -26,7 +26,7 @@ stays opt-in.
 | Queues           | `@vercel/queue` with idempotency-key envelopes                             |
 | Cron             | `vercel.json` schedules → `/api/cron/*` (`Authorization: Bearer` guarded)  |
 | i18n             | next-intl (App Router, locale prefix `as-needed`); en + zh seeded          |
-| Tests            | Jest + Testing Library (unit), Playwright (e2e), Vitest (`@app/db`)        |
+| Tests            | Jest + Testing Library (unit), Playwright (e2e), Vitest (`@repo/db`)        |
 | Lint / Format    | ESLint + `eslint-config-molindo`, Prettier, Stylelint                      |
 
 ## Layout
@@ -34,7 +34,7 @@ stays opt-in.
 ```
 app-template/
 ├── packages/
-│   └── db/                       # @app/db — Drizzle schema, clients, authz
+│   └── db/                       # @repo/db — Drizzle schema, clients, authz
 │       ├── src/
 │       │   ├── client.ts         # getDbHttp() / getDbTransaction() — naming by use case
 │       │   ├── authz.ts          # withUserScope() / requireOwnership()
@@ -157,7 +157,7 @@ pnpm lint             # eslint + tsc + prettier (CI gate)
 pnpm lint:fix         # auto-fix
 pnpm test             # playwright e2e + jest unit
 pnpm db:studio        # drizzle studio
-pnpm -F @app/db test  # vitest specs against optional dev branch
+pnpm -F @repo/db test  # vitest specs against optional dev branch
 ```
 
 ## Conventions worth knowing
@@ -204,7 +204,7 @@ Add new modules under `docs/optional-modules/` as you fork.
 
 ## Renaming for a new project
 
-`app-template` and `@app/db` are deliberate generic names. To rebrand:
+`app-template` and `@repo/db` are deliberate generic names. To rebrand:
 
 1. Walk through [`RENAME.md`](RENAME.md) — the exact strings + paths to
    change live there.

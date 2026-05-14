@@ -27,21 +27,12 @@ export async function getWelcomeEmailTemplate(
     ? t('welcome.greetingNamed', { name: escapeHtml(userName) })
     : t('welcome.greetingFallback');
 
-  const bulletStyle = `color:${EMAIL_STYLES.textColor}; font-size:15px; line-height:1.7;`;
   const linkStyle = `color:${EMAIL_STYLES.primaryColor}; text-decoration:underline;`;
 
   const content = `
     <h1>${t('welcome.title')}</h1>
     <p>${greeting}</p>
     <p>${t('welcome.intro')}</p>
-
-    <ul style="${bulletStyle} padding-left:20px; margin:8px 0 24px;">
-      <li>${t('welcome.bullets.urlToVideo')}</li>
-      <li>${t('welcome.bullets.videoInsight')}</li>
-      <li>${t('welcome.bullets.productVideo')}</li>
-      <li>${t('welcome.bullets.productPhoto')}</li>
-      <li>${t('welcome.bullets.generators')}</li>
-    </ul>
 
     <div class="button-container" style="text-align:center;">
       <a href="${appUrl}" class="button" style="font-size:16px; padding:14px 30px; border-radius:10px;">${t('welcome.cta')}</a>

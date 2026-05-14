@@ -14,7 +14,6 @@ export const routing = defineRouting({
     '/about': { en: '/about', zh: '/about' },
     '/privacy': { en: '/privacy', zh: '/privacy' },
     '/terms': { en: '/terms', zh: '/terms' },
-    '/blog': { en: '/blog', zh: '/blog' },
     '/auth/login': { en: '/auth/login', zh: '/auth/login' },
     '/auth/sign-up': { en: '/auth/sign-up', zh: '/auth/sign-up' },
     '/auth/forgot-password': {
@@ -28,22 +27,6 @@ export const routing = defineRouting({
     '/app': { en: '/app', zh: '/app' },
     '/pricing': { en: '/pricing', zh: '/pricing' },
     '/feedback': { en: '/feedback', zh: '/feedback' },
-    '/features/url-to-video': {
-      en: '/features/url-to-video',
-      zh: '/features/url-to-video',
-    },
-    '/features/video-insight': {
-      en: '/features/video-insight',
-      zh: '/features/video-insight',
-    },
-    '/features/product-video': {
-      en: '/features/product-video',
-      zh: '/features/product-video',
-    },
-    '/features/product-photo': {
-      en: '/features/product-photo',
-      zh: '/features/product-photo',
-    },
   },
 });
 

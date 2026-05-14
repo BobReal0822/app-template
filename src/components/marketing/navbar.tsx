@@ -11,7 +11,6 @@ import {
 import {
   Menu,
   X,
-  Layers,
   ChevronDown,
   Info,
   Newspaper,
@@ -25,7 +24,6 @@ import { LanguageSwitcher } from '@/components/language-switcher';
 import { Button } from '@/components/ui/button';
 import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 
-import { getFeatureById } from '@/config/features';
 import { useIsAuthenticated } from '@/contexts/auth-context';
 import { useUserData } from '@/hooks/use-user-data';
 import { Link } from '@/i18n/routing';
@@ -48,7 +46,6 @@ function userDisplayInitial(userData: {
 
 export function Navbar() {
   const t = useTranslations('marketingNav');
-  const tFeatureNames = useTranslations('featureNames');
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -65,54 +62,13 @@ export function Navbar() {
   const avatarSrc = getR2PublicUrl(userData?.avatar) || '';
   const [avatarLoadFailed, setAvatarLoadFailed] = useState(false);
   const showAvatarImage = Boolean(avatarSrc) && !avatarLoadFailed;
-  const marketingFeatureItems = [
-    {
-      icon: getFeatureById('urlToVideo').icon,
-      label: tFeatureNames('urlToVideo'),
-      description: t('featureItems.urlToVideo.description'),
-      href: '/features/url-to-video',
-    },
-    {
-      icon: getFeatureById('videoAnalysis').icon,
-      label: tFeatureNames('videoAnalysis'),
-      description: t('featureItems.videoAnalysis.description'),
-      href: '/features/video-insight',
-    },
-    {
-      icon: getFeatureById('productVideo').icon,
-      label: tFeatureNames('productVideo'),
-      description: t('featureItems.productVideo.description'),
-      href: '/features/product-video',
-    },
-    {
-      icon: getFeatureById('productPhoto').icon,
-      label: tFeatureNames('productPhoto'),
-      description: t('featureItems.productPhoto.description'),
-      href: '/features/product-photo',
-    },
-    {
-      icon: Layers,
-      label: t('featureItems.assetGenerator.label'),
-      description: t('featureItems.assetGenerator.description'),
-      href: '/#features',
-    },
-  ];
 
   const navItems = [
     {
       id: 'features',
       label: t('features'),
-      href: '#features',
-      hasDropdown: true,
-      dropdownItems: [
-        ...marketingFeatureItems,
-        // {
-        //   icon: FileVideo,
-        //   label: t('featureItems.videoTemplates.label'),
-        //   description: t('featureItems.videoTemplates.description'),
-        //   href: '#templates',
-        // },
-      ],
+      href: '/#features',
+      hasDropdown: false,
     },
     {
       id: 'resources',

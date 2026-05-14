@@ -1,4 +1,4 @@
-// Schema barrel — re-exported by `@app/db/schema` and consumed by
+// Schema barrel — re-exported by `@repo/db/schema` and consumed by
 // drizzle-kit (`schema: './src/schema/index.ts'` in drizzle.config.ts).
 //
 // Tables are split across modules below so PR diffs stay reviewable and

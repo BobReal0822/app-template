@@ -144,8 +144,8 @@ Fetch related rows in one query (Drizzle `with` / explicit joins) instead of per
 
 ```typescript
 // ✅ GOOD: Server Component + Drizzle
-import { getDbHttp } from '@app/db';
-import { projects } from '@app/db/schema';
+import { getDbHttp } from '@repo/db';
+import { projects } from '@repo/db/schema';
 
 export default async function ProjectsPage() {
   const db = getDbHttp();

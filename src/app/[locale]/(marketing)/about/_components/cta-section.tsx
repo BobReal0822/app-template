@@ -42,7 +42,7 @@ export function AboutCtaSection() {
                   className="h-12 cursor-pointer rounded-full border-primary-foreground/30 bg-transparent px-8 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                   asChild
                 >
-                  <Link href="/features/url-to-video">{t('ctaSecondary')}</Link>
+                  <Link href="/pricing">{t('ctaSecondary')}</Link>
                 </Button>
               </div>
             </div>

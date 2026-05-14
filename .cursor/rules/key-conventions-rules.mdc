@@ -60,7 +60,7 @@ User-facing UI text (labels, buttons, page content, toasts, validation messages)
 ### Database schema (Drizzle / Neon)
 
 - **Schema modules**: under `packages/db/src/schema/` (table definitions shared by the app).
-- **Migrations**: `packages/db` scripts (`pnpm -F @app/db migrate`); keep column names aligned with the DB source of truth.
+- **Migrations**: `packages/db` scripts (`pnpm -F @repo/db migrate`); keep column names aligned with the DB source of truth.
 
 ---
 
@@ -87,8 +87,8 @@ import { Button } from '@/components/ui/button';
 
 // 3. Internal utilities
 import { getCurrentUser } from '@/lib/auth/server-session';
-import { getDbHttp } from '@app/db';
-import { projects } from '@app/db/schema';
+import { getDbHttp } from '@repo/db';
+import { projects } from '@repo/db/schema';
 import { getR2PublicUrl } from '@/lib/utils/r2';
 
 // 4. Components
@@ -341,8 +341,8 @@ export default function UserProfile() {
 **Use index files for clean imports:**
 
 ```typescript
-// packages/db — schema tables are exported from `@app/db/schema`
-import { projects, users } from '@app/db/schema';
+// packages/db — schema tables are exported from `@repo/db/schema`
+import { projects, users } from '@repo/db/schema';
 ```
 
 ---

@@ -1,0 +1,110 @@
+---
+description: Rules for creating and organizing markdown documentation files in the project.
+globs: **/*.md
+---
+
+# Markdown Documentation Rules
+
+## Critical Rule
+
+**Do not create markdown documentation files unless the user explicitly
+asks for them.** This applies to every code task — bug fixes, refactors,
+feature work, code reviews, dependency upgrades, anything. If the user
+hasn't asked for docs, don't write docs.
+
+When the user does ask, follow the rules below.
+
+---
+
+## File Placement
+
+- The repository root may contain only `README.md`.
+- Every other markdown file lives under `/docs/`.
+- Use kebab-case names: `api-reference.md`, `code-review-report.md`.
+  Avoid generic names like `notes.md` or `temp.md`.
+
+```
+project-root/
+├── README.md           # only md allowed at the root
+└── docs/               # everything else
+    ├── api-reference.md
+    ├── deployment-guide.md
+    ├── troubleshooting.md
+    └── …
+```
+
+---
+
+## Document Structure
+
+Use a clear hierarchy:
+
+```markdown
+# Title
+
+One-line description of what this covers.
+
+## Overview
+
+- Purpose and scope
+- Prerequisites
+
+## Main content
+
+### Section 1
+…
+
+### Section 2
+…
+
+## Examples
+
+…
+
+## References
+
+…
+```
+
+Required sections: **Title**, **Overview**, content sections, and
+**References** when relevant. Add a TOC for documents long enough to scroll.
+
+---
+
+## Content Style
+
+- Active voice, concise sentences.
+- Use bullet lists / numbered steps for procedures.
+- Code blocks must include a language tag (`ts`, `bash`, `jsonc`, …).
+- Internal links use relative paths (`./other-doc.md`); external links use
+  full URLs.
+- Keep terminology consistent with the codebase (e.g. "Route Handler", not
+  "API endpoint" / "function").
+
+---
+
+## Updates and Migrations
+
+- When code changes, update **existing** docs that describe that code.
+  Do not create new docs to "log" the change.
+- If you move a markdown file into `/docs/`, update every link that
+  pointed at the old path (search the repo, including other `.md` files
+  and code comments).
+
+---
+
+## When the User Asks for Documentation
+
+Examples that qualify as explicit requests:
+
+- "Write a code review report for the recent changes"
+- "Generate API documentation for `/api/billing/*`"
+- "Create a deployment guide for the queue workers"
+
+For these, place the new file under `/docs/<kebab-case-name>.md`, follow
+the structure above, and link it from any existing index doc if one
+exists.
+
+If the request is ambiguous (e.g. "document this"), ask whether they want
+new docs or just inline JSDoc / comments — see
+`clarification-before-action.mdc`.

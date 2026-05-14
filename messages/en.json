@@ -1,0 +1,2831 @@
+{
+  "errors": {
+    "default": "An error occurred. Please try again.",
+    "networkError": "Network error. Please check your connection and try again.",
+    "parseUrlFailed": "Failed to analyze video URL. Please try again.",
+    "1001": "Missing required information",
+    "1002": "Invalid input provided",
+    "1003": "Invalid request format",
+    "1004": "Invalid request",
+    "1005": "This action is not allowed",
+    "1006": "Please check your input and try again",
+    "2001": "Please log in to continue",
+    "2002": "You don't have permission to perform this action",
+    "2003": "User not found",
+    "2004": "Invalid email or password",
+    "2005": "An account with this email already exists",
+    "2006": "Your session has expired. Please log in again.",
+    "2007": "Invalid authentication. Please log in again.",
+    "2008": "You don't have permission to access this resource",
+    "3001": "Task not found",
+    "3002": "This task already exists",
+    "3003": "Failed to create task. Please try again.",
+    "3004": "Failed to update task. Please try again.",
+    "3005": "Failed to delete task. Please try again.",
+    "3006": "Operation failed. Please try again.",
+    "3007": "The operation timed out. Please try again.",
+    "4001": "Resource not found",
+    "4002": "This resource already exists",
+    "4003": "Data not found",
+    "4004": "Invalid data format",
+    "4005": "Data conflict detected",
+    "4006": "You have exceeded your usage limit. Please upgrade your plan.",
+    "4007": "Your monthly AI conversation quota has been exceeded. Please try again next month or upgrade your plan.",
+    "5001": "Something went wrong. Please try again later.",
+    "5002": "A database error occurred. Please try again later.",
+    "5003": "External service error. Please try again later.",
+    "5004": "Service temporarily unavailable. Please try again later.",
+    "5005": "Too many requests. Please wait a moment and try again.",
+    "5006": "Network error. Please check your connection."
+  },
+  "common": {
+    "name": "App Template",
+    "skipToMain": "Skip to main content",
+    "getStarted": "Get Started",
+    "goToApp": "Go to App",
+    "ariaLabelGoToHome": "Go to home page",
+    "retry": "Retry",
+    "noModelsAvailable": "No models available",
+    "queuedAttachmentThumbnailAlt": "Queued attachment thumbnail"
+  },
+  "rootMeta": {
+    "title": "App Template - AI Ad Creative Platform for E-Commerce",
+    "description": "Generate publish-ready ad creatives — images and videos — for e-commerce performance teams. Faster iteration, lower cost, on-brand.",
+    "posterAlt": "App Template - AI Ad Creative Platform for E-Commerce"
+  },
+  "deleteDialog": {
+    "closeAriaLabel": "Close dialog",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "deleting": "Deleting..."
+  },
+  "appLayout": {
+    "profileDataError": {
+      "title": "Could not load your profile",
+      "description": "You are signed in, but we could not load your account right now. This is usually temporary—try again in a moment. If it keeps happening, sign out and sign back in.",
+      "signOut": "Sign out"
+    }
+  },
+  "userData": {
+    "hooks": {
+      "profileNotFound": "We couldn't find your account. Try signing in again.",
+      "profileLoadFailed": "Couldn't load your account. Try again.",
+      "notSignedIn": "Sign in to continue",
+      "defaultDisplayName": "Member"
+    }
+  },
+  "home": {
+    "title": "App Template - AI Ad Creative Platform | Generate Video & Image Ads",
+    "description": "Turn ideas, briefs, and product assets into campaign-ready ads with faster iteration, lower production cost, and consistent brand quality.",
+    "keywords": "AI ad creative platform, AI video ads, AI image ads, ad generation, marketing creative automation, performance advertising, App Template, App Template AI",
+    "slogan": "Better Ads, Powered by <ai>AI</ai>",
+    "badge": "AI Ad Creative Platform",
+    "agentInputPlaceholder": "Enter your idea or upload assets to generate video and image ads.",
+    "hero": {
+      "videoReady": "Creative Ready",
+      "featureCardTitle": "Skip the photo shoot",
+      "toolsLabel": "Photo · Video · Insights",
+      "tryForFree": "Try For Free",
+      "feature1": "No credit card required",
+      "feature2": "Start in seconds",
+      "preview": {
+        "inputLabel": "Brief",
+        "brief": "330ml craft beverage can · morning outdoor lifestyle reel",
+        "inputAlt": "Product reference image for the creative brief",
+        "generate": "Create video",
+        "justGenerated": "Ready",
+        "resultAlt": "Generated short product reel preview"
+      }
+    },
+    "features": {
+      "label": "Powerful Features",
+      "descriptionLine1": "Everything you need to create",
+      "descriptionLine2": "high-performing ad creatives.",
+      "getStarted": "Get started →",
+      "urlToVideo": {
+        "title": "URL to Video",
+        "description": "Paste a product URL to generate a publish-ready video ad draft with script and structure."
+      },
+      "videoAnalysis": {
+        "title": "Video Insight",
+        "description": "Analyze winning videos to uncover hooks, pacing, and creative angles you can reuse."
+      },
+      "productVideo": {
+        "title": "Product Video",
+        "description": "Turn product assets into polished video ads with avatars, voiceover, and music."
+      },
+      "productPhoto": {
+        "title": "Product Photo",
+        "description": "Generate high-quality product photos with AI for ads, social media, and e-commerce listings."
+      },
+      "assetGenerator": {
+        "title": "Asset Generator",
+        "description": "Generate image and video assets from one unified workspace for every campaign need."
+      }
+    },
+    "howToUse": {
+      "title": "Create ad creatives in 3 simple steps",
+      "description": "Turn ideas into campaign-ready, high-quality ad creatives faster.",
+      "step1": "Set Your Brief",
+      "step1Description": "Add product assets, campaign goals, key messages, or a URL to define the creative brief.",
+      "step2": "Generate Variations",
+      "step2Description": "Create multiple ad creative variations tailored to campaign scenarios and channel needs.",
+      "step3": "Polish and Launch",
+      "step3Description": "Refine details, keep brand consistency, and export launch-ready creatives for paid and organic channels.",
+      "readyToCreate": "Ship better ads in minutes, not days.",
+      "startGenerating": "Generate your first campaign-ready ad in under 2 minutes.",
+      "averageGenerationTime": "Average generation time: {seconds} seconds"
+    },
+    "comments": {
+      "title": "Trusted by modern marketing teams",
+      "description": "From acquisition to retargeting, teams use App Template to produce better ad creatives faster and at lower cost.",
+      "comment1Author": "Marcus Johnson",
+      "comment1Role": "Growth Lead",
+      "comment1Comment": "App Template dramatically reduced our creative turnaround time. We launch new ad variants in hours, not days.",
+      "comment2Author": "Sarah Chen",
+      "comment2Role": "DTC Marketing Manager",
+      "comment2Comment": "We generate video and image ads in one workflow and keep everything on-brand. It made scaling campaigns much easier.",
+      "comment3Author": "Elena Rodriguez",
+      "comment3Comment": "The quality is consistently strong, and iteration is fast. It's become part of our weekly ad production process.",
+      "comment3Role": "Performance Marketing Director",
+      "comment4Author": "David Hilton",
+      "comment4Role": "App Growth Manager",
+      "comment4Comment": "Lower production cost, faster testing cycles, and better creative output. Exactly what a growth team needs.",
+      "reviewsBadge": "4.5 from 2,000+ reviews",
+      "readReviews": "Read reviews"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "description": "Find answers to common questions about creating ads with App Template.",
+      "question1": "What inputs can I use to generate ad creatives?",
+      "answer1": "App Template supports product images, descriptions, campaign briefs, URLs, and direct text input. AI uses these inputs to generate campaign-ready creatives.",
+      "question2": "Can I generate both video and image ads?",
+      "answer2": "Yes. App Template supports both video and image ad generation, so teams can create multi-format creatives in one workflow.",
+      "question3": "Is my uploaded content secure and private?",
+      "answer3": "Yes. Uploads and processing are protected with secure infrastructure and encryption standards.",
+      "question4": "Who is App Template built for?",
+      "answer4": "App Template is designed for modern marketing teams that need better ad quality, lower production cost, and faster creative iteration.",
+      "question5": "How does App Template improve ad performance?",
+      "answer5": "By helping teams produce more relevant, on-brand creatives faster, App Template enables quicker testing cycles and better-performing campaign assets."
+    },
+    "logoBar": {
+      "trustedBy": "Trusted by modern marketing teams worldwide"
+    },
+    "brand": {
+      "title": "Keep every ad on brand",
+      "description": "Maintain brand consistency while producing ad creatives faster across campaigns and channels.",
+      "previewAlt": "Brand customization preview",
+      "feature1Title": "Update ad creatives in one click",
+      "feature1Description": "Apply messaging or style changes across variants without restarting production.",
+      "feature2Title": "Export campaign-ready assets for your workflow",
+      "feature2Description": "Use outputs directly in your creative and media workflow with minimal manual editing.",
+      "feature3Title": "Improve creatives with performance insights",
+      "feature3Description": "Use feedback loops and creative signals to iterate on what performs.",
+      "exploreFeature": "Explore feature"
+    },
+    "freeTool": {
+      "previewAlt": "AI creative preview",
+      "selectAvatar": "Select Avatar",
+      "sampleAvatarAlt": "Example user avatar {index} in signup preview"
+    },
+    "trust": {
+      "eyebrow": "Why Teams Choose App Template",
+      "titleLine1": "Built for quality,",
+      "titleLine2": "speed, and scale",
+      "point1Title": "No complex production setup required",
+      "point1Description": "Launch creative production without heavyweight tools, long onboarding, or specialist bottlenecks.",
+      "point1Link": "Learn more about features",
+      "point2Title": "Enterprise-grade security and control",
+      "point2Description": "Built with security and reliability standards that teams can trust for production workflows.",
+      "point2Link": "Learn more about security",
+      "point3Title": "Lower cost across the full creative cycle",
+      "point3Description": "Consolidate workflows, reduce manual production overhead, and scale output efficiently.",
+      "point3Link": "Learn more about pricing"
+    },
+    "cta": {
+      "contactUs": "Contact us"
+    }
+  },
+  "pricingPage": {
+    "loading": "Loading pricing...",
+    "meta": {
+      "title": "Pricing - App Template",
+      "description": "Simple, transparent pricing. Start free and scale as you grow."
+    },
+    "hero": {
+      "titlePrefix": "Choose the perfect plan for your",
+      "titleHighlight": "business",
+      "description": "Start free and scale as you grow. No hidden fees, no surprises. Cancel anytime."
+    },
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "pricingConfigError": {
+      "title": "Couldn't load pricing",
+      "description": "Check your connection and try again.",
+      "retry": "Try again"
+    },
+    "cards": {
+      "mostPopular": "Most Popular",
+      "customPrice": "Custom",
+      "perMonth": "/month",
+      "billedAnnually": "Billed annually",
+      "billedMonthly": "Billed monthly, cancel anytime",
+      "billedYearlySaving": "<savings>Saving {amountWithSuffix}</savings>, billed yearly, cancel anytime",
+      "billedYearlySavingPerYear": "/year",
+      "yearlyVsMonthlyPriceAria": "Compared to {monthlyPrice} per month on monthly billing, yearly billing is {yearlyPrice} per month equivalent.",
+      "billedCustom": "Custom pricing, contact us",
+      "billedFree": "Free forever, no credit card required",
+      "getStartedFree": "Get Started Free",
+      "contactSales": "Contact Sales",
+      "upgradeNow": "Upgrade now",
+      "proPlanName": "Pro"
+    },
+    "plans": {
+      "dynamicCredits": {
+        "monthly": "{credits} credits per month"
+      },
+      "free": {
+        "name": "Free",
+        "description": "Perfect for trying out App Template",
+        "features": [
+          "15 credits per month",
+          "Standard generation queue",
+          "Basic templates"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "For individual creators getting started",
+        "features": [
+          "150 credits per month",
+          "Higher-quality models",
+          "Faster generation queue"
+        ]
+      },
+      "pro_s": {
+        "name": "Pro S",
+        "description": "For teams with steady monthly volume",
+        "features": [
+          "500 credits per month",
+          "Priority generation queue",
+          "Advanced models and workflows"
+        ]
+      },
+      "pro_m": {
+        "name": "Pro M",
+        "description": "For growing teams with higher throughput needs",
+        "features": [
+          "1,000 credits per month",
+          "Priority generation queue",
+          "Advanced models and workflows"
+        ]
+      },
+      "pro_l": {
+        "name": "Pro L",
+        "description": "For high-volume teams running production workflows",
+        "features": [
+          "2,000 credits per month",
+          "Priority generation queue",
+          "Advanced models and workflows"
+        ]
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For large-scale production requirements",
+        "features": [
+          "Custom credit allocation",
+          "SLA and support",
+          "Custom contracts"
+        ]
+      }
+    },
+    "insufficientCreditsModal": {
+      "title": "Not enough credits",
+      "descriptionUpgradePath": "You need more credits to generate this content.",
+      "descriptionMaxTier": "You've used all credits for this billing period.",
+      "summary": {
+        "required": "Required",
+        "available": "Available",
+        "shortBy": "Short by"
+      },
+      "creditsAmount": "{count, plural, one {# credit} other {# credits}}",
+      "needAmount": "{count, plural, one {# credit} other {# credits}}",
+      "maxTier": {
+        "resetTitle": "Credits refill on schedule",
+        "resetDescription": "Your balance resets on {date}.",
+        "contactPromptTitle": "Need more right now?",
+        "contactPromptBody": "Contact us to discuss Enterprise with a custom credit allocation.",
+        "confirm": "Got it"
+      },
+      "upgradePath": {
+        "benefitsTitle": "Upgrade to unlock",
+        "benefitCredits": "Higher monthly credits for more output",
+        "benefitPriority": "Priority processing for faster results",
+        "dismiss": "Not now"
+      }
+    },
+    "upgradeModal": {
+      "title": "Upgrade your plan",
+      "description": "Upgrade to unlock more credits and faster output, with flexible subscription management at any time.",
+      "currentPlan": "Current Plan",
+      "manageSubscription": "Manage Subscription",
+      "switchTo": "Switch to {plan}",
+      "manageBilling": "Manage Billing (Stripe)",
+      "toast": {
+        "checkoutFailed": "We couldn't open the checkout page. Check your connection, make sure you're signed in, refresh the page, then try again. If it keeps failing, try again later or contact support.",
+        "portalFailed": "We couldn't open your billing page. Check your connection and try again. If it continues, wait a few minutes and retry, or contact support."
+      }
+    },
+    "comparison": {
+      "title": "Compare all features",
+      "subtitle": "Find the perfect plan for your needs",
+      "columns": {
+        "features": "Features",
+        "free": "Free",
+        "starter": "Starter",
+        "pro_s": "Pro S",
+        "enterprise": "Enterprise"
+      },
+      "monthlyCredits": {
+        "name": "Monthly credits",
+        "free": "15",
+        "starter": "150",
+        "pro_s": "500-2,000",
+        "enterprise": "Custom"
+      },
+      "priorityQueue": {
+        "name": "Priority queue"
+      },
+      "teamSupport": {
+        "name": "Team support"
+      },
+      "apiSla": {
+        "name": "API & enterprise SLA"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know about our pricing and plans",
+      "items": [
+        {
+          "question": "What happens when my credits run out?",
+          "answer": "Generation is paused when credits are insufficient. Free and Starter users can upgrade directly; Pro and Enterprise users should contact sales for higher quota options."
+        },
+        {
+          "question": "Can I manage billing details in app?",
+          "answer": "Billing management is handled by Stripe Billing Portal for security and reliability."
+        },
+        {
+          "question": "Can I change plans later?",
+          "answer": "Yes. You can switch plans anytime through Stripe Billing Portal, and changes apply according to Stripe billing rules."
+        },
+        {
+          "question": "What is the difference between monthly and yearly billing for credits?",
+          "answer": "Your plan allowance refreshes every month on the same schedule whether you pay monthly or yearly. Yearly billing only changes how often you are charged (once per year at a discount), not how credits are issued."
+        },
+        {
+          "question": "Do unused credits roll over to next month?",
+          "answer": "No. Unused credits do not roll over; your balance resets to the plan allowance on each monthly refresh."
+        },
+        {
+          "question": "Can I cancel anytime?",
+          "answer": "Yes. You can cancel your subscription anytime in Stripe Billing Portal. Your current period remains active until it ends."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Join thousands of e-commerce sellers creating stunning product videos with AI.",
+      "startFree": "Start for free",
+      "talkToSales": "Talk to sales"
+    }
+  },
+  "marketingNav": {
+    "features": "Features",
+    "resources": "Resources",
+    "pricing": "Pricing",
+    "viewAllFeatures": "View all features",
+    "toggleMenu": "Toggle menu",
+    "mobileNavMenuLabel": "Mobile navigation",
+    "desktopNavLabel": "Main navigation",
+    "goToDashboard": "Open app",
+    "goToSettings": "Go to settings",
+    "login": "Log in",
+    "getStarted": "Get started",
+    "signUpFree": "Sign up for free",
+    "featureItems": {
+      "urlToVideo": {
+        "description": "Turn product URLs into campaign-ready ad creatives"
+      },
+      "aiAvatars": {
+        "label": "AI Avatars",
+        "description": "Use lifelike AI presenters for ad content"
+      },
+      "multiLanguage": {
+        "label": "Multi-language",
+        "description": "Create and localize ad creatives across languages"
+      },
+      "smartEditing": {
+        "label": "Smart Editing",
+        "description": "Iterate and refine creatives with AI assistance"
+      },
+      "ecommerceIntegration": {
+        "label": "E-commerce Integration",
+        "description": "Connect product data and assets from commerce platforms"
+      },
+      "videoTemplates": {
+        "label": "Creative Templates",
+        "description": "Start faster with reusable ad creative structures"
+      },
+      "videoAnalysis": {
+        "description": "Analyze viral videos and generate reusable scripts"
+      },
+      "productVideo": {
+        "description": "AI-generated product video ads with avatars"
+      },
+      "productPhoto": {
+        "description": "Generate high-quality product photos with AI"
+      },
+      "assetGenerator": {
+        "label": "Asset Generator",
+        "description": "Versatile AI studio for images, videos, and more"
+      }
+    },
+    "resourceItems": {
+      "blog": {
+        "label": "Blog",
+        "description": "Insights, strategies, and best practices"
+      },
+      "about": {
+        "label": "About",
+        "description": "Learn about our mission and team"
+      },
+      "feedback": {
+        "label": "Feedback",
+        "description": "Share your thoughts and help us improve"
+      },
+      "helpCenter": {
+        "label": "Help Center",
+        "description": "Find answers to common questions"
+      },
+      "community": {
+        "label": "Community",
+        "description": "Connect with other creators and marketers"
+      }
+    }
+  },
+  "marketingFooter": {
+    "description": "From brief to campaign-ready ad — faster, cheaper, on-brand.",
+    "columns": {
+      "products": "Products",
+      "solutions": "Solutions",
+      "resources": "Resources",
+      "company": "Company"
+    },
+    "links": {
+      "blog": "Blog",
+      "pricing": "Pricing",
+      "feedback": "Feedback",
+      "about": "About"
+    },
+    "copyright": "© {year} App Template. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "siteLinksNavLabel": "Site links",
+    "legalNavLabel": "Legal"
+  },
+  "featureNames": {
+    "urlToVideo": "URL to Video",
+    "productVideo": "Product Video",
+    "productPhoto": "Product Photo",
+    "videoGenerator": "Video Generator",
+    "imageGenerator": "Image Generator",
+    "videoAnalysis": "Video Insight"
+  },
+  "about": {
+    "title": "About App Template - AI Ad Creative Platform for E-Commerce Teams",
+    "keywords": "App Template, App Template AI, app.example.com, AI ad creative platform, stunning ad creatives, AI video ads, AI image ads, creative automation, campaign-ready assets, e-commerce marketing",
+    "ogImageAlt1": "App Template AI — create stunning ads with AI | app.example.com",
+    "ogImageAlt2": "App Template AI — AI platform for video and image ad creatives | app.example.com",
+    "description": "App Template helps brands create stunning AI ad creatives across video and image — from idea to campaign-ready assets with speed, consistency, and brand control.",
+    "heroTitle": "We Make High-Performance Ad Creative Accessible",
+    "heroSubtitle": "We built App Template because high-quality ad creative shouldn't require a big budget or a production team. Our AI tools deliver studio-grade results — at a fraction of the traditional cost.",
+    "whatWeStandForTitle": "What We Believe",
+    "whatWeStandForSubtitle": "The principles that guide everything we build.",
+    "ourMission": "Our Mission",
+    "missionDescription": "To help marketing teams make better ads without burning budget. AI takes raw ideas and turns them into campaign-ready creatives — faster, cleaner, and at a fraction of traditional production cost.",
+    "missionTrusted": "Built for lean, high-output marketing teams",
+    "missionAvatarAlt": "Illustrative team avatar {n}",
+    "ourVision": "Our Vision",
+    "visionDescription": "To become every marketing team's go-to creative engine — where quality, speed, and scale work together instead of against each other.",
+    "visionSupport": "Supports global campaigns and brand consistency across channels",
+    "storyImageAlt": "App Template team collaborating on creative work",
+    "storyTitle": "Our Story",
+    "storyP1": "For years, ad production has forced teams into the same trade-off: quality, speed, or cost. Most brands could only optimize two, and the third became a constant bottleneck in execution.",
+    "storyP2": "App Template exists to break that constraint by turning fragmented creative work into one AI-native workflow. Instead of switching between disconnected tools and manual handoffs, teams can move from idea to launch in a single system.",
+    "storyP3": "Our goal stays simple: help teams ship better ads, iterate faster on what works, and scale creative output without runaway production costs. Better quality should not require slower cycles or bigger teams.",
+    "valuesSectionTitle": "What We Stand For",
+    "valuesSectionSubtitle": "These principles shape how we prioritize, build, and deliver.",
+    "valueAIDrivenTitle": "AI, Applied",
+    "valueAIDrivenDescription": "AI is built into creation, optimization, and iteration so teams ship better creative, faster.",
+    "valueCustomerTitle": "Customer First",
+    "valueCustomerDescription": "We start from real marketing constraints and measurable outcomes, then build for everyday execution.",
+    "valueQualityTitle": "Quality Without Compromise",
+    "valueQualityDescription": "Speed matters only when quality holds. Every workflow is designed for polished, on-brand output.",
+    "valueGlobalTitle": "Global by Design",
+    "valueGlobalDescription": "Built for multilingual campaigns across markets, without losing brand consistency.",
+    "ctaTitle": "Ready to create high-performing ads at lower cost?",
+    "ctaSubtitle": "Use AI to ship polished, on-brand creative faster — without a large production team.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "Explore features",
+    "ourMissionDescription": "We believe that marketing should be efficient and engaging. Our platform uses advanced AI to transform any content into professional marketing videos, making e-commerce marketing more accessible and effective.",
+    "aboutTeno": "About App Template",
+    "aboutTenoDescription": "App Template (app.example.com) is an AI ad creative platform for producing stunning videos, images, and campaign assets with speed and control.",
+    "features": "Features",
+    "getStarted": "Get Started",
+    "feature1": "AI-powered video generation",
+    "feature2": "Multiple video styles",
+    "feature3": "Customizable templates",
+    "feature4": "Real-time preview",
+    "feature5": "Multi-platform export",
+    "getStartedDescription": "Ready to level up your creative process? Sign up and start creating stunning ad content with App Template."
+  },
+  "notFound": {
+    "title": "Page Not Found - App Template",
+    "description": "The page you are looking for could not be found. Please check the URL or return to the homepage.",
+    "backToHome": "Back to Home",
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDescription": "The page you're looking for doesn't exist or has been moved. Let's get you back on track.",
+    "ariaLabelBackToHome": "Back to home page",
+    "ariaLabelGoToDashboard": "Open app",
+    "quickLinks": "Quick links:"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "temporaryHint": "A temporary error occurred. You can try again or return to the home page.",
+    "persistentHint": "An unexpected error occurred. Please return to the home page or contact support if the problem persists.",
+    "tryAgain": "Try again",
+    "resetting": "Resetting…",
+    "goHome": "Go home",
+    "devDetailsLabel": "Error details (development only)"
+  },
+  "footer": {
+    "title": "App Template",
+    "description": "Create professional marketing videos for cross-border e-commerce with the power of AI.",
+    "product": "Product",
+    "resources": "Resources",
+    "history": "History",
+    "company": "Company",
+    "about": "About",
+    "contact": "Contact",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "copyright": "© {year} App Template. All rights reserved.",
+    "madeWithLove": "Made with ❤️ for cross-border e-commerce businesses",
+    "ariaLabelVisitBlog": "Visit our blog",
+    "ariaLabelVisitHistory": "Visit history page",
+    "ariaLabelVisitAbout": "Learn more about us",
+    "ariaLabelVisitTerms": "Read our terms of service",
+    "ariaLabelVisitPrivacy": "Read our privacy policy",
+    "ariaLabelVisitFeedback": "Contact us",
+    "ariaLabelVisitPricing": "View pricing plans"
+  },
+  "history": {
+    "title": "History",
+    "description": "View and manage your video generation history and progress.",
+    "searchPlaceholder": "Search videos...",
+    "fetchError": "Error fetching tasks.",
+    "deleteError": "Error deleting task.",
+    "deleteSuccess": "Task deleted successfully.",
+    "deleteConfirm": "Confirm to delete this task? This action cannot be undone.",
+    "delete": "Delete",
+    "noQuizzes": "No Videos",
+    "noQuizzesDescription": "You haven't created any videos yet. Click 'Create video' to get started!",
+    "createQuiz": "Create video",
+    "loginRequired": "Login Required",
+    "loginRequiredDescription": "Please log in to view your video history and manage your created videos.",
+    "login": "Login",
+    "signUp": "Sign Up",
+    "noSearchResults": "No Search Results",
+    "noSearchResultsDescription": "No videos found matching your search. Try different keywords or clear the search to see all videos.",
+    "clearSearch": "Clear Search",
+    "init": "Creating",
+    "pending": "Processing",
+    "completed": "Done",
+    "failed": "Failed"
+  },
+  "account": {
+    "title": "Account Settings",
+    "description": "Manage your account settings and preferences.",
+    "profile": "Profile",
+    "planAndBilling": "Plan and Billing",
+    "upgrade": "Upgrade",
+    "settings": "Settings",
+    "billing": "Billing",
+    "preferences": "Preferences",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "profileInfo": "Profile Information",
+    "profileDescription": "Update your account profile information.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "name": "Name",
+    "email": "Email",
+    "updatePwd": "Update password",
+    "changeAvatar": "Change Avatar",
+    "clickAvatarToUpload": "Click avatar to upload a new photo",
+    "avatarDescription": "JPG, GIF or PNG. 2MB max.",
+    "saveChanges": "Save changes",
+    "uploading": "Uploading...",
+    "invalidFileType": "Invalid file type. Please select JPEG, PNG.",
+    "fileTooLarge": "File too large. Please select a file smaller than MB.",
+    "avatarUpdated": "Avatar updated successfully!",
+    "uploadFailed": "Upload failed. Please try again.",
+    "profileUpdated": "Profile updated successfully!",
+    "savingChanges": "Saving changes...",
+    "currentPlan": "Current Plan",
+    "currentPlanDescription": "Manage your subscription and view usage statistics.",
+    "free": "Free",
+    "pro": "Pro",
+    "upgradePlan": "Upgrade plan",
+    "managePlan": "Manage plan",
+    "billingHistory": "Billing Information",
+    "billingDetails": "Billing details",
+    "preferencesDescription": "Customize your App Template experience and application settings.",
+    "language": "Language",
+    "notifications": "Notifications",
+    "notificationsDescription": "Receive notifications about your quizzes and account.",
+    "notificationsEmail": "Email notifications",
+    "notificationsEmailDescription": "Receive email updates about your quizzes and account.",
+    "notificationsMarketing": "Marketing emails",
+    "notificationsMarketingDescription": "Receive emails about new features and tips.",
+    "savePreferences": "Save preferences",
+    "login": "Log in",
+    "clickToLogin": "Click to log in",
+    "ariaLabelLogin": "Log in to your account",
+    "contactSupportToChangeEmail": "Contact support to change your email",
+    "saved": "Saved!",
+    "avatarAlt": "Avatar",
+    "securityTitle": "Security",
+    "securityDescription": "Manage sensitive account actions.",
+    "selectLanguage": "Select language",
+    "selectTheme": "Select theme",
+    "languageEnglish": "English",
+    "languageChinese": "Chinese",
+    "settingsPage": {
+      "metaTitle": "Settings - App Template",
+      "metaDescription": "Manage your profile and account settings",
+      "title": "Account Settings",
+      "description": "Update your profile, billing, and account preferences.",
+      "tabs": {
+        "profile": "Profile",
+        "subscription": "Subscription",
+        "notifications": "Notifications"
+      }
+    },
+    "changePassword": {
+      "trigger": "Change password",
+      "title": "Change password",
+      "description": "Set a new password to keep your account secure.",
+      "currentPassword": "Current password",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "newPassword": "New password",
+      "newPasswordPlaceholder": "Enter a new password (at least 6 characters)",
+      "confirmNewPassword": "Confirm new password",
+      "confirmNewPasswordPlaceholder": "Enter your new password again",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePassword": "Update password",
+      "successUpdated": "Password updated",
+      "errors": {
+        "missingEmail": "Email is missing",
+        "passwordTooShort": "Password must be at least 6 characters",
+        "passwordsDoNotMatch": "Passwords do not match",
+        "currentPasswordIncorrect": "Current password is incorrect",
+        "requiresRecentLogin": "Please sign in again and try.",
+        "userNotAuthenticated": "You're not signed in",
+        "updateFailed": "Couldn't update password. Try again."
+      }
+    },
+    "notificationsTab": {
+      "title": "Notifications",
+      "description": "Choose which updates you want to receive.",
+      "notificationOptions": {
+        "email": {
+          "label": "Email updates",
+          "description": "Receive account and project updates by email."
+        },
+        "videoComplete": {
+          "label": "Video ready",
+          "description": "Get notified when a video is ready."
+        },
+        "weeklyReport": {
+          "label": "Weekly summary",
+          "description": "Receive a weekly usage summary."
+        },
+        "marketing": {
+          "label": "Product updates",
+          "description": "Receive product news and special offers."
+        }
+      }
+    },
+    "subscriptionInfo": {
+      "customPrice": "Custom",
+      "monthShort": "/mo",
+      "monthLong": "/month",
+      "popular": "Popular",
+      "billedAnnually": "Billed annually",
+      "currentPlan": {
+        "title": "Current Plan",
+        "description": "You are currently on a Pro plan"
+      },
+      "usage": {
+        "creditsUsed": "Credits Used",
+        "videosCreated": "Videos Created",
+        "allTime": "All time",
+        "nextPayment": "Next Payment"
+      },
+      "availablePlans": {
+        "title": "Available Plans",
+        "description": "Choose the plan that works best for you"
+      },
+      "billingCycle": {
+        "monthly": "Monthly",
+        "yearly": "Yearly"
+      },
+      "subscription": {
+        "title": "Subscription",
+        "renewsOn": "Renews on {date}",
+        "endsOn": "Ends {date}",
+        "noExpiry": "No expiry",
+        "notSubscribedHint": "No paid subscription yet. Upgrade to unlock plan credits.",
+        "manageButtonFree": "View plans and upgrade",
+        "manageButtonPaid": "Manage subscription"
+      },
+      "creditsBalance": {
+        "title": "Credits",
+        "available": "{count, plural, one {# credit available} other {# credits available}}",
+        "used": "{percent}% of this billing period allocation is used",
+        "usedAria": "{percent} percent of this billing period credits used",
+        "upgradePrompt": "Upgrade for more credits",
+        "upgradeButton": "Upgrade plan"
+      },
+      "payment": {
+        "title": "Payment Method",
+        "descriptionPaid": "Update your card and billing details in the Stripe Customer Portal.",
+        "descriptionFree": "After subscribing, you can update your card and billing details in the Stripe Customer Portal.",
+        "button": "Manage payment method"
+      },
+      "invoices": {
+        "title": "Invoices",
+        "descriptionPaid": "View and download invoices in the Stripe Customer Portal.",
+        "descriptionFree": "After subscribing, you can view and download invoices in the Stripe Customer Portal.",
+        "button": "View invoices"
+      },
+      "toast": {
+        "portalFailed": "We couldn't open billing right now. Check your connection and try again. If the issue continues, wait a few minutes or contact support.",
+        "noStripeCustomer": "No billing profile found yet. Subscribe to a plan first, then manage payment methods and invoices here."
+      },
+      "management": {
+        "subscription": {
+          "action": "Manage subscription"
+        }
+      },
+      "actions": {
+        "currentPlan": "Current plan",
+        "contactSales": "Contact sales",
+        "upgrade": "Upgrade"
+      },
+      "footer": {
+        "needMore": "Need more?",
+        "viewFullPlanComparison": "View full plan comparison"
+      },
+      "paymentMethod": {
+        "title": "Payment Method",
+        "description": "Manage your payment details",
+        "expires": "Expires",
+        "update": "Update"
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "description": "Perfect for trying out",
+          "features": {
+            "0": "3 videos/month",
+            "1": "720p quality",
+            "2": "5 AI avatars",
+            "3": "Basic templates"
+          }
+        },
+        "starter": {
+          "name": "Starter",
+          "description": "For individual sellers",
+          "features": {
+            "0": "20 videos/month",
+            "1": "1080p quality",
+            "2": "20 AI avatars",
+            "3": "No watermark"
+          }
+        },
+        "pro": {
+          "displayName": "Pro",
+          "tierShort": {
+            "pro_s": "S",
+            "pro_m": "M",
+            "pro_l": "L"
+          }
+        },
+        "pro_s": {
+          "name": "Pro S",
+          "description": "For steady monthly output",
+          "features": {
+            "0": "500 credits/month",
+            "1": "1080p quality",
+            "2": "All 50+ avatars",
+            "3": "Brand customization",
+            "4": "Analytics"
+          }
+        },
+        "pro_m": {
+          "name": "Pro M",
+          "description": "For growing teams",
+          "features": {
+            "0": "1,000 credits/month",
+            "1": "Priority queue",
+            "2": "Advanced models",
+            "3": "Brand customization",
+            "4": "Analytics"
+          }
+        },
+        "pro_l": {
+          "name": "Pro L",
+          "description": "For high-volume teams",
+          "features": {
+            "0": "2,000 credits/month",
+            "1": "Priority queue",
+            "2": "Advanced models",
+            "3": "Brand customization",
+            "4": "Analytics"
+          }
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "description": "For teams & agencies",
+          "features": {
+            "0": "Unlimited videos",
+            "1": "4K quality",
+            "2": "Custom avatars",
+            "3": "API access",
+            "4": "Dedicated support"
+          }
+        }
+      }
+    }
+  },
+  "auth": {
+    "layout": {
+      "brandName": "App Template",
+      "showcaseAlt": "AI ad creative dashboard preview",
+      "badgeTitle": "Creative Ready",
+      "badgeSubtitle": "Generated in 2 min",
+      "headlinePrefix": "Transform your ideas into",
+      "headlineHighlight": "stunning ads",
+      "headlineDescription": "Create professional AI-powered ad creatives from your product assets. No editing skills required.",
+      "stats": {
+        "activeUsers": "Active Users",
+        "creativesGenerated": "Creatives Generated",
+        "languages": "Languages"
+      },
+      "copyright": "© {year} App Template. All rights reserved."
+    },
+    "login": {
+      "title": "Log in to App Template – Access Your AI Ad Creative Workspace",
+      "description": "Log in to App Template to access your personalized AI video generation tools and marketing insights. Make video creation effortless and effective with intelligent AI generation.",
+      "keywords": "AI videos, video generation, cross-border e-commerce, App Template login, marketing tools, AI video assistant",
+      "mainTitle": "Welcome back",
+      "mainDescription": "Welcome back! Please use your email or Google account to log in.",
+      "mainKeywords": "Login, keywords",
+      "email": "Email",
+      "name": "Name",
+      "password": "Password",
+      "login": "Log in",
+      "loggingIn": "Logging in...",
+      "forgotPassword": "Forgot password?",
+      "orContinueWith": "Or",
+      "loginWithGoogle": "Log in with Google",
+      "signUp": "Sign up",
+      "notHaveAccount": "Don't have an account?",
+      "termsDesc": "By continuing, you agree to our",
+      "termsOfService": "Terms of Service",
+      "termsAnd": "and",
+      "privacyPolicy": "Privacy Policy",
+      "enterEmailPassword": "Please enter email and password",
+      "loginFailed": "Login failed. Please check your details and try again, or complete sign-up first.",
+      "googleUnavailable": "Google login service is currently unavailable. Please try email login instead.",
+      "googleLoginError": "Failed to initiate Google login. Please try again or use email login.",
+      "googleLoginTimeout": "Google login request timed out. Please check your network connection or try email login.",
+      "googleUnavailableHint": "Google login may be unavailable in your region. Please use email login instead.",
+      "emailPlaceholder": "name@example.com",
+      "passwordPlaceholder": "Enter your password",
+      "ariaShowPassword": "Show password",
+      "ariaHidePassword": "Hide password",
+      "orContinueWithEmail": "or continue with email",
+      "loginCtaDescription": "Log in to continue creating stunning ads with AI.",
+      "signUpForFree": "Sign up for free"
+    },
+    "signup": {
+      "title": "Sign Up for App Template – Start Creating AI-Powered Ad Creatives",
+      "description": "Join App Template for free and start generating professional AI marketing videos in seconds. Perfect for cross-border e-commerce businesses who want to make marketing smarter and more engaging.",
+      "keywords": "AI videos, video generation, video generator, App Template signup, AI marketing tools, cross-border e-commerce",
+      "mainTitle": "Create your account",
+      "mainDescription": "Start creating stunning ads with AI in minutes.",
+      "email": "Email",
+      "password": "Password",
+      "repeatPassword": "Confirm Password",
+      "signUp": "Sign up",
+      "createAccount": "Create account",
+      "creatingAccount": "Creating account...",
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Log in",
+      "passwordMismatch": "Passwords do not match",
+      "accountExists": "This email is already registered. Please log in or reset your password.",
+      "forgotPasswordCta": "Reset password",
+      "signUpFailed": "Sign up failed. Please check your details and try again. If you already have an account, log in or reset your password.",
+      "autoSignInFailed": "Your account was created, but we couldn't sign you in automatically. Please log in to continue.",
+      "continueWithGoogle": "Continue with Google",
+      "orContinueWithEmail": "or continue with email",
+      "emailPlaceholder": "name@example.com",
+      "namePlaceholder": "Your name",
+      "passwordPlaceholder": "Create a password",
+      "repeatPasswordPlaceholder": "Confirm your password",
+      "ariaShowPassword": "Show password",
+      "ariaHidePassword": "Hide password",
+      "ariaShowRepeatPassword": "Show confirm password",
+      "ariaHideRepeatPassword": "Hide confirm password",
+      "otpTitle": "Verify your email",
+      "otpDescription": "Enter the 6-digit code we sent to <highlight>{email}</highlight>.",
+      "sendOtp": "Send verification code",
+      "sendingOtp": "Sending ...",
+      "otpSent": "Verification code sent. Please check your inbox.",
+      "otpCode": "Verification code",
+      "verifyOtp": "Verify code",
+      "verifyingOtp": "Verifying code...",
+      "resendOtp": "Resend code",
+      "resendOtpIn": "Resend in {seconds}s",
+      "editEmail": "Edit email address",
+      "otpInvalid": "Invalid verification code. Please try again.",
+      "otpExpired": "Code expired. Please request a new code.",
+      "otpLocked": "Too many failed attempts. Please request a new code later.",
+      "passwordStepTitle": "Set your password",
+      "passwordStepDescription": "Email verified for <highlight>{email}</highlight>. Set a password to finish signing up.",
+      "passwordRequirementsTitle": "Password requirements",
+      "requirementMinLength": "At least 8 characters",
+      "requirementLetterAndNumber": "Includes letters and numbers",
+      "requirementsMatch": "Passwords match",
+      "passwordTooWeak": "Password must be at least 8 characters and include letters and numbers.",
+      "registrationExpired": "Registration session expired. Please restart sign up.",
+      "nameRequired": "Please enter your name.",
+      "backToVerification": "Back to verification",
+      "stepIndicatorLabel": "Sign up progress, 3 steps total",
+      "completeRegistration": "Complete sign up",
+      "completingRegistration": "Completing sign up...",
+      "googleLoginError": "Failed to log in with Google. Please try again.",
+      "googleUnavailable": "Google log in is temporarily unavailable. Please use email sign up."
+    },
+    "forgotPassword": {
+      "title": "Forgot Password – Recover Your App Template Account",
+      "description": "Forgot your password? Reset your App Template account credentials here and regain access to your personalized AI-powered video generation platform.",
+      "keywords": "App Template forgot password, reset password, account recovery, AI video platform, video generator app",
+      "mainTitle": "Reset Your Password",
+      "mainDescription": "Enter your email and we'll send you a 6-digit reset code.",
+      "otpTitle": "Enter reset code",
+      "otpDescription": "Enter the 6-digit code sent to <highlight>{email}</highlight>.",
+      "passwordStepTitle": "Set new password",
+      "passwordStepDescription": "Code verified for <highlight>{email}</highlight>. Set a new password to finish.",
+      "email": "Email",
+      "emailAddress": "Email address",
+      "emailPlaceholder": "name@example.com",
+      "sendResetEmail": "Send Reset Email",
+      "sendResetCode": "Send reset code",
+      "sendingResetEmail": "Sending...",
+      "otpCode": "Reset code",
+      "continueToPassword": "Continue",
+      "verifyingCode": "Verifying code...",
+      "resendCodeIn": "Resend in {seconds}s",
+      "requestNewCode": "Request a new reset code",
+      "editEmail": "Edit email address",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmNewPasswordPlaceholder": "Confirm new password",
+      "ariaShowPassword": "Show password",
+      "ariaHidePassword": "Hide password",
+      "ariaShowConfirmPassword": "Show confirm password",
+      "ariaHideConfirmPassword": "Hide confirm password",
+      "passwordRequirementsTitle": "Password requirements",
+      "requirementMinLength": "At least 8 characters",
+      "requirementLetterAndNumber": "Includes letters and numbers",
+      "requirementsMatch": "Passwords match",
+      "updating": "Updating...",
+      "resetPasswordButton": "Reset password",
+      "stepIndicatorLabel": "Reset password progress, 3 steps total",
+      "backToVerification": "Back to verification",
+      "checkYourEmail": "Check Your Email",
+      "checkDescription": "Password reset code sent",
+      "checkContent": "If you signed up using your email, you will receive a one-time reset code.",
+      "successTitle": "Password updated",
+      "successDescription": "Your password has been reset successfully. You can now log in with your new password.",
+      "successDescriptionPrefix": "We've sent a password reset code to",
+      "continueToReset": "Continue with reset code",
+      "redirectingToLogin": "Redirecting to log in...",
+      "backToLogin": "Back to log in",
+      "login": "Log in",
+      "rememberPassword": "Remember your password?",
+      "didNotReceiveEmail": "Didn't receive the email?",
+      "tryAgain": "Try again",
+      "emailRequired": "Email is required.",
+      "codeRequired": "Reset code is required.",
+      "passwordRequirementsNotMet": "Please ensure all password requirements are met.",
+      "invalidOrExpiredCode": "Invalid or expired reset code.",
+      "sendResetEmailFailed": "Failed to send reset email. Please try again.",
+      "unexpectedError": "Something went wrong. Please try again."
+    },
+    "resetPassword": {
+      "title": "Reset Password – Secure Your App Template Account",
+      "description": "Reset or update your App Template password to keep your account secure and continue enjoying personalized AI-powered video generation and marketing.",
+      "keywords": "App Template reset password, change password, account security, AI videos, video generation, video generator",
+      "mainTitle": "Reset Your Password",
+      "mainDescription": "Please enter your new password below.",
+      "email": "Email",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm new password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmNewPasswordPlaceholder": "Confirm new password",
+      "passwordPl": "New password",
+      "confirmPasswordPl": "Confirm new password",
+      "ariaShowPassword": "Show password",
+      "ariaHidePassword": "Hide password",
+      "ariaShowConfirmPassword": "Show confirm password",
+      "ariaHideConfirmPassword": "Hide confirm password",
+      "emailPlaceholder": "name@example.com",
+      "otpCode": "Reset code",
+      "otpPlaceholder": "Enter the 6-digit code",
+      "emailRequired": "Email is required.",
+      "codeRequired": "Reset code is required.",
+      "invalidOrExpiredCode": "Invalid or expired reset code.",
+      "save": "Save new password",
+      "saving": "Saving...",
+      "verifyingLink": "Verifying your reset link...",
+      "invalidOrExpiredLink": "Invalid or expired reset link.",
+      "passwordRequirementsNotMet": "Please ensure all password requirements are met.",
+      "invalidResetLink": "Invalid reset link.",
+      "resetFailed": "Failed to reset password. Please try again.",
+      "unexpectedError": "Something went wrong. Please try again.",
+      "expiredTitle": "Link expired",
+      "expiredDescription": "This password reset link is invalid or expired. Please request a new one.",
+      "requestNewLink": "Request new link",
+      "backToLogin": "Back to log in",
+      "successTitle": "Password updated",
+      "successDescription": "Your password has been reset successfully. You can now log in with your new password.",
+      "redirectingToLogin": "Redirecting to log in...",
+      "loginNow": "Log in now",
+      "setNewPasswordTitle": "Set new password",
+      "setNewPasswordDescription": "Create a strong password to secure your account.",
+      "forEmailPrefix": "for",
+      "passwordRequirementsTitle": "Password requirements:",
+      "requirementMinLength": "8+ characters",
+      "requirementLetterAndNumber": "Letters and numbers",
+      "requirementsMatch": "Passwords match",
+      "updating": "Updating...",
+      "resetPasswordButton": "Reset password",
+      "rememberPassword": "Remember your password?",
+      "login": "Log in",
+      "requestNewCode": "Request a new reset code"
+    }
+  },
+  "manifest": {
+    "name": "App Template - AI Ad Creative Platform for E-Commerce",
+    "shortName": "App Template",
+    "description": "Generate publish-ready ad creatives — images and videos — for e-commerce performance teams. Faster iteration, lower cost, on-brand."
+  },
+  "sidebar": {
+    "home": "Home",
+    "history": "History",
+    "resources": "Resources",
+    "quickGuide": "Quick Guide",
+    "affiliate": "Invite & Earn",
+    "pricing": "Pricing",
+    "feedback": "Feedback",
+    "ariaLabelHome": "Go to home page",
+    "ariaLabelHistory": "Go to history page",
+    "ariaLabelResources": "Visit our blog",
+    "ariaLabelQuickGuide": "Visit our quick guide",
+    "ariaLabelAffiliate": "Join the affiliate program",
+    "ariaLabelPricing": "View pricing plans",
+    "ariaLabelFeedback": "Contact us"
+  },
+  "quizDetail": {
+    "pendingDescription": "Please wait while we process original content.",
+    "errorFormattingInput": "Error formatting task input.",
+    "titleCreatedSuccessfully": "Title created successfully, begin generating quizzes.",
+    "errorInputStream": "Error processing original content.",
+    "noPrompt": "No prompt.",
+    "noOriginalContent": "No original content.",
+    "formattingContent": "Formatting content...",
+    "originalContent": "Original Content",
+    "errorFetchingQuiz": "Error fetching quiz.",
+    "userAuthError": "Error authenticating user.",
+    "errorCreatingQuiz": "Error creating quiz.",
+    "errorGeneratingQuizzes": "Error generating quizzes.",
+    "errorFetchingQuizItems": "Error fetching quiz items.",
+    "errorUpdatingQuizItem": "Error updating quiz item.",
+    "errorUpdatingQuizItemRate": "Error updating rate.",
+    "errorCheckingAnswer": "Error checking answer.",
+    "answerIsCorrect": "Answer is correct.",
+    "answerIsIncorrect": "Answer is incorrect.",
+    "invalidAnswer": "Invalid answer or quiz.",
+    "yourAnswerStatus": "Your answer status:",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "checking": "Checking...",
+    "submit": "Submit",
+    "questionIndex": "{index}/{total} questions",
+    "singleChoice": "Single Choice",
+    "multipleChoice": "Multiple Choice",
+    "trueFalse": "True/False",
+    "shortAnswer": "Short Answer",
+    "fillInBlank": "Fill in the Blank",
+    "selectAllCorrectAnswers": "Select all correct answers (multiple options):",
+    "chooseTrueOrFalse": "Choose True or False:",
+    "briefAnswerInYourWords": "Brief answer in your words:",
+    "explanation": "Explanation",
+    "enterYourAnswer": "Enter your answer here...",
+    "fillInTheBlank": "Fill in the blank:",
+    "previous": "Previous",
+    "next": "Next",
+    "progress": "Progress: ",
+    "progressIndex": "{index} of {total} completed",
+    "quizQuestions": "Quiz Questions",
+    "thinking": "Thinking...",
+    "questionsGenerated": "{index} questions generated",
+    "taskFailed": "Task Failed",
+    "taskFailedDescription": "The task processing has failed.",
+    "taskFailedTitle": "This could be due to several reasons:",
+    "taskFailedDescription1": "Network connectivity issues",
+    "taskFailedDescription2": "Server temporarily unavailable",
+    "taskFailedDescription3": "Invalid or unsupported input content",
+    "taskFailedDescription4": "Please check your input content or network, if the problem persists, contact customer service for assistance.",
+    "goBack": "Go Back",
+    "back": "Back",
+    "fetchTaskError": "Error fetching task.",
+    "questionsNum": "{num} questions"
+  },
+  "terms": {
+    "title": "App Template Terms of Service - AI Ad Creative Platform User Agreement",
+    "description": "Read App Template's Terms of Service for our AI ad creative platform. Learn user rights, responsibilities, and service conditions for our AI tools.",
+    "keywords": "App Template terms of service, user agreement, terms and conditions, legal terms, service conditions, user rights, platform terms, video platform legal"
+  },
+  "privacy": {
+    "title": "App Template Privacy Policy - AI Ad Creative Platform Data Protection",
+    "description": "Learn how App Template protects your data on our AI video generation platform. Your privacy and security are our top priority when using our AI video generator.",
+    "keywords": "App Template privacy policy, data protection, user privacy, GDPR compliance, data security, privacy rights, personal data protection, platform privacy"
+  },
+  "legalDocument": {
+    "lastUpdatedLabel": "Last updated: {date}"
+  },
+  "blog": {
+    "title": "App Template Blog - AI Ad Creative Playbooks, Tips & Product Updates",
+    "description": "Practical playbooks, product updates, and real campaign insights to help e-commerce teams create better ad creatives with AI.",
+    "keywords": "App Template blog, AI ad creative, e-commerce marketing, video ad playbook, creative strategy, product updates, ad performance",
+    "blogTitle": "Resources & Blog",
+    "blogDescription": "Discover insights, tips, and best practices for creating effective marketing videos and enhancing e-commerce experiences with App Template.",
+    "readMore": "Read More",
+    "share": "Share:",
+    "bookmark": "Bookmark",
+    "linkCopiedToClipboard": "Link copied to clipboard!",
+    "addedToBrowserBookmarks": "Added to browser bookmarks",
+    "pressCtrlD": "Press Ctrl+D (or Cmd+D on Mac) to bookmark this page",
+    "featured": "Featured",
+    "resources": "Resources",
+    "category": "Category",
+    "relatedArticles": "Related Articles",
+    "ariaLabelVisitBlog": "Go to blog page: {title}",
+    "ariaLabelBackToBlog": "Back to blog page",
+    "heroBadge": "Latest insights & updates",
+    "heroTitleHighlight": "Blog",
+    "heroSubtitle": "Guides, comparisons, and product updates to help you ship better AI ad creative — faster.",
+    "searchPlaceholder": "Search articles...",
+    "noResults": "No articles found matching your criteria.",
+    "clearFilters": "Clear filters",
+    "categories": {
+      "all": "All",
+      "guides": "Guides",
+      "comparisons": "Comparisons",
+      "academy": "Academy",
+      "case-studies": "Customer Stories",
+      "integrations": "Integrations",
+      "updates": "Product Updates",
+      "industry-news": "Industry News"
+    },
+    "backToBlog": "Back to blog",
+    "articleCoverAlt": "Cover image for: {title}",
+    "inlineImageAltFallback": "Illustration in this article",
+    "updatedLabel": "Updated {date}",
+    "updatedTooltip": "Last meaningfully updated on {date}",
+    "readingProgressLabel": "Reading progress",
+    "tocTitle": "On this page",
+    "tocLabel": "Table of contents",
+    "ctaTitle": "Ready to turn insights into better ads?",
+    "ctaSubtitle": "Apply these playbooks in App Template and ship high-performing creative faster - without a larger production team.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "Try the demo",
+    "paginationNav": "Blog article pages",
+    "paginationPrevious": "Previous page",
+    "paginationNext": "Next page",
+    "paginationGoToPage": "Go to page {page}",
+    "fallbackEnglishOriginal": "English original"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "description": "Provide feedback to help us improve App Template.",
+    "keywords": "feedback, feedback form, feedback to improve App Template, feedback to help us improve App Template",
+    "mainTitle": "Feedback and product support",
+    "mainDescription": "Whether you want to report a bug, request a feature, ask about billing, or share product feedback, we'd love to hear from you.",
+    "formTitle": "Send us a message",
+    "formDescription": "Fill out the form below to share your feedback with our team.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Your email",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Select a subject",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Hey, I have a question about...",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "submitted": "Submitted",
+    "emailUs": "Email Us",
+    "emailDescription": "Prefer email? Send us a message directly:",
+    "followUs": "Follow Us",
+    "socialDescription": "Follow us on social media to get the latest updates and news.",
+    "faqDescription": "Check out our Quick Guide for answers to common questions.",
+    "responseTime": "We typically respond within 24 hours on business days.",
+    "successMessage": "Thank you for your feedback! We'll get back to you as soon as possible.",
+    "errorMessage": "Failed to submit feedback. Please try again later.",
+    "needHelp": "Need Quick Help?",
+    "visitFaq": "Visit Quick Guide",
+    "experienceFeedback": "Experience Feedback",
+    "subjectBug": "Bug Report",
+    "subjectFeature": "Feature Request",
+    "subjectSupport": "Technical Support",
+    "subjectBilling": "Billing & Subscription",
+    "subjectFeedback": "General Feedback",
+    "subjectOther": "Other",
+    "nameRequired": "Name is required",
+    "emailRequired": "Email is required",
+    "subjectRequired": "Subject is required",
+    "messageRequired": "Message is required",
+    "nameLength": "Name must be no more than {maxLength} characters",
+    "emailLength": "Email must be no more than {maxLength} characters",
+    "subjectLength": "Subject must be no more than {maxLength} characters",
+    "messageLength": "Message must be no more than {maxLength} characters",
+    "emailFormat": "Invalid email format",
+    "pleaseFixErrors": "Please fix the errors in the form"
+  },
+  "videoAnalysis": {
+    "header": {
+      "highlight": "Viral",
+      "title": "Video Insight",
+      "subtitle": "Break down high-performing videos into reusable hooks, script patterns, and creative direction for ad creative"
+    },
+    "input": {
+      "supports": "Supports:",
+      "tabs": {
+        "ariaLabel": "Input type",
+        "url": "URL",
+        "upload": "Upload",
+        "analyzeUrl": "Analyze URL"
+      },
+      "url": {
+        "placeholder": "Paste video link here...",
+        "emptyError": "Please enter a video URL",
+        "parsedSuccess": "Video parsed successfully",
+        "autoParsing": "Video link detected. Parsing..."
+      },
+      "upload": {
+        "selectFilePlaceholder": "Select a video file to analyze...",
+        "browse": "Browse",
+        "supportsFormatPrefix": "Supported formats: ",
+        "supportsFormatSuffix": " (Max {maxSizeMB}MB, up to {maxDurationMinutes} minutes)",
+        "fileTooLarge": "Video file size cannot exceed {maxSizeMB}MB",
+        "unsupportedFormat": "Unsupported video format. Supported: {extensions}"
+      }
+    },
+    "detailEmpty": {
+      "error": {
+        "title": "Couldn't load this insight",
+        "description": "Something went wrong while loading. Check your connection and try again or go back to the list.",
+        "back": "Go back",
+        "retry": "Retry"
+      },
+      "notFound": {
+        "title": "Insight Not Found",
+        "description": "This insight does not exist or has expired.",
+        "back": "Go back"
+      },
+      "loading": {
+        "title": "Loading insight…",
+        "hint": "This should only take a moment.",
+        "back": "Go back"
+      }
+    },
+    "failedCard": {
+      "title": "Could not generate insights",
+      "description": "Something went wrong during this insight. Go back and try again.",
+      "back": "Back to list",
+      "manualDownload": {
+        "description": "Video processing failed. You can open this video link in a new tab; if you have the appropriate rights, save the video locally and continue analysis via local upload.",
+        "hint": "Use the save options available on that page, or your browser/system save shortcut."
+      }
+    },
+    "report": {
+      "title": "Insight report",
+      "writing": "Writing..."
+    },
+    "actions": {
+      "copy": "Copy",
+      "download": "Download",
+      "helpful": "Helpful",
+      "inaccurate": "Inaccurate",
+      "copySuccess": "Copied to clipboard",
+      "copyFailed": "Copy failed",
+      "downloadSuccess": "Download successful",
+      "feedbackThanks": "Thanks for your feedback!",
+      "feedbackFailed": "Failed to submit feedback. Please try again."
+    },
+    "info": {
+      "titleFallback": "Video insight",
+      "thumbnailAlt": "Video thumbnail",
+      "previewAria": "Video preview"
+    },
+    "chat": {
+      "thinking": "Thinking...",
+      "inputPlaceholder": "Ask questions about this video, let AI help you analyze...",
+      "toast": {
+        "quotaExceeded": "Your monthly AI conversation quota has been exceeded. Please try again next month or upgrade your plan.",
+        "quotaExceededAssistant": "Your monthly AI conversation quota has been exceeded. You can try again next month or upgrade your plan to get more quota.",
+        "replyFailed": "Failed to generate reply. Please try again.",
+        "replyFailedAssistant": "Generation failed. Please try again."
+      },
+      "suggestions": {
+        "viralElements": {
+          "label": "Viral elements",
+          "text": "Please analyze which viral elements in this video are most reusable."
+        },
+        "scriptRewrite": {
+          "label": "Script rewrite",
+          "text": "Based on this video's style, draft a similar script outline."
+        },
+        "improvements": {
+          "label": "Improvements",
+          "text": "What can be improved in this video?"
+        },
+        "followUpIdeas": {
+          "label": "Follow-up ideas",
+          "text": "Based on this video and report, suggest a few follow-up content directions I could explore in a similar style."
+        }
+      }
+    },
+    "demo": {
+      "title": "Demo Mode",
+      "description": "This is a demo video. To experience the full insight workflow, upload your own video or paste a video URL.",
+      "cta": "Start New Insight"
+    },
+    "previewCard": {
+      "localLabel": "Local",
+      "thumbnailAlt": "Video thumbnail",
+      "status": {
+        "uploading": "Uploading video...",
+        "starting": "Starting analysis...",
+        "ready": "Ready to analyze"
+      },
+      "button": {
+        "start": "Analyze Video",
+        "uploading": "Uploading...",
+        "starting": "Starting..."
+      }
+    },
+    "source": {
+      "upload": "Local Upload",
+      "local": "Local Upload",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "douyin": "Douyin",
+      "other": "Other"
+    },
+    "hooks": {
+      "chatLoadFailed": "Couldn't load messages. Try again.",
+      "chatSignInRequired": "Sign in to send messages.",
+      "chatSendFailed": "Couldn't send your message. Try again.",
+      "reportGeneratingElsewhere": "Report is being written in another session. It'll appear here when ready.",
+      "reportGenerationFailed": "Couldn't generate the insight report. Try again.",
+      "taskProgressListenFailed": "Lost connection to this task. Refresh the page or try again.",
+      "signInRequired": "Sign in to start an analysis.",
+      "videoUploadFailed": "Couldn't upload your video. Try again.",
+      "needFileOrUrl": "Add a video file or paste a link.",
+      "createTaskFailed": "Couldn't start this analysis. Try again.",
+      "reportNotReady": "This task isn't ready for a report yet.",
+      "connectionUnavailable": "Couldn't connect. Check your connection and try again.",
+      "taskNotFound": "This insight no longer exists or you don't have access.",
+      "taskLoadFailed": "Couldn't load this insight. Try again.",
+      "defaultVideoName": "{source} · Video"
+    },
+    "history": {
+      "newAnalysis": "New Insight",
+      "loadFailed": "Failed to load",
+      "loadFailedHint": "Check your connection and try again.",
+      "retry": "Retry",
+      "empty": "No insights yet",
+      "unnamed": "Untitled video",
+      "delete": "Delete",
+      "deleteDisabled": "Insight in progress — can't delete yet",
+      "dateGroup": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "thisWeek": "This week",
+        "thisMonth": "This month",
+        "earlier": "Earlier"
+      },
+      "status": {
+        "pending": "Pending",
+        "downloading": "Downloading",
+        "downloadFailed": "Download failed",
+        "processing": "Analyzing",
+        "generatingReport": "Writing report",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "toast": {
+        "notDeletable": "This task is still running and cannot be deleted yet.",
+        "deleted": "Insight deleted",
+        "deleteFailed": "Delete failed. Please try again."
+      },
+      "deleteDialog": {
+        "title": "Confirm delete",
+        "description": "Delete \"{name}\"? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      }
+    },
+    "chain": {
+      "header": {
+        "initializing": "Getting started",
+        "running": "Analyzing video",
+        "completed": "Insights ready",
+        "failed": "Could not generate insights",
+        "generatingReport": "Writing your report"
+      },
+      "steps": {
+        "videoPrep": {
+          "label": "Video preparation",
+          "running": "Fetching video content...",
+          "done": "Video ready",
+          "doneWithSize": "Video ready · {size}"
+        },
+        "speechRecognition": {
+          "label": "Speech analysis",
+          "running": "Transcribing audio...",
+          "done": "Speech transcription done"
+        },
+        "shotDetection": {
+          "label": "Visual analysis",
+          "running": "Analyzing visuals...",
+          "done": "Visual analysis done"
+        },
+        "contentAnalysis": {
+          "label": "Compiling insights",
+          "running": "Pulling it all together...",
+          "done": "Insights compiled"
+        }
+      },
+      "error": {
+        "title": "Could not generate insights",
+        "description": "Something went wrong during insight generation. Please go back and try again."
+      },
+      "reportGenerating": {
+        "title": "Writing your report",
+        "description": "Writing your insight report..."
+      },
+      "progressMessages": {
+        "preparingAnalysis": "Preparing...",
+        "downloadingVideo": "Downloading video...",
+        "generatingReport": "Insights ready, writing report..."
+      }
+    },
+    "progress": {
+      "overall": {
+        "downloadingTitle": "Downloading video",
+        "analysisTitle": "Video insight",
+        "downloadProgress": "Download progress",
+        "analysisSteps": "Insight steps"
+      },
+      "stages": {
+        "linkParsing": "Parsing video link",
+        "videoDownload": "Downloading video",
+        "shotDetection": "Scene detection",
+        "speechRecognition": "Speech recognition",
+        "contentAnalysis": "Content analysis"
+      },
+      "status": {
+        "downloadFailed": "Download failed",
+        "analysisFailed": "Insight generation failed",
+        "readyTitle": "Insight ready",
+        "readyDesc": "Generating a detailed report...",
+        "completedTitle": "Report generated",
+        "completedDesc": "Your video insight report is ready"
+      }
+    }
+  },
+  "appSidebar": {
+    "nav": {
+      "home": "Home",
+      "projects": "Projects",
+      "create": "Create",
+      "analyze": "Analyze"
+    }
+  },
+  "appFeatures": {
+    "feature": "Feature",
+    "back": "Back",
+    "failedToUpdateName": "Failed to update name",
+    "failedToSignOut": "Failed to sign out. Please try again.",
+    "profile": "Profile",
+    "subscription": "Subscription",
+    "signOut": "Sign out"
+  },
+  "projectsPage": {
+    "loadFailed": "Failed to load projects. Please try again later.",
+    "loadMore": "Load more",
+    "loadingMore": "Loading...",
+    "toast": {
+      "projectDeleted": "Project deleted.",
+      "projectDeleteFailed": "Failed to delete project."
+    }
+  },
+  "projectStatus": {
+    "pending": "Pending",
+    "processing": "Processing",
+    "completed": "Completed",
+    "failed": "Failed",
+    "draft": "Draft"
+  },
+  "projectCard": {
+    "thumbnailAlt": "Project thumbnail",
+    "untitled": "Untitled Project",
+    "a11y": {
+      "moreActions": "More actions"
+    },
+    "actions": {
+      "download": "Download",
+      "delete": "Delete"
+    },
+    "toast": {
+      "downloaded": "Downloaded",
+      "openedInNewTab": "Couldn't download directly. The file opened in a new tab — save it from there.",
+      "downloadFailed": "Download failed"
+    },
+    "type": {
+      "urlToVideo": "URL to Video",
+      "productVideo": "Product Video",
+      "productPhoto": "Product Photo",
+      "videoGenerator": "Video",
+      "imageGenerator": "Image",
+      "genVideo": "Video",
+      "genImage": "Image"
+    }
+  },
+  "projectLibrary": {
+    "title": "My Projects",
+    "projectCount": "{count} {unit} total",
+    "projectUnit": {
+      "one": "project",
+      "other": "projects"
+    },
+    "createNew": "New Project",
+    "searchPlaceholder": "Search projects...",
+    "view": {
+      "grid": "Grid view",
+      "list": "List view"
+    },
+    "thumbnailAlt": "Project thumbnail",
+    "untitled": "Untitled Project",
+    "empty": {
+      "noProjectsTitle": "No projects yet",
+      "noProjectsDesc": "Create your first project to get started.",
+      "noMatchTitle": "No matching projects",
+      "noMatchDesc": "Try adjusting your search criteria.",
+      "clearSearch": "Clear Search"
+    },
+    "list": {
+      "header": {
+        "project": "Project",
+        "status": "Status",
+        "duration": "Duration",
+        "created": "Created"
+      },
+      "actions": {
+        "continueEditing": "Continue editing",
+        "viewDetails": "View details",
+        "download": "Download",
+        "delete": "Delete"
+      }
+    }
+  },
+  "projectDetail": {
+    "untitled": "Untitled Project",
+    "toast": {
+      "renameFailed": "Failed to rename project.",
+      "projectDeleted": "Project deleted.",
+      "projectDeleteFailed": "Failed to delete project.",
+      "imageDownloaded": "Image downloaded.",
+      "imageDownloadFailed": "Failed to download image.",
+      "imageOpenedInNewTab": "Couldn't download directly. The image opened in a new tab — save it from there (for example, right-click → Save image as).",
+      "videoDownloaded": "Video downloaded.",
+      "videoDownloadFailed": "Failed to download video.",
+      "videoOpenedInNewTab": "Couldn't download directly. The video opened in a new tab — use your browser's menu to save the file.",
+      "ratingMarkedHelpful": "Marked as helpful.",
+      "ratingFeedbackSaved": "Feedback saved.",
+      "ratingCleared": "Feedback removed.",
+      "ratingFailed": "Couldn't save feedback. Please try again."
+    },
+    "failed": {
+      "title": "Generation Failed",
+      "description": "Something went wrong while generating your video.",
+      "retry": "Try Again"
+    },
+    "processing": {
+      "title": "Rendering video...",
+      "description": "This usually takes a few minutes. Thanks for your patience."
+    },
+    "actions": {
+      "delete": "Delete"
+    },
+    "a11y": {
+      "backToProjects": "Back to projects",
+      "renameProject": "Rename project",
+      "rateHelpful": "Mark project as helpful",
+      "rateNotHelpful": "Mark project as not helpful",
+      "downloadMedia": "Download generated media",
+      "moreActions": "More actions",
+      "videoSeek": "Seek video playback position",
+      "videoPlay": "Play video",
+      "videoPause": "Pause video",
+      "videoMute": "Mute video",
+      "videoUnmute": "Unmute video",
+      "videoEnterFullscreen": "Enter fullscreen"
+    }
+  },
+  "studio": {
+    "galleryHeading": "Gallery",
+    "galleryEmpty": "Empty",
+    "generatorTab": "Generator",
+    "resultsTab": "Results",
+    "generatorAriaLabel": "Generator settings",
+    "generatorResultsTabListAriaLabel": "Generator and results",
+    "resultsAriaLabel": "Results",
+    "resultsCountAriaLabel": "Results ({count})",
+    "hooks": {
+      "capabilitiesLoadFailed": "Couldn't load models. Try again."
+    }
+  },
+  "imageGenerator": {
+    "settingsNotAvailable": "Settings not available",
+    "settingsNotAvailableDesc": "Unable to get generator settings",
+    "promptRequired": "Prompt required",
+    "promptRequiredDesc": "Please enter a prompt to generate an image",
+    "refImageRequired": "Reference image required",
+    "refImageRequiredDesc": "Please upload a reference image for image-to-image generation",
+    "authRequired": "Authentication required",
+    "authRequiredDesc": "Please log in to generate images",
+    "generationStarted": "Generation started",
+    "generatingImages": "Generating {count} images...",
+    "yourImageGenerating": "Your image is being generated...",
+    "generationFailed": "Generation failed",
+    "settingsReusedToEditor": "Settings loaded in the editor"
+  },
+  "videoGenerator": {
+    "settingsNotAvailable": "Settings not available",
+    "settingsNotAvailableDesc": "Unable to get generator settings",
+    "promptRequired": "Prompt required",
+    "promptRequiredDesc": "Please enter a prompt to generate a video",
+    "imageRequired": "Image required",
+    "imageRequiredDesc": "Please upload an image for image-to-video generation",
+    "sourceVideoRequired": "Source video required",
+    "sourceVideoRequiredDesc": "Please upload a source video",
+    "authRequired": "Authentication required",
+    "authRequiredDesc": "Please log in to generate videos",
+    "generationStarted": "Generation started",
+    "yourVideoGenerating": "Your video is being generated...",
+    "generationFailed": "Generation failed",
+    "settingsReusedToEditor": "Settings loaded in the editor"
+  },
+  "productPhoto": {
+    "settingsNotAvailable": "Settings unavailable right now.",
+    "uploadRequired": "Please upload a product image first.",
+    "authRequired": "Please sign in to continue.",
+    "imageProcessFailed": "Failed to process uploaded image.",
+    "defaultPrompt": "Create a polished product photo",
+    "generationStarted": "Submitted",
+    "generationStartedDesc": "Your image will show up in Results when it's ready.",
+    "generationFailed": "Couldn't finish",
+    "tryAgain": "Please try again.",
+    "imageNotAvailable": "Image not available yet.",
+    "imageDownloaded": "Image downloaded",
+    "imageDownloadFailed": "Failed to download image",
+    "imageNotFound": "We couldn't find that image.",
+    "emptyTitle": "Create polished, watermark-free product photos instantly",
+    "emptyDescription": "Upload a product image, choose a style, and quickly get visuals ready for your store and ad campaigns.",
+    "emptyPosterAlt": "Product photo feature preview",
+    "generatorAriaLabel": "Creation panel settings",
+    "generatorResultsTabListAriaLabel": "Create and results",
+    "generatorTab": "Create",
+    "resultsAriaLabel": "Results",
+    "resultsCountAriaLabel": "Results ({count})",
+    "resultsTab": "Results",
+    "deleteSucceeded": "Deleted",
+    "deleteSucceededDesc": "Removed from your results.",
+    "deleteFailed": "Couldn't delete",
+    "deleteFailedTryAgain": "Please try again."
+  },
+  "productVideo": {
+    "settingsNotAvailable": "Settings unavailable right now.",
+    "uploadRequired": "Please upload a start frame image first.",
+    "authRequired": "Please sign in to continue.",
+    "imageProcessFailed": "Failed to process uploaded image.",
+    "defaultPrompt": "Create a polished product video",
+    "generationStarted": "Submitted",
+    "generationStartedDesc": "Your video will show up in Results when it's ready.",
+    "generationFailed": "Couldn't finish",
+    "tryAgain": "Please try again.",
+    "videoNotAvailable": "Video not available yet.",
+    "videoDownloaded": "Video downloaded",
+    "videoDownloadFailed": "Failed to download video",
+    "videoNotFound": "We couldn't find that video.",
+    "emptyTitle": "Create professional, watermark-free video ads instantly",
+    "emptyDescription": "Upload a start frame and choose a model to quickly generate a finished video; results appear here, ready for storefronts and ad campaigns.",
+    "emptyPosterAlt": "Product video feature preview",
+    "generatorAriaLabel": "Creation panel settings",
+    "generatorResultsTabListAriaLabel": "Create and results",
+    "generatorTab": "Create",
+    "resultsAriaLabel": "Results",
+    "resultsCountAriaLabel": "Results ({count})",
+    "resultsTab": "Results",
+    "deleteSucceeded": "Deleted",
+    "deleteSucceededDesc": "Removed from your results.",
+    "deleteFailed": "Couldn't delete",
+    "deleteFailedTryAgain": "Please try again."
+  },
+  "urlToVideo": {
+    "title": "From Product Link to",
+    "titleHighlight": "Video Ad",
+    "subtitle": "Paste any product URL — we'll script, design, and edit a ready-to-use video ad in minutes.",
+    "urlPlaceholder": "Paste your product URL here...",
+    "analyzeUrl": "Analyze URL",
+    "extracting": "Preparing your product details...",
+    "tryExample": "Try with an example:",
+    "exampleAmazon": "Amazon Product",
+    "exampleShopify": "Shopify Store",
+    "exampleEbay": "eBay Listing",
+    "platformsNote": "Supports major e-commerce platforms",
+    "andMore": "& more",
+    "platformAmazon": "Amazon",
+    "platformShopify": "Shopify",
+    "platformEbay": "eBay",
+    "platformAlibaba": "Alibaba",
+    "enterUrl": "Paste a product page URL to continue.",
+    "validUrl": "Enter a valid URL (including https://).",
+    "extractedProductDemoAlt": "Product image extracted from URL (interface preview)",
+    "sceneStripFrameAlt": "Video scene frame {index}",
+    "productDetails": "Product Details",
+    "productName": "Product Name",
+    "productNamePlaceholder": "e.g. Acme Wireless Earbuds Pro",
+    "productDescription": "Description",
+    "productDescriptionPlaceholder": "What it is, who it's for, and what sets it apart…",
+    "productKeyPoints": "Key Selling Points",
+    "productKeyPointsPlaceholder": "Bullet-style benefits — one idea per line or short paragraphs.",
+    "productCopyRequired": "Add a description or key selling points before continuing.",
+    "targetAudience": "Target Audience",
+    "addAudience": "Add audience...",
+    "assets": "Assets",
+    "unselectAll": "Unselect All",
+    "selectAll": "Select All",
+    "upload": "Upload",
+    "clipCount": "{count} clips",
+    "toggleMediaSelection": "Select or unselect {name}",
+    "mediaItemFallbackName": "this media item",
+    "videoSettings": "Video Settings",
+    "aspectRatioLabel": "Aspect ratio",
+    "durationLabel": "Duration",
+    "languageLabel": "Language",
+    "uploadingMedia": "Uploading…",
+    "mediaAltFallback": "Product media",
+    "back": "Back",
+    "next": "Next",
+    "generating": "Generating...",
+    "selectPromptTitle": "Choose Your Video Script",
+    "selectPromptSubtitle": "Pick a suggested AI script, or write your own.",
+    "scriptSourceTabsAriaLabel": "Script source",
+    "tabAiGenerated": "AI Scripts",
+    "tabCustomPrompt": "Write Your Own",
+    "noPrompts": "We couldn't create script options this time. Go back and try again.",
+    "editPromptPlaceholder": "Edit this script…",
+    "charCount": "{current}/{max} characters",
+    "enhancePrompt": "Improve",
+    "generateMore": "{count, plural, one {Generate one more script} other {Generate # more scripts}}",
+    "customPromptPlaceholder": "Describe the video you want (up to {max} characters).",
+    "customPromptTitle": "Custom Script",
+    "signInRequired": "Please sign in to generate scripts.",
+    "generatePromptsFailed": "Couldn't create script options. Please try again.",
+    "selectPromptFirst": "Select a script to continue.",
+    "promptCannotBeEmpty": "This script is empty. Add content before continuing.",
+    "customPromptRequired": "Write a custom script before continuing.",
+    "noImagesSelected": "Select at least one product image to continue.",
+    "noImagesSelectedScriptStep": "No product images are available for this video. Please go back to the previous step, select at least one image, then return here.",
+    "startGenerationFailed": "Couldn't start your video yet. Please try again.",
+    "generateVideo": "Render Video",
+    "submitting": "Submitting...",
+    "estimatedCreditsHint": "This render will use {credits} credits.",
+    "processing": "Processing...",
+    "loadingAnalyzing": "Getting your product ready...",
+    "loadingExtracting": "Gathering key details and images for your video",
+    "loadingScripts": "Creating script options for you...",
+    "loadingScriptsSub": "You can pick one and edit it before generating",
+    "loadingProject": "Setting up your video project...",
+    "loadingProjectSub": "Almost there - preparing the final settings",
+    "loadingRestoring": "Bringing your progress back...",
+    "draftCreateFailedContinueLocal": "We couldn't save your draft yet. You can keep going and we'll retry automatically.",
+    "loadingDefault": "Getting everything ready...",
+    "estRemaining": "About {seconds}s left",
+    "almostDone": "Almost done",
+    "stepMayTake": "Usually takes up to {seconds}s",
+    "errorAuthRequired": "Please sign in and try again.",
+    "errorInvalidProductUrl": "We couldn't use this link. Make sure it's a public product page and try again.",
+    "errorRequestTimedOut": "This step is taking longer than usual. Please try again.",
+    "errorFetchProductDetailsFailed": "We couldn't read enough product info from this page. Try another product link.",
+    "errorExtractProductInfoFailed": "We couldn't prepare this product for video. Please try again.",
+    "errorServiceUnavailable": "We're having trouble right now. Please try again in a moment.",
+    "errorExtractProductInfoFallback": "We couldn't use this link yet. Please check it and try again."
+  },
+  "marketingUrlToVideo": {
+    "meta": {
+      "title": "URL to Video - Turn Product Links into AI Videos",
+      "description": "Paste any product URL and App Template turns it into a professional AI-generated video ad in minutes — built for e-commerce, social media, and product showcases."
+    },
+    "hero": {
+      "title": "URL to Video <highlight>Ad Maker</highlight>",
+      "subtitle": "Drop a URL & Get a Video for Free. It's That Simple!",
+      "urlPlaceholder": "Paste your product URL here...",
+      "submitDefault": "Create Video",
+      "submitLoading": "Continue",
+      "authHint": "Not signed in? We'll ask you to log in before continuing.",
+      "supportsLabel": "App Template Supports",
+      "posterAlt": "URL to Video feature preview",
+      "errors": {
+        "emptyUrl": "Please enter a product URL.",
+        "invalidUrl": "Please enter a valid URL."
+      }
+    },
+    "featuresSection": {
+      "heading": "URL to Video Maker Features",
+      "subheading": "Everything you need to create professional product videos in minutes",
+      "cards": {
+        "smartProductUnderstanding": {
+          "title": "Smart Product Understanding",
+          "description": "App Template understands your product page structure and turns raw listing content into clear product context for video generation."
+        },
+        "scriptAngles": {
+          "title": "Script Angles That Convert",
+          "description": "Generate ad-ready script directions based on product info, then refine messaging before you render the final video."
+        },
+        "multiPlatformSupport": {
+          "title": "Multi-Platform Support",
+          "description": "Use product links from Amazon, Shopify, eBay, WordPress, App Store, Google Play, and more with consistent extraction quality across platforms."
+        }
+      }
+    },
+    "howItWorksSection": {
+      "heading": "Create Videos in 3 Simple Steps",
+      "subheading": "Extract product context, refine script direction, and export a ready-to-publish video.",
+      "stepLabel": "Step {number}",
+      "steps": {
+        "step1": {
+          "title": "Paste Product URL",
+          "description": "Drop an e-commerce product link and App Template extracts product details, selling points, and available media."
+        },
+        "step2": {
+          "title": "Refine Script Direction",
+          "description": "Review generated script angles and adjust messaging so the final video matches your product and audience."
+        },
+        "step3": {
+          "title": "Generate and Export",
+          "description": "Render a polished product video with your chosen format and settings, then export and publish fast."
+        }
+      }
+    },
+    "faqSection": {
+      "heading": "Frequently Asked Questions",
+      "subheading": "Key questions before your first URL-to-video conversion.",
+      "items": {
+        "q1": {
+          "question": "What types of product URLs are supported?",
+          "answer": "We support major e-commerce URLs including Amazon, Shopify, eBay, WordPress, App Store, Google Play, and more. Paste your product link and App Template will extract product details and available media automatically."
+        },
+        "q2": {
+          "question": "How long does it take to produce a video?",
+          "answer": "Most videos are ready in a few minutes, depending on media quality, script complexity, and output settings."
+        },
+        "q3": {
+          "question": "Can I customize the output before exporting?",
+          "answer": "Yes. You can refine script direction, adjust visual style, and tune output settings like format and duration before final export."
+        },
+        "q4": {
+          "question": "What video formats and resolutions are available?",
+          "answer": "Videos are exported in MP4 and support common aspect ratios like 16:9, 9:16, and 1:1 for cross-platform publishing."
+        },
+        "q5": {
+          "question": "Is there a limit to how many videos I can create?",
+          "answer": "The number of videos depends on your subscription plan. Free users get 3 videos per month, while paid plans offer 20 to unlimited videos. Check our pricing page for details."
+        },
+        "q6": {
+          "question": "Can I use the videos for commercial purposes?",
+          "answer": "Yes, you can use videos for ads and product marketing. Please make sure your source assets and product materials have the appropriate usage rights."
+        }
+      }
+    },
+    "ctaSection": {
+      "heading": "Paste a link. Get a campaign-ready video.",
+      "subheading": "Launch high-converting product videos faster with AI-powered creation built for e-commerce teams.",
+      "primaryCta": "Get Started Free",
+      "secondaryCta": "View Pricing"
+    }
+  },
+  "marketingVideoInsight": {
+    "meta": {
+      "title": "Video Insight - Decode Viral Videos for Winning Ads",
+      "description": "App Template Video Insight analyzes any top-performing video into reusable hook, structure, and script insights you can apply to your own ad creatives."
+    },
+    "hero": {
+      "title": "Turn Viral Videos into <highlight>Actionable Insights</highlight>",
+      "subtitle": "Break down winning video patterns, extract script logic, and apply them to your next ad in minutes.",
+      "urlPlaceholder": "Paste a video URL (TikTok, YouTube, Instagram Reels...)",
+      "submitDefault": "Get Insights",
+      "supportsNote": "Supports TikTok, YouTube, Instagram Reels, and direct uploads.",
+      "tryFree": "Try it free",
+      "platformsLabel": "Supported Sources",
+      "previewAlt": "Video Insight analysis preview",
+      "scoreLabel": "Creative Score: 8.5/10",
+      "scoreItems": {
+        "hookStrength": "Hook Strength",
+        "storytelling": "Storytelling",
+        "ctaClarity": "CTA Clarity"
+      },
+      "scriptCardLabel": "Extracted Script Pattern",
+      "scriptCardText": "\"Stop scrolling. Here's the one thing that changed my routine in 7 days...\"",
+      "errors": {
+        "emptyUrl": "Please enter a video URL.",
+        "invalidUrl": "Please enter a valid URL."
+      }
+    },
+    "featuresSection": {
+      "heading": "Decode What Makes Winning Video Ads Work",
+      "subheading": "Analyze hooks, scripts, and performance signals you can reuse.",
+      "cards": {
+        "hookAndStructure": {
+          "title": "Hook Pattern Mapping",
+          "description": "Map opening hooks, scene progression, and pacing shifts into a reusable structure you can apply to new ad concepts."
+        },
+        "scriptExtraction": {
+          "title": "Script & Caption Blueprint",
+          "description": "Turn spoken lines and on-screen text into editable script blueprints for faster rewrite and adaptation."
+        },
+        "creativeScorecard": {
+          "title": "Creative Performance Scorecard",
+          "description": "Score hook strength, narrative clarity, and CTA impact with prioritized recommendations for the next iteration."
+        }
+      }
+    },
+    "howItWorksSection": {
+      "heading": "Apply Viral Patterns in 3 Practical Steps",
+      "subheading": "Paste a source video, extract reusable insights, then turn them into your next ad direction.",
+      "stepLabel": "Step {number}",
+      "steps": {
+        "step1": {
+          "title": "Paste Source Video URL",
+          "description": "Add a TikTok, Shorts, or Reels link to ingest the source creative and start analysis instantly."
+        },
+        "step2": {
+          "title": "Extract Patterns & Script Signals",
+          "description": "Break down hook structure, pacing shifts, and caption/script elements into reusable creative patterns."
+        },
+        "step3": {
+          "title": "Turn Insights into Your Next Ad",
+          "description": "Convert extracted patterns into a clearer ad brief and direction for your next creative iteration."
+        }
+      }
+    },
+    "faqSection": {
+      "heading": "Frequently Asked Questions",
+      "subheading": "Key questions about getting the most from Video Insight.",
+      "items": {
+        "q1": {
+          "question": "Which platforms are supported?",
+          "answer": "You can analyze videos from TikTok, YouTube, and Instagram Reels, and also upload local video files for analysis."
+        },
+        "q2": {
+          "question": "How accurate is script extraction?",
+          "answer": "Extraction combines speech and visual text recognition to produce high-quality script references for creative analysis."
+        },
+        "q3": {
+          "question": "Can I reuse these insights in my own ads?",
+          "answer": "Yes. The workflow is designed to help you adapt patterns and direction into original ad creatives for your products."
+        },
+        "q4": {
+          "question": "How long does analysis take?",
+          "answer": "Most videos are processed within 30 to 60 seconds. Longer assets may take up to a few minutes."
+        },
+        "q5": {
+          "question": "Can I directly copy analyzed scripts?",
+          "answer": "Video Insight is intended for learning and adaptation. You should produce original creatives instead of copying source content directly."
+        }
+      }
+    },
+    "ctaSection": {
+      "heading": "Turn viral videos into your next winning creative.",
+      "subheading": "Start free and turn top-performing videos into clearer ad decisions for your team.",
+      "primaryCta": "Get Started Free",
+      "secondaryCta": "View Pricing"
+    }
+  },
+  "marketingProductVideo": {
+    "meta": {
+      "title": "Product Video Generator - Studio-Ready, Fast",
+      "description": "Turn a single product image into polished marketing videos with App Template's AI motion, flexible style controls, and fast export."
+    },
+    "hero": {
+      "title": "Create <highlight>Stunning</highlight> Product Videos at Lower Cost",
+      "subtitle": "Turn your product assets into campaign-ready videos with controllable motion and consistent brand quality.",
+      "primaryCta": "Start Product Video",
+      "secondaryCta": "View Pricing",
+      "hint": "No editing software required. Start free and export fast.",
+      "previewAlt": "Product Video feature preview"
+    },
+    "featuresSection": {
+      "heading": "Purpose-Built Workflows for Product Video",
+      "subheading": "Uses preset scenes and templates to deliver higher quality, better control, and faster output.",
+      "cards": {
+        "motionReady": {
+          "title": "Preset Scene Starters",
+          "description": "Start from built-in product-video scenes so your output begins with ad-friendly structure instead of a blank setup."
+        },
+        "styleControl": {
+          "title": "Template-Level Control",
+          "description": "Use guided controls on templates to tune motion direction, style behavior, and ratio with more predictable results."
+        },
+        "exportReady": {
+          "title": "Higher-Quality Output, Faster",
+          "description": "Produce campaign-ready product videos with less trial-and-error and faster turnaround than general-purpose generation flows."
+        }
+      }
+    },
+    "howItWorksSection": {
+      "heading": "Create Product Videos in 3 Steps",
+      "subheading": "From product assets to launch-ready videos with speed, control, and consistent quality.",
+      "stepLabel": "Step {number}",
+      "steps": {
+        "step1": {
+          "title": "Add Product Assets",
+          "description": "Import product inputs (image, key frame, or supported sources) to define subject and scene context."
+        },
+        "step2": {
+          "title": "Set Motion and Style",
+          "description": "Choose model, aspect ratio, and motion direction to match each channel and campaign goal."
+        },
+        "step3": {
+          "title": "Generate and Publish",
+          "description": "Render your video and export a ready-to-publish asset for storefronts, ads, and social."
+        }
+      }
+    },
+    "faqSection": {
+      "heading": "Frequently Asked Questions",
+      "subheading": "Key questions before your first product video run.",
+      "items": {
+        "q1": {
+          "question": "What input do I need to start?",
+          "answer": "A clear product image is enough to begin. You can then define motion and output settings."
+        },
+        "q2": {
+          "question": "Can I control video aspect ratios?",
+          "answer": "Yes. You can generate outputs for common formats like 16:9, 9:16, and 1:1."
+        },
+        "q3": {
+          "question": "How long does generation usually take?",
+          "answer": "Most product videos are generated within a few minutes, depending on model and settings."
+        },
+        "q4": {
+          "question": "Can I use outputs for commercial campaigns?",
+          "answer": "Yes. Please ensure your uploaded product assets have the appropriate usage rights."
+        },
+        "q5": {
+          "question": "Do I need editing experience?",
+          "answer": "No. The workflow is designed for marketers to produce strong outputs without complex editing tools."
+        }
+      }
+    },
+    "ctaSection": {
+      "heading": "From product assets to launch-ready video — no editing needed.",
+      "subheading": "Start free and create campaign-ready product videos in minutes.",
+      "primaryCta": "Get Started Free",
+      "secondaryCta": "View Pricing"
+    }
+  },
+  "marketingProductPhoto": {
+    "meta": {
+      "title": "Product Photo - AI-Generated Ad-Ready Product Images",
+      "description": "Create clean, brand-fit product photos from a single upload with App Template's AI style controls, scene presets, and fast export."
+    },
+    "hero": {
+      "title": "Studio-Quality Product Photos, <highlight>In Seconds</highlight>",
+      "subtitle": "Upload a photo, pick your style — get ad-ready visuals for every channel, no studio needed.",
+      "primaryCta": "Start Free",
+      "secondaryCta": "Go to Product Photo",
+      "hint": "One upload. Multiple polished visuals. No studio needed.",
+      "previewAlt": "Product Photo feature preview"
+    },
+    "featuresSection": {
+      "heading": "The Fastest Way to Ad-Ready Product Photos",
+      "subheading": "One upload, multiple polished visuals — ready for every channel.",
+      "cards": {
+        "studioQuality": {
+          "title": "Studio Polish, Zero Setup",
+          "description": "Clean backgrounds, sharp details, and balanced lighting — every output comes out ad-ready."
+        },
+        "styleControl": {
+          "title": "Your Style, Your Scene",
+          "description": "Switch between studio, outdoor, luxury, and more — every output fits your brand and channel."
+        },
+        "campaignReady": {
+          "title": "One Upload, Multiple Looks",
+          "description": "From one photo, get ad, social, and storefront-ready visuals — no repeat work."
+        }
+      }
+    },
+    "howItWorksSection": {
+      "heading": "Studio-Quality Photos in 3 Simple Steps",
+      "subheading": "From raw product input to polished visuals — fast, consistent, and channel-ready.",
+      "stepLabel": "Step {number}",
+      "steps": {
+        "step1": {
+          "title": "Upload Product Input",
+          "description": "Start with any clear product image, cutout, or packshot — no studio setup or pro gear required."
+        },
+        "step2": {
+          "title": "Set Style and Scene",
+          "description": "Pick a style preset or customize your own — studio, outdoor, luxury, and more."
+        },
+        "step3": {
+          "title": "Export and Publish",
+          "description": "Download polished visuals ready for storefronts, ads, and social content."
+        }
+      }
+    },
+    "faqSection": {
+      "heading": "Frequently Asked Questions",
+      "subheading": "Common questions about Product Photo.",
+      "items": {
+        "q1": {
+          "question": "Do I need a professional source image?",
+          "answer": "No. A clear product photo is all you need — no studio lighting or professional equipment required."
+        },
+        "q2": {
+          "question": "Can I get multiple styles from one upload?",
+          "answer": "Yes. Swap style presets to produce multiple visual directions from the same photo in seconds."
+        },
+        "q3": {
+          "question": "How fast can I get results?",
+          "answer": "Most results are ready in seconds. Exact timing may vary by style and output settings."
+        },
+        "q4": {
+          "question": "Are outputs suitable for paid ads?",
+          "answer": "Yes. Outputs are designed for campaign usage across ad and commerce channels."
+        },
+        "q5": {
+          "question": "Can I use these images commercially?",
+          "answer": "Yes, as long as your source materials and product assets have proper commercial rights."
+        }
+      }
+    },
+    "ctaSection": {
+      "heading": "Studio-quality product photos. No photographer, no studio.",
+      "subheading": "Start free and get polished product photos in seconds.",
+      "primaryCta": "Get Started Free",
+      "secondaryCta": "View Pricing"
+    }
+  },
+  "productPhotoPanel": {
+    "invalidImageFile": "Please upload a valid image file.",
+    "imageTooLarge": "Image must be smaller than {max} MB.",
+    "selectModelFirst": "Please select a model first.",
+    "uploadImageFirst": "Please upload a product image first.",
+    "uploadFailed": "Upload failed. Please try again.",
+    "uploadTitle": "Upload a Product Image",
+    "uploadProductImageAria": "Upload product image",
+    "uploadedProductAlt": "Uploaded product",
+    "tips": "Tips",
+    "tipsAria": "Open product photo tips",
+    "tipsTitle": "Upload tips",
+    "tipsDoTitle": "Recommended",
+    "tipsDoItem1": "Solid and clean background",
+    "tipsDoItem2": "Sharp focus on product",
+    "tipsDontTitle": "Avoid",
+    "tipsDontItem1": "People or hands in frame",
+    "tipsDontItem2": "Blur or motion blur",
+    "tipsDontItem3": "Cropped product edges",
+    "tipsDontItem4": "Out-of-focus subject",
+    "replacing": "Replacing...",
+    "uploaded": "Uploaded",
+    "removeUploadedImageAria": "Remove uploaded image",
+    "clickToReplace": "Click to replace image",
+    "supportedFormats": "Supported: JPG, PNG, WebP",
+    "clickOrDrop": "Click or drop to upload",
+    "uploadLimit": "Upload image up to {max} MB",
+    "dropToUpload": "Drop image to upload",
+    "samples": "Samples",
+    "useSampleImageAria": "Use sample image {index}",
+    "sampleImageAlt": "Sample image {index}",
+    "presetsAria": "Preset style options",
+    "presetAriaLabel": "Preset: {label}",
+    "presetLabels": {
+      "auto-match": "Auto match",
+      "studio": "Studio",
+      "white": "White",
+      "outdoor": "Outdoor",
+      "luxury": "Luxury",
+      "cozy": "Cozy",
+      "beauty": "Beauty",
+      "romantic": "Romantic",
+      "flat-lay": "Flat lay",
+      "industrial": "Industrial",
+      "modern": "Modern"
+    },
+    "appearanceTitle": "Scene style",
+    "defaultAutoMatch": "(Auto match by default)",
+    "describeProductAria": "Describe product",
+    "optional": "(Optional)",
+    "presets": "Presets",
+    "additionalDescription": "Additional description",
+    "copyAdditionalDescription": "Copy additional description",
+    "additionalDescriptionPlaceholder": "Add scene, background, lighting, or style details...",
+    "demoDescription": "Soft golden-hour light, polished marble surface, subtle reflection, shallow depth of field.",
+    "morePresets": "More",
+    "collapse": "Collapse",
+    "advancedSettings": "Advanced settings",
+    "modelLabel": "Model",
+    "generatingAria": "Generating image",
+    "uploadingAria": "Uploading reference image",
+    "submittingAria": "Submitting request",
+    "generateAria": "Generate product image",
+    "generating": "Generating...",
+    "uploading": "Uploading...",
+    "submitting": "Submitting...",
+    "generate": "Generate",
+    "poweredBy": "Powered by a state-of-the-art image model"
+  },
+  "productVideoPanel": {
+    "invalidImageFile": "Please upload a valid image file.",
+    "imageTooLarge": "Image must be smaller than {max} MB.",
+    "selectModelFirst": "Please select a model first.",
+    "uploadImageFirst": "Please upload a start frame image first.",
+    "uploadFailed": "Upload failed. Please try again.",
+    "uploadTitle": "Upload a Key Frame",
+    "uploadStartFrameAria": "Upload start frame image",
+    "uploadedStartFrameAlt": "Uploaded start frame",
+    "tips": "Tips",
+    "tipsAria": "Open key frame tips",
+    "tipsTitle": "Key frame tips",
+    "tipsDoTitle": "Recommended",
+    "tipsDoItem1": "Product clearly visible and near the center",
+    "tipsDoItem2": "Stable angle and even, clean lighting",
+    "tipsDontTitle": "Avoid",
+    "tipsDontItem1": "Extreme wide angle or heavy distortion",
+    "tipsDontItem2": "Blur, shake, or soft focus on the product",
+    "tipsDontItem3": "Hands or people as the main subject",
+    "tipsDontItem4": "Busy backgrounds that compete with the product",
+    "replacing": "Replacing...",
+    "uploaded": "Uploaded",
+    "removeUploadedImageAria": "Remove uploaded image",
+    "clickToReplace": "Click to replace frame",
+    "bestPractice": "Best: clear subject + stable angle",
+    "clickOrDrop": "Click or drop a key frame",
+    "uploadLimit": "Upload image up to {max} MB",
+    "dropToUpload": "Drop frame to upload",
+    "sampleFrames": "Sample frames",
+    "useSampleFrameAria": "Use sample frame {index}",
+    "sampleFrameAlt": "Sample frame {index}",
+    "presetsAria": "Preset motion options",
+    "presetAriaLabel": "Preset: {label}",
+    "presetLabels": {
+      "auto-match": "Auto match",
+      "glide-left": "Glide Left",
+      "glide-right": "Glide Right",
+      "zoom-in": "Zoom In",
+      "zoom-out": "Zoom Out",
+      "orbit": "Orbit",
+      "turntable": "360° Spin",
+      "close-up-glide": "Close-up Glide",
+      "crane-down": "Crane Down"
+    },
+    "optional": "(Optional)",
+    "motionStyleTitle": "Motion style",
+    "motionStyleInputModeAria": "Motion prompt input",
+    "defaultAutoMatch": "(Auto match by default)",
+    "presets": "Presets",
+    "prompt": "Prompt",
+    "additionalDescription": "Additional description",
+    "copyAdditionalDescription": "Copy additional description",
+    "additionalDescriptionPlaceholder": "e.g. warm studio lighting, wooden table, blurred background...",
+    "collapse": "Collapse",
+    "advancedSettings": "Advanced settings",
+    "modelLabel": "Model",
+    "generateAudioLabel": "Audio",
+    "generateAudioAria": "Toggle generated audio",
+    "generatingAria": "Generating video",
+    "uploadingAria": "Uploading key frame image",
+    "submittingAria": "Submitting request",
+    "generateAria": "Generate product video",
+    "generating": "Generating...",
+    "uploading": "Uploading...",
+    "submitting": "Submitting...",
+    "generate": "Generate",
+    "motionPreviewAlt": "Motion and style preview with selected product framing"
+  },
+  "productResultsPanel": {
+    "typeAll": "All",
+    "typeProductShot": "Product Shot",
+    "typeProductVideo": "Product Video",
+    "typeModelShowcase": "Model Showcase",
+    "typeTalkingVideo": "Talking Video",
+    "filterByTypeAria": "Filter by type",
+    "downloadResultAria": "Download result",
+    "moreActionsAria": "More actions",
+    "resultThumbnailAlt": "Result thumbnail",
+    "download": "Download",
+    "copyPrompt": "Copy Prompt",
+    "reuseSettings": "Reuse settings",
+    "clipboardUnavailable": "Clipboard API not available",
+    "promptCopied": "Prompt copied to clipboard",
+    "failedToCopyPrompt": "Failed to copy prompt",
+    "delete": "Delete",
+    "generatingPhoto": "Capturing your shot",
+    "generatingPhotoDescription": "Usually ready in about 20 seconds.",
+    "generatingVideo": "Rendering your video",
+    "generatingVideoDescription": "Usually ready in about 2 minutes.",
+    "generationFailed": "Shot didn't complete",
+    "tryAgain": "Please try again in a moment.",
+    "mediaNotAvailable": "Media not available",
+    "imageDownloaded": "Image downloaded",
+    "videoDownloaded": "Video downloaded",
+    "failedToDownloadImage": "Failed to download image",
+    "failedToDownloadVideo": "Failed to download video",
+    "openedInNewTabImage": "Couldn't download directly. The image opened in a new tab — save it from there (for example, right-click → Save image as).",
+    "openedInNewTabVideo": "Couldn't download directly. The video opened in a new tab — use your browser's menu to save the file.",
+    "deleteImageTitle": "Delete image",
+    "deleteVideoTitle": "Delete video",
+    "deleteImageConfirm": "Are you sure you want to delete this result? This action cannot be undone.",
+    "deleteVideoConfirm": "Are you sure you want to delete this result? This action cannot be undone.",
+    "cancel": "Cancel",
+    "deleting": "Deleting..."
+  },
+  "studioResultsPanel": {
+    "text-to-image": "Text to image",
+    "image-to-image": "Image to image",
+    "text-to-video": "Text to video",
+    "image-to-video": "Image to video",
+    "reference-to-video": "Reference to video",
+    "video-to-video": "Video to video",
+    "generating": "Generating...",
+    "generationFailed": "Generation didn't complete",
+    "generationFailedHint": "Adjust settings in the left panel and generate again, or delete this task.",
+    "deleteFailedItem": "Delete failed item",
+    "mediaNotAvailable": "Media not available",
+    "videoDownloaded": "Video downloaded",
+    "imageDownloaded": "Image downloaded",
+    "failedToDownloadVideo": "Failed to download video",
+    "failedToDownloadImage": "Failed to download image",
+    "openedInNewTabImage": "Couldn't download directly. The image opened in a new tab — save it from there (for example, right-click → Save image as).",
+    "openedInNewTabVideo": "Couldn't download directly. The video opened in a new tab — use your browser's menu to save the file.",
+    "downloadVideo": "Download video",
+    "downloadImage": "Download image",
+    "deleteThisVideo": "Delete this video",
+    "deleteThisImage": "Delete this image",
+    "copyPrompt": "Copy Prompt",
+    "clipboardUnavailable": "Clipboard API not available",
+    "promptCopied": "Prompt copied to clipboard",
+    "failedToCopyPrompt": "Failed to copy prompt",
+    "reuseInEditor": "Reuse settings",
+    "deleteTask": "Delete Task",
+    "noResultsYet": "No results yet",
+    "descriptionEmpty": "Generate your first image or video to see results here",
+    "imageGeneratorEmptyTitle": "Create high-converting ad images in seconds",
+    "imageGeneratorEmptyDescription": "Use text prompts or reference images to generate polished visuals with controllable styles and backgrounds.",
+    "videoGeneratorEmptyTitle": "Turn ideas into ready-to-run video creatives",
+    "videoGeneratorEmptyDescription": "Generate professional ad videos from text, images, or source footage, then iterate quickly for different channels.",
+    "feature1": "Multiple style options",
+    "feature2": "High-quality outputs",
+    "feature3": "Fast generation",
+    "aiPowered": "AI Powered",
+    "projectResults": "Project Results",
+    "taskDeleted": "Task deleted",
+    "taskDeletedDesc": "Task and all outputs have been deleted",
+    "lastItemDeletedDesc": "Last item deleted, task has been removed from history",
+    "itemDeleted": "Item deleted",
+    "itemDeletedDesc": "Item has been deleted successfully",
+    "deleteFailed": "Delete Failed",
+    "deleteTaskTitle": "Delete Task",
+    "deleteImageTitle": "Delete Image",
+    "deleteVideoTitle": "Delete Video",
+    "deleteImageTaskConfirm": "Are you sure you want to delete this task? This will delete all images in this task and cannot be undone.",
+    "deleteVideoTaskConfirm": "Are you sure you want to delete this task? This will delete all videos in this task and cannot be undone.",
+    "deleteImageConfirm": "Are you sure you want to delete this image? This action cannot be undone.",
+    "deleteVideoConfirm": "Are you sure you want to delete this video? This action cannot be undone.",
+    "videoFallback": "Video",
+    "imageFallback": "Image",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "cancel": "Cancel"
+  },
+  "mediaPreviewDialog": {
+    "title": "Preview",
+    "generateVideo": "Generate video",
+    "download": "Download",
+    "more": "More",
+    "close": "Close",
+    "copyPrompt": "Copy Prompt",
+    "loadingImage": "Loading image...",
+    "loadingVideo": "Loading video...",
+    "failedToLoadImage": "Failed to load image",
+    "failedToLoadVideo": "Failed to load video",
+    "couldNotLoadImage": "The image could not be loaded",
+    "couldNotLoadVideo": "The video could not be loaded",
+    "prompts": "Prompts",
+    "settings": "Settings",
+    "generatedWith": "Generated with",
+    "imageSize": "Image size",
+    "resolution": "Resolution",
+    "aspectRatio": "Aspect ratio",
+    "duration": "Duration",
+    "audioOn": "On",
+    "audioOff": "Off",
+    "createdAt": "Created at",
+    "reuseSettings": "Reuse settings",
+    "clipboardUnavailable": "Clipboard API not available",
+    "promptCopied": "Prompt copied to clipboard",
+    "failedToCopyPrompt": "Failed to copy prompt",
+    "imageDownloaded": "Image downloaded",
+    "videoDownloaded": "Video downloaded",
+    "failedToDownload": "Failed to download",
+    "mediaNotAvailable": "Media not available",
+    "failedToDownloadImage": "Failed to download image",
+    "failedToDownloadVideo": "Failed to download video",
+    "openedInNewTabImage": "Couldn't download directly. The image opened in a new tab — save it from there (for example, right-click → Save image as).",
+    "openedInNewTabVideo": "Couldn't download directly. The video opened in a new tab — use your browser's menu to save the file."
+  },
+  "photoGeneratorPanel": {
+    "textToImage": "Text to image",
+    "imageToImage": "Image to image",
+    "model": "Model",
+    "referenceImage": "Reference Image",
+    "prompt": "Prompt",
+    "promptEnhancer": "Prompt enhancer",
+    "promptPlaceholder": "Describe the image you want to generate...",
+    "generate": "Generate",
+    "generating": "Generating...",
+    "submitting": "Submitting...",
+    "uploadReference": "Upload reference image",
+    "uploading": "Uploading...",
+    "uploadFailed": "Upload failed. Please try again.",
+    "referenceImageInvalid": "Please upload a valid image file.",
+    "referenceImageTooLarge": "Reference image must be smaller than {max}MB.",
+    "removeReferenceImageAria": "Delete",
+    "modelNotReady": "Model capability is not ready yet.",
+    "selectField": "Select {label}",
+    "placeholderSeed": "Enter seed",
+    "placeholderNumberField": "Enter {label}",
+    "placeholderTextField": "Describe {label}",
+    "collapse": "Collapse",
+    "advancedSettings": "Advanced settings",
+    "booleanFieldEnabled": "Enabled",
+    "output": "output",
+    "outputs": "outputs"
+  },
+  "videoGeneratorPanel": {
+    "textToVideo": "Text to video",
+    "imageToVideo": "Image to video",
+    "videoToVideo": "Video to video",
+    "model": "Model",
+    "frameImages": "Start & end frames",
+    "inputImage": "Reference Image",
+    "replaceImageAria": "Replace image",
+    "removeReferenceImageAria": "Delete",
+    "startFrame": "Start frame",
+    "endFrame": "End frame",
+    "startLabel": "Start",
+    "endLabel": "End",
+    "sourceVideo": "Source Video",
+    "uploadSourceVideo": "Upload source video",
+    "uploadFailed": "Upload failed. Please try again.",
+    "invalidImageFile": "Please upload a valid image file.",
+    "imageTooLarge": "Image must be smaller than {max} MB.",
+    "invalidVideoFile": "Please upload a valid video file.",
+    "videoTooLarge": "Video must be smaller than {max} MB.",
+    "modelNotReady": "Model capability is not ready yet.",
+    "prompt": "Prompt",
+    "promptOptional": "(optional)",
+    "promptEnhancer": "Prompt enhancer",
+    "promptPlaceholder": "Describe the video you want to generate...",
+    "generate": "Generate",
+    "generating": "Generating...",
+    "uploading": "Uploading...",
+    "submitting": "Submitting...",
+    "selectField": "Select {label}",
+    "collapse": "Collapse",
+    "advancedSettings": "Advanced settings",
+    "placeholderSeed": "Enter seed",
+    "placeholderNegativePrompt": "Describe what you want to avoid"
+  },
+  "modelCapability": {
+    "modelsLoadFailedTitle": "Couldn't load models",
+    "modelsLoadFailedHint": "Check your connection and try again.",
+    "image": {
+      "fields": {
+        "prompt": "Prompt",
+        "num_images": "Number of Images",
+        "max_images": "Max Images",
+        "seed": "Seed",
+        "output_format": "Output Format",
+        "aspect_ratio": "Aspect Ratio",
+        "resolution": "Resolution",
+        "image_size": "Image Size",
+        "image_urls": "Reference Images",
+        "quality": "Quality"
+      },
+      "models": {
+        "nano-banana-2": {
+          "name": "Nano Banana 2",
+          "description": "Google's latest model for image generation and editing, with strong character consistency."
+        },
+        "nano-banana-pro": {
+          "name": "Nano Banana Pro",
+          "description": "High-consistency image generation and editing with commercial-grade quality."
+        },
+        "gpt-image-2": {
+          "name": "GPT Image 2",
+          "description": "OpenAI's latest image model for detailed generation, fine typography, and precise image edits."
+        },
+        "flux-2-pro": {
+          "name": "FLUX.2 Pro",
+          "description": "Ideal for high-quality image manipulation, style transfer, and sequential editing workflows."
+        },
+        "flux-2-max": {
+          "name": "FLUX.2 Max",
+          "description": "State-of-the-art image generation and advanced editing with exceptional realism, precision, and consistency."
+        },
+        "seedream-4_5": {
+          "name": "Seedream 4.5",
+          "description": "ByteDance's next-generation unified model for image generation and image editing."
+        },
+        "seedream-5-lite": {
+          "name": "Seedream 5.0 Lite",
+          "description": "Fast Seedream 5.0 Lite for high-quality intelligent image generation and editing."
+        }
+      }
+    },
+    "video": {
+      "fields": {
+        "prompt": "Prompt",
+        "negative_prompt": "Negative Prompt",
+        "seed": "Seed",
+        "generate_audio": "Generate Audio",
+        "cfg_scale": "CFG Scale",
+        "keep_audio": "Keep Original Audio",
+        "aspect_ratio": "Aspect Ratio",
+        "duration": "Duration",
+        "resolution": "Resolution",
+        "image_url": "Image URL",
+        "video_url": "Video URL",
+        "start_image_url": "Start Image URL",
+        "end_image_url": "End Image URL"
+      },
+      "models": {
+        "veo-3_1": {
+          "name": "Veo 3.1",
+          "description": "Improved cinematic realism with cleaner audio and stronger motion control."
+        },
+        "veo-3_1-fast": {
+          "name": "Veo 3.1 Fast",
+          "description": "Faster and more efficient generation while maintaining strong overall quality."
+        },
+        "sora-2-pro": {
+          "name": "Sora 2 Pro",
+          "description": "OpenAI's latest video generation model with stronger physical realism and controllability."
+        },
+        "kling-o3-standard": {
+          "name": "Kling O3 Standard",
+          "description": "Supports up to 15s with native audio, turning images into multi-shot videos with dialogue and ambience."
+        },
+        "kling-o3-pro": {
+          "name": "Kling O3 Pro",
+          "description": "Pixel-level locking for higher-fidelity visual style and motion consistency."
+        },
+        "seedance-2_0": {
+          "name": "Seedance 2.0",
+          "description": "ByteDance's advanced video model with native audio, cinematic motion, and strong text-to-video and image-to-video control."
+        },
+        "seedance-2_0-fast": {
+          "name": "Seedance 2.0 Fast",
+          "description": "A lower-latency Seedance 2.0 tier for fast video generation with native audio and cinematic motion."
+        }
+      }
+    }
+  },
+  "promptEnhancerModal": {
+    "title": "Prompt Enhancer",
+    "description": "Refine your prompt to generate clearer, more production-ready results.",
+    "placeholder": "Describe what you want to create...",
+    "cancel": "Cancel",
+    "enhancing": "Enhancing...",
+    "enhance": "Enhance"
+  },
+  "feedbackModal": {
+    "triggerLabel": "Feedback",
+    "title": "We value your feedback",
+    "authRequired": "Authentication required",
+    "authRequiredDescription": "Please log in to submit feedback",
+    "thankYou": "Thank you!",
+    "successMessage": "Your feedback has been submitted successfully.",
+    "description": "All valuable submissions will be rewarded with credits as a thank you! Tell us how we can make your experience better.",
+    "placeholder": "Share any specific changes or improvements you'd recommend.",
+    "attachment": "Attachment",
+    "optional": "(Optional)",
+    "submit": "Submit",
+    "uploading": "Uploading...",
+    "submitting": "Submitting...",
+    "maxAttachments": "Maximum {max} attachments allowed",
+    "fileTooLarge": "Some files exceed maximum size of 5MB. Please remove them."
+  },
+  "cmp": {
+    "quizPreferences": {
+      "title": "Customize Quiz",
+      "description": "Edit your preferences for custom quizzes.",
+      "types": "Question Types",
+      "diff": "Difficulty",
+      "num": "Number of Questions",
+      "topicIds": "Topics",
+      "focus": "What should the quiz focus on?",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "singleChoice": "Single Choice",
+      "multipleChoice": "Multiple Choice",
+      "shortAnswer": "Short Answer",
+      "trueFalse": "True/False",
+      "fillInBlank": "Fill in the Blank",
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "expert": "Expert",
+      "typesRequired": "Please select at least one question type",
+      "numRequired": "Number of questions must be between 1 and 50",
+      "diffRequired": "Please select at least one difficulty level"
+    }
+  },
+  "appTopbar": {
+    "openMenu": "Open menu",
+    "creditsRemaining": "Credits remaining",
+    "creditsUnit": "credits",
+    "demoUser": "Demo User",
+    "demoEmail": "demo@example.com",
+    "planRowTitle": "Current subscription plan",
+    "manageProfilePreferences": "Manage your profile and account preferences.",
+    "fullName": "Full Name",
+    "yourName": "Your name",
+    "emailCannotBeChanged": "Email cannot be changed.",
+    "creditsRemainingCount": "{count} credits remaining"
+  },
+  "appCreditsBadge": {
+    "creditsCount": "{count} credits",
+    "upgrade": "Upgrade"
+  },
+  "email": {
+    "shared": {
+      "brand": "App Template",
+      "copyright": "© {year} App Template",
+      "privacyPolicy": "Privacy Policy"
+    },
+    "otpBlock": {
+      "expires": "Expires in {minutes} minutes"
+    },
+    "otpVerify": {
+      "subject": "Your App Template verification code",
+      "title": "Verify your email address",
+      "intro": "Enter the code below to verify your email address and finish creating your App Template account.",
+      "securityNote": "If you didn't sign up for App Template, you can safely ignore this email."
+    },
+    "otpReset": {
+      "subject": "Your App Template password reset code",
+      "title": "Reset your password",
+      "intro": "Enter the code below to set a new password for your App Template account.",
+      "securityNote": "If you didn't request a password reset, you can ignore this email. We recommend reviewing your account security."
+    },
+    "welcome": {
+      "subject": "Welcome to App Template",
+      "title": "Welcome to App Template 🎉",
+      "greetingNamed": "Hi {name},",
+      "greetingFallback": "Hi there,",
+      "intro": "Welcome aboard. App Template is your AI co-pilot for high-converting ad creatives — from a single product URL to a polished video ready to publish.",
+      "bullets": {
+        "urlToVideo": "Turn product URLs into ready-to-publish video ads",
+        "videoInsight": "Decode viral videos into reusable hooks, structure, and scripts",
+        "productVideo": "Generate polished product videos from your own assets",
+        "productPhoto": "Create on-brand product photos in any scene or style",
+        "generators": "Spin up video and image assets with the latest AI models"
+      },
+      "cta": "Open App Template",
+      "creditsNote": "Your account comes with 15 free credits — enough for your first few creatives. Have fun exploring.",
+      "needHelpPrefix": "Need a hand? Reply to this email or send us",
+      "helpCenter": "feedback",
+      "needHelpSuffix": "."
+    }
+  },
+  "appNotFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved. Let's get you back on track.",
+    "actions": {
+      "goBack": "Go Back",
+      "backToDashboard": "Back to app"
+    }
+  },
+  "appHome": {
+    "featureCards": {
+      "title": "Create",
+      "urlToVideoDesc": "Turn a product URL into a ready-to-use video ad.",
+      "productVideoDesc": "Upload product assets and get a polished product video.",
+      "productPhotoDesc": "Create on-brand product photos in any scene or style.",
+      "videoGeneratorDesc": "Generate video assets from text or images with top AI models.",
+      "imageGeneratorDesc": "Generate image assets with custom styles and AI models."
+    },
+    "homeBanner": {
+      "a11y": {
+        "carouselLabel": "Featured promotions",
+        "previousSlide": "Show previous slide",
+        "nextSlide": "Show next slide",
+        "goToSlide": "Go to slide {index} of {total}",
+        "currentSlide": "Slide {current} of {total}: {title}"
+      },
+      "latestModels": {
+        "title": "Latest AI Models",
+        "description": "Use models like Kling O3 and Nano Banana 2 to create better ads faster.",
+        "cta": "Try Video Models",
+        "badge": "Model Updates"
+      },
+      "stunningAds": {
+        "title": "Create stunning Ads with AI",
+        "description": "Turn product assets into ads with fast iteration and consistent style.",
+        "cta": "Create Ads",
+        "badge": "Ad Creative"
+      },
+      "urlToVideo": {
+        "title": "URL to Video, in One Click",
+        "description": "Paste a product URL and get publish-ready ad videos in minutes.",
+        "cta": "Start URL to Video",
+        "badge": "Fast Workflow"
+      }
+    },
+    "recentProjects": {
+      "title": "Recent Projects",
+      "viewAll": "View all",
+      "empty": {
+        "title": "No projects yet",
+        "description": "Create your first project using one of the tools above."
+      },
+      "toast": {
+        "projectDeleted": "Project deleted.",
+        "projectDeleteFailed": "Failed to delete project."
+      }
+    }
+  }
+}

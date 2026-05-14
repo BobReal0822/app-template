@@ -1,0 +1,90 @@
+{
+  "name": "@app/db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Drizzle ORM schema, client, and authz helpers for Neon Postgres. Consumed by the Next.js app (`src/`) and any Node tooling in this repo.",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./src/index.ts",
+        "default": "./src/index.ts"
+      },
+      "default": "./src/index.ts"
+    },
+    "./schema": {
+      "require": {
+        "types": "./dist/cjs/schema/index.d.ts",
+        "default": "./dist/cjs/schema/index.js"
+      },
+      "import": {
+        "types": "./src/schema/index.ts",
+        "default": "./src/schema/index.ts"
+      },
+      "default": "./src/schema/index.ts"
+    },
+    "./client": {
+      "require": {
+        "types": "./dist/cjs/client.d.ts",
+        "default": "./dist/cjs/client.js"
+      },
+      "import": {
+        "types": "./src/client.ts",
+        "default": "./src/client.ts"
+      },
+      "default": "./src/client.ts"
+    },
+    "./authz": {
+      "require": {
+        "types": "./dist/cjs/authz.d.ts",
+        "default": "./dist/cjs/authz.js"
+      },
+      "import": {
+        "types": "./src/authz.ts",
+        "default": "./src/authz.ts"
+      },
+      "default": "./src/authz.ts"
+    },
+    "./credits": {
+      "require": {
+        "types": "./dist/cjs/credits.d.ts",
+        "default": "./dist/cjs/credits.js"
+      },
+      "import": {
+        "types": "./src/credits.ts",
+        "default": "./src/credits.ts"
+      },
+      "default": "./src/credits.ts"
+    }
+  },
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "migrate": "tsx ./src/migrate.ts",
+    "studio": "drizzle-kit studio",
+    "seed": "tsx ./src/seed.ts",
+    "verify": "tsx ./src/verify.ts",
+    "check": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -p tsconfig.build.cjs.json && node -e \"require('fs').writeFileSync('dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }, null, 2))\"",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "dotenv": "^17.4.2",
+    "dotenv-cli": "^7.4.4",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.5"
+  }
+}

@@ -1,0 +1,200 @@
+---
+description: Supplemental UI styling playbook with practical examples and review checklists.
+alwaysApply: false
+---
+
+# UI Styling Playbook
+
+## Precedence
+
+Reference-only guidance; not authoritative.
+For global conflict order, see `rules-index.mdc`.
+
+This playbook complements `ui-styling-rules.mdc` with practical examples.
+Use it as implementation guidance, not as a duplicate source of enforcement.
+
+## 1) Component-First Authoring
+
+Default to Shadcn/Radix components for interactive controls.
+
+### Prefer
+
+- `<Button>` over `<button>`
+- `<Input>` over `<input>`
+- `<Textarea>` over `<textarea>`
+- `<Select>` over native `<select>`
+- `<Checkbox>`, `<RadioGroup>`, `<Switch>`
+- `<Dialog>` / `<Sheet>`, `<Popover>` / `<DropdownMenu>`
+
+### Allowed Native Exceptions
+
+- Semantic structure: `<header>`, `<main>`, `<section>`, `<article>`, `<footer>`
+- HTML media/graphics: `<video>`, `<audio>`, `<canvas>`
+- Form edge-cases: hidden/file inputs when required
+
+### Example
+
+```tsx
+// Avoid
+<button className="px-4 py-2 bg-primary rounded">Submit</button>;
+
+// Prefer
+import { Button } from '@/components/ui/button';
+
+<Button>Submit</Button>;
+```
+
+## 2) Theme Token and Variant Strategy
+
+Prefer semantic tokens and component variants for durable product UI.
+
+### Prefer
+
+- `bg-background`, `bg-card`, `bg-muted`
+- `text-foreground`, `text-muted-foreground`
+- `border-border`, `text-destructive`
+- Built-in variants instead of one-off class stacks
+
+### Avoid
+
+- Hardcoding long-lived meaning with literal palettes in app UI
+
+```tsx
+// Avoid
+<div className="bg-white text-black border-gray-200">...</div>
+
+// Prefer
+<div className="bg-card text-card-foreground border border-border">...</div>
+```
+
+## 3) Loading-State Patterns
+
+For async data, prefer skeleton-first loading states.
+
+### Baseline Flow
+
+1. `loading` -> skeleton
+2. `error` -> error state
+3. `empty` -> empty state
+4. `success` -> content
+
+### Example
+
+```tsx
+if (loading) return <HistorySkeleton count={8} />;
+if (error) return <ErrorState />;
+if (!data?.length) return <EmptyState />;
+return <Content data={data} />;
+```
+
+### Skeleton Notes
+
+- Match skeleton layout to final content layout.
+- Prefer existing skeleton primitives before creating new ones.
+- Keep spacing and hierarchy realistic to reduce visual jank.
+
+## 4) Accessibility in UI Composition
+
+For motion/interaction baselines (touch target, reduced motion, pseudo-clickable behavior),
+follow `frontend-motion-interaction-governance.mdc`.
+
+In this playbook, focus on composition-level a11y:
+
+- Use semantic controls and labels by default.
+- Ensure form inputs are associated with labels.
+- Use `aria-hidden="true"` only for decorative content.
+
+```tsx
+<Label htmlFor="email">Email</Label>
+<Input id="email" type="email" />
+```
+
+## 5) Interaction Design Patterns
+
+### Progressive Disclosure
+
+Start simple, reveal sophistication through interaction.
+
+```tsx
+// Basic options visible; advanced behind expandable section
+<div>
+  <MainOptions />
+  <Collapsible>
+    <CollapsibleTrigger asChild>
+      <Button variant="ghost">Advanced options</Button>
+    </CollapsibleTrigger>
+    <CollapsibleContent>
+      <AdvancedOptions />
+    </CollapsibleContent>
+  </Collapsible>
+</div>
+```
+
+### Button Hierarchy
+
+Not every action deserves a primary button — use variant hierarchy to guide attention.
+
+```tsx
+// Primary action stands out; secondary recedes
+<div className="flex gap-3">
+  <Button>Save changes</Button>
+  <Button variant="ghost">Cancel</Button>
+</div>
+```
+
+### Empty States
+
+Design empty states that teach the interface, not just say "nothing here."
+
+```tsx
+// Avoid: <p>No items found.</p>
+// Prefer:
+<EmptyState
+  title="No projects yet"
+  description="Create your first project to get started."
+  action={<Button>Create project</Button>}
+/>
+```
+
+## 6) UX Writing
+
+- Make every word earn its place — remove filler and redundant labels.
+- Do not repeat information users can already see (e.g. a heading that restates the page title).
+- Labels and descriptions should help users act, not describe the obvious.
+
+```tsx
+// Avoid: redundant intro
+<h2>Your Projects</h2>
+<p>This is a list of all your projects.</p>
+
+// Prefer: actionable context
+<h2>Your Projects</h2>
+<p>Select a project to continue editing, or create a new one.</p>
+```
+
+## 7) Design Quality Anti-patterns
+
+Common patterns that make UI feel generic or AI-generated. Avoid these:
+
+- **Glassmorphism everywhere** — blur effects, glass cards, and glow borders used decoratively rather than purposefully.
+- **Identical card grids** — same-sized cards with icon + heading + text repeated endlessly.
+- **Card-in-card nesting** — visual noise; flatten the hierarchy.
+- **Decorative sparklines** — tiny charts that look sophisticated but convey nothing meaningful.
+- **Rounded rectangles with generic drop shadows** — safe, forgettable default.
+- **Uniform spacing** — same padding everywhere with no rhythm or grouping.
+- **Gradient text on headings** — decorative rather than meaningful; also an accessibility concern (see motion governance §4).
+
+When reviewing UI, ask: does this feel intentionally designed for the context, or could it be any generic template?
+
+## 8) PR Review Checklist (UI Composition)
+
+- [ ] Interactive controls use design-system primitives (or documented exception)
+- [ ] Styling uses semantic tokens/variants for long-lived semantics
+- [ ] Button variants create clear action hierarchy
+- [ ] Typography has clear weight/size hierarchy across heading, body, and label levels
+- [ ] Layout avoids card-in-card nesting and monotonous equal spacing
+- [ ] Empty states are actionable, not just "nothing here"
+- [ ] Copy is concise and non-redundant
+- [ ] Async content has skeleton/error/empty/success flow
+- [ ] No generic anti-patterns from §7
+- [ ] Composition guidance does not conflict with motion governance rule

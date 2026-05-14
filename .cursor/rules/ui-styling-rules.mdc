@@ -1,0 +1,152 @@
+---
+description: Enforce UI composition and design-token usage for app and shared components.
+globs: src/{app,components,styles}/**/*.{tsx,css}
+alwaysApply: false
+---
+
+# UI Styling Rules
+
+## Precedence
+
+Primary rule for UI composition and design-token usage.
+For global conflict order, see `rules-index.mdc`.
+
+## Scope and Non-Overlap
+
+This rule focuses on UI composition and design-system usage.
+
+- Covers: component choice, theme-token usage, variant usage, and loading-state patterns.
+- Delegates motion and interaction governance to `frontend-motion-interaction-governance.mdc`:
+  - `transition-all` bans and transition scoping
+  - pseudo-clickable semantics and touch-target baselines
+  - reduced-motion requirements
+  - hero gradient presets and color-governance enforcement
+  - media/performance animation constraints
+
+When both files apply, follow this split to avoid duplicated or conflicting guidance.
+
+## Extended Reference
+
+For deeper examples and review checklists, use:
+
+- `/.cursor/rules/ui-styling-playbook.mdc` (supplemental guidance)
+- `/.cursor/rules/frontend-motion-interaction-governance.mdc` (motion/interaction baseline)
+
+## Core Styling Framework
+
+- Use Shadcn UI, Radix UI, and Tailwind CSS as the default stack.
+- Build mobile-first responsive layouts with Tailwind utilities.
+- Prefer composition with existing project UI primitives before custom wrappers.
+
+## Theme-First Styling
+
+Prefer semantic theme tokens and component variants for long-lived UI meaning.
+
+- Use tokens for backgrounds, borders, text hierarchy, and statuses:
+  `bg-background`, `bg-card`, `bg-muted`, `text-foreground`,
+  `text-muted-foreground`, `border-border`, `text-destructive`, etc.
+- Prefer built-in component variants over ad hoc class combinations:
+  - `Button`: `default | secondary | outline | ghost | destructive`
+  - `Alert`: `default | destructive`
+  - `Badge`: supported project variants
+- Local visual accents are allowed when bounded to a specific section and not used as global semantic state.
+- **Headline emphasis**: use solid token text (`text-primary` for stressed words), not gradient clip-text on `h1`/`h2` copy — see `frontend-motion-interaction-governance.mdc` §4 (Headline emphasis).
+
+### Color Quality
+
+- Avoid raw `#000` / `#fff` — use design tokens or slightly tinted neutrals for a more natural feel.
+- On colored backgrounds, tint neutral text toward the background hue instead of using raw gray (`text-gray-*`).
+- Not every button should be `default` (primary) — use `ghost`, `outline`, `secondary` to create visual hierarchy.
+
+### Good
+
+```tsx
+<Button>Upgrade</Button>
+<Button variant="ghost">Cancel</Button>
+<div className="border border-border bg-card text-card-foreground">...</div>
+<div className="border border-destructive/20 bg-destructive/10 text-destructive">
+  Failed
+</div>
+```
+
+### Avoid
+
+```tsx
+<div className="bg-white text-black border-gray-200">...</div>
+<div className="bg-[#000] text-[#fff]">...</div>
+```
+
+## Typography & Visual Hierarchy
+
+- Vary font weight and size across headings, body, and labels to create clear hierarchy — avoid uniform type treatment.
+- Use fluid font sizing (`text-sm` / `text-base` / `text-lg` / `text-xl` etc.) deliberately; do not apply the same size everywhere.
+- Pair distinct heading styles with restrained body text for contrast.
+
+## Layout Composition
+
+- Do not nest cards inside cards — flatten the visual hierarchy.
+- Avoid identical repeated card grids (same-sized cards with icon + heading + text) unless uniformity is the explicit intent.
+- Create visual rhythm through varied spacing — tight groupings for related items, generous separations between sections. Monotonous equal spacing reads as unfinished.
+- Do not center everything by default — left-aligned text with asymmetric layouts often reads more intentional.
+
+## Component Usage Priority
+
+Use project UI components first. Do not default to native controls for interactive UI.
+
+### Use UI Components
+
+- `<Button>` over `<button>`
+- `<Input>` over `<input>`
+- `<Textarea>` over `<textarea>`
+- `<Select>` over native `<select>`
+- `<Checkbox>`, `<RadioGroup>`, `<Switch>`
+- `<Dialog>` / `<Sheet>`, `<Popover>` / `<DropdownMenu>`
+
+### Native Exceptions (allowed)
+
+- Structural semantics: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`
+- Special primitives: `<video>`, `<audio>`, `<canvas>`
+- Form edge cases: hidden inputs and file inputs when required
+
+### Import Convention
+
+Import UI components from `@/components/ui/*`.
+
+```tsx
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+```
+
+## Loading-State Rules
+
+For async content, prefer skeleton-based loading over generic spinners-only patterns.
+
+- Reuse existing skeletons first:
+  - `@/components/ui/skeleton`
+  - specialized skeletons (for example history/card/table variants)
+- Skeleton layout should match final content structure.
+- Keep loading-state branching explicit:
+  - loading -> skeleton
+  - error -> error state
+  - empty -> empty state
+  - success -> content
+
+### Example
+
+```tsx
+if (loading) return <HistorySkeleton count={8} />;
+if (error) return <ErrorState />;
+if (!data?.length) return <EmptyState />;
+return <Content data={data} />;
+```
+
+## Authoring Checklist
+
+- [ ] UI controls use Shadcn/Radix primitives (or documented exception)
+- [ ] Long-lived styling uses semantic tokens/variants — no raw `#hex`, `bg-white`, `text-black`
+- [ ] Button variants create clear hierarchy (not all primary)
+- [ ] Typography varies weight/size for heading vs body vs label
+- [ ] No card-in-card nesting; spacing rhythm varies between sections
+- [ ] Loading UX uses skeletons where data is asynchronous
+- [ ] No duplicated motion/interaction rules introduced here; rely on `frontend-motion-interaction-governance.mdc`

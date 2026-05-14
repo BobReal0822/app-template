@@ -1,0 +1,389 @@
+---
+description: Rules for optimizing performance in Next.js applications — minimize client JS, optimize images, keep database reads bounded, and use Next.js caching primitives.
+globs: src/**/*.{ts,tsx}
+---
+
+# Performance Optimization Rules
+
+## Core Principles
+
+- Minimize 'use client', 'useEffect', and 'useState'; favor React Server Components (RSC).
+- Wrap client components in Suspense with fallback.
+- Use dynamic loading for non-critical components.
+- Optimize images: use Next.js Image component, include size data, implement lazy loading.
+
+---
+
+## Next.js 15 Optimizations
+
+### 1. React Server Components (RSC) First
+
+**Priority: Always use Server Components by default**
+
+```typescript
+// ✅ GOOD: Server Component (default)
+export default async function Page() {
+  const data = await fetchData();
+  return <div>{data}</div>;
+}
+
+// ⚠️ ONLY when needed: Client Component
+'use client';
+export function InteractiveComponent() {
+  const [state, setState] = useState();
+  return <button onClick={() => setState()}>Click</button>;
+}
+```
+
+**Benefits:**
+- Zero JavaScript bundle for Server Components
+- Automatic code splitting
+- Better SEO and initial load performance
+
+### 2. Streaming and Suspense
+
+**Use Suspense boundaries for progressive loading:**
+
+```typescript
+import { Suspense } from 'react';
+
+export default function Page() {
+  return (
+    <div>
+      <Suspense fallback={<Skeleton />}>
+        <AsyncDataComponent />
+      </Suspense>
+      <Suspense fallback={<OtherSkeleton />}>
+        <AnotherAsyncComponent />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+**Benefits:**
+- Progressive page rendering
+- Better perceived performance
+- Non-blocking data fetching
+
+### 3. Partial Prerendering (PPR)
+
+**Enable for pages with dynamic content:**
+
+```typescript
+// next.config.js
+export default {
+  experimental: {
+    ppr: true, // Enable Partial Prerendering
+  },
+};
+
+// In page components
+export const experimental_ppr = true;
+```
+
+**Use cases:**
+- Pages with mostly static content and some dynamic sections
+- Blog posts with comments
+- Product pages with user-specific data
+
+### 4. Dynamic Imports for Code Splitting
+
+**Lazy load heavy components:**
+
+```typescript
+import dynamic from 'next/dynamic';
+
+// ✅ GOOD: Lazy load with loading state
+const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
+  loading: () => <Skeleton />,
+  ssr: false, // Only if component requires browser APIs
+});
+
+export default function Page() {
+  return <HeavyComponent />;
+}
+```
+
+**When to use:**
+- Large third-party libraries (charts, editors)
+- Components only needed on specific routes
+- Components that require browser APIs
+
+---
+
+## Database query optimization (Drizzle / Neon)
+
+### 1. Always bound reads
+
+```typescript
+// ✅ GOOD: explicit `.limit(...)` / keyset pagination
+await db.select().from(projects).where(eq(projects.uid, uid)).limit(20);
+
+// ❌ BAD: unbounded `.select()` on large tables
+await db.select().from(projects);
+```
+
+### 2. Select only needed columns
+
+```typescript
+// ✅ GOOD: column projection
+await db
+  .select({ id: projects.id, name: projects.name })
+  .from(projects)
+  .limit(20);
+
+// ⚠️ Avoid pulling large JSON blobs unless the UI needs them
+```
+
+### 3. Prefer joins or batched queries over N+1 loops
+
+Fetch related rows in one query (Drizzle `with` / explicit joins) instead of per-row queries inside `map`.
+
+### 4. Fetch on the server by default
+
+```typescript
+// ✅ GOOD: Server Component + Drizzle
+import { getDbHttp } from '@app/db';
+import { projects } from '@app/db/schema';
+
+export default async function ProjectsPage() {
+  const db = getDbHttp();
+  const rows = await db.select().from(projects).limit(20);
+  return <ProjectList projects={rows} />;
+}
+```
+
+---
+
+## Image and Media Optimization
+
+### 1. Next.js Image Component
+
+**Always use Next.js Image for images:**
+
+```typescript
+import Image from 'next/image';
+
+// ✅ GOOD: Optimized image with proper sizing
+<Image
+  src={imageUrl}
+  alt="Description"
+  width={800}
+  height={600}
+  priority={isAboveFold} // For LCP optimization
+  loading={isAboveFold ? undefined : 'lazy'}
+/>
+
+// ❌ BAD: Native img tag
+<img src={imageUrl} alt="Description" />
+```
+
+**Benefits:**
+- Automatic WebP/AVIF conversion
+- Responsive image generation
+- Lazy loading
+- Blur placeholder support
+
+### 2. External Image Domains
+
+**Configure external image domains in `next.config.js`:**
+
+```typescript
+// next.config.js
+export default {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'your-r2-domain.com',
+        pathname: '/**',
+      },
+    ],
+  },
+};
+```
+
+### 3. R2 Public URLs
+
+**Use helper function for R2 URLs:**
+
+```typescript
+import { getR2PublicUrl } from '@/lib/utils/r2';
+
+// ✅ GOOD: Consistent URL generation
+const imageUrl = getR2PublicUrl(mediaKey);
+
+// ❌ BAD: Hardcoded URLs
+const imageUrl = `https://r2-domain.com/${mediaKey}`;
+```
+
+### 4. Video Optimization
+
+**Use proper video attributes:**
+
+```typescript
+<video
+  src={videoUrl}
+  controls
+  preload="metadata" // Don't preload entire video
+  poster={thumbnailUrl} // Show thumbnail while loading
+/>
+```
+
+---
+
+## Bundle Size Optimization
+
+### 1. Tree Shaking
+
+**Use named imports instead of default imports:**
+
+```typescript
+// ✅ GOOD: Tree-shakeable
+import { Button } from '@/components/ui/button';
+import { format } from 'date-fns';
+
+// ❌ BAD: Imports entire library
+import * as dateFns from 'date-fns';
+```
+
+### 2. Avoid Large Dependencies
+
+**Prefer lightweight alternatives:**
+
+```typescript
+// ✅ GOOD: Lightweight date formatting
+import { format } from 'date-fns';
+
+// ⚠️ CONSIDER: Native Intl.DateTimeFormat for simple cases
+new Intl.DateTimeFormat('en-US').format(date);
+```
+
+### 3. Analyze Bundle Size
+
+**Regularly check bundle size:**
+
+```bash
+# Build the app and inspect the per-route output
+pnpm build
+```
+
+For a full bundle analyzer report, set the `ANALYZE=1` env var if the project
+has wired `@next/bundle-analyzer` into `next.config.js`.
+
+---
+
+## Caching Strategies
+
+### 1. Next.js Caching
+
+**Use appropriate cache strategies:**
+
+```typescript
+// ✅ GOOD: Time-based revalidation
+export const revalidate = 3600; // 1 hour
+
+// ✅ GOOD: On-demand revalidation
+export async function GET() {
+  const data = await fetchData();
+  return Response.json(data);
+}
+
+// Revalidate via API
+await fetch('/api/revalidate?path=/products');
+```
+
+### 2. Next.js caching
+
+Use `fetch` cache options, `revalidate`, `cache` / `"use cache"` (per project conventions), or move immutable reads behind CDNs — pick explicitly; **do not assume** implicit DB caching.
+
+### 3. Static Generation
+
+**Use Static Site Generation when possible:**
+
+```typescript
+// ✅ GOOD: Static generation for public content
+export async function generateStaticParams() {
+  return [{ slug: 'post-1' }, { slug: 'post-2' }];
+}
+
+export default async function PostPage({ params }) {
+  const post = await getPost(params.slug);
+  return <article>{post.content}</article>;
+}
+```
+
+---
+
+## Web Vitals Optimization
+
+### 1. Largest Contentful Paint (LCP)
+
+**Optimize LCP:**
+
+- Use `priority` prop for above-the-fold images
+- Preload critical resources
+- Minimize render-blocking CSS/JS
+- Use font-display: swap for web fonts
+
+```typescript
+// ✅ GOOD: Priority image for LCP
+<Image
+  src={heroImage}
+  alt="Hero"
+  priority
+  width={1920}
+  height={1080}
+/>
+```
+
+### 2. First Input Delay (FID)
+
+**Reduce JavaScript execution time:**
+
+- Minimize client-side JavaScript
+- Use Server Components
+- Code split large bundles
+- Defer non-critical JavaScript
+
+### 3. Cumulative Layout Shift (CLS)
+
+**Prevent layout shifts:**
+
+- Set explicit dimensions for images/videos
+- Reserve space for dynamic content
+- Use skeleton loaders
+- Avoid inserting content above existing content
+
+```typescript
+// ✅ GOOD: Fixed dimensions prevent CLS
+<Image
+  src={imageUrl}
+  width={800}
+  height={600}
+  alt="Description"
+/>
+
+// ✅ GOOD: Skeleton prevents layout shift
+{loading ? <Skeleton className="h-64 w-full" /> : <Content />}
+```
+
+---
+
+## Performance Checklist
+
+Before deploying, verify:
+
+- [ ] Server Components used by default
+- [ ] Client Components only when necessary
+- [ ] Suspense boundaries for async data
+- [ ] Dynamic imports for heavy components
+- [ ] Image optimization with Next.js Image
+- [ ] Query limits / pagination on database reads
+- [ ] Only select columns the UI actually needs
+- [ ] Bundle size analyzed and optimized
+- [ ] Caching strategies implemented
+- [ ] Web Vitals metrics checked
+- [ ] LCP optimized (priority images, preload)
+- [ ] CLS minimized (fixed dimensions, skeletons)

@@ -1,0 +1,290 @@
+---
+description: Enforce secret handling and safe error-message exposure in frontend and backend code.
+globs: src/**/*.{ts,tsx}
+alwaysApply: true
+---
+
+# Security Rules
+
+## Precedence
+
+Authoritative for all security decisions in this repository.
+For global conflict order, see `rules-index.mdc`.
+
+## Core Security Principles
+
+### 1. Sensitive Information Management
+
+- **STRICTLY PROHIBITED** to hardcode any sensitive information in source code:
+  - API Keys / Secret Keys / Access Keys
+  - Passwords / Tokens / Secrets
+  - Database connection strings (containing passwords)
+  - Payment keys / Third-party service credentials
+  - JWT Secret / Session Secret / Encryption keys
+
+- **MUST** store all sensitive information **ONLY** in environment variable files (`.env`, `.env.local`, etc.)
+- **MUST NOT** store sensitive information in configuration files
+- **MUST NOT** hardcode secrets in source code or config files
+- **Next.js server-side code** may read secrets via `process.env` (Route Handlers, Server Actions, `server/` modules). Use the host platform’s secret manager in production (e.g. Vercel **Sensitive** env vars), not client-exposed names.
+- **MUST** provide `.env.example` as template without real values
+
+### 2. Environment Variable File Management
+
+- **ALL** environment variable files (`.env*`) **MUST** be in `.gitignore` and **NEVER** committed
+- Configuration example files can be committed, but **MUST NOT** contain real sensitive values
+
+### 3. Next.js Environment Variables
+
+**CRITICAL: Understanding `NEXT_PUBLIC_` Prefix**
+
+- **NEVER use `NEXT_PUBLIC_` prefix for sensitive credentials** (exposed to browser)
+- **Use `NEXT_PUBLIC_` ONLY for public, non-sensitive configuration**:
+  - Public API endpoints (not API keys)
+  - Public domain names / Account IDs (not secrets)
+  - Feature flags
+
+**Rules:**
+
+- **Server-side API Routes** (`src/app/api/**/route.ts`): Use env vars **without** `NEXT_PUBLIC_` prefix
+- **Client-side Components**: **NEVER** access API keys; use `NEXT_PUBLIC_` only for public config
+
+### 4. Configuration File Best Practices
+
+Configuration files should **NEVER** contain sensitive information directly.
+They should only read from environment variables. Project-wide secrets in
+this repo include the Stripe secret key, Resend API key, R2 access keys,
+the FAL API/webhook tokens, and `AI_GATEWAY_API_KEY`.
+
+```typescript
+// ✅ Correct: typed accessor that reads from env at runtime.
+//    Centralized accessors live in @/server/lib/secrets so the runtime can
+//    fail fast with a clear message when a secret is missing in production.
+import { stripeSecretKey } from '@/server/lib/secrets';
+const stripe = new Stripe(stripeSecretKey.value());
+
+// ✅ Correct: ad-hoc reads (only when used in one place)
+const apiKey = process.env.RESEND_API_KEY ?? '';
+
+// ❌ Wrong: hardcoded literal
+const apiKey = 'sk_live_51N...'; // never commit a real or fake-looking secret
+```
+
+### 5. Git Security
+
+- **PROHIBITED** to commit files containing sensitive information
+- If accidentally committed: revoke commit, rotate keys, clean history, update `.gitignore`
+
+### 6. Other Security Considerations
+
+- Do not output sensitive information in logs or error messages
+- Use HTTPS for all external API calls
+- Validate and sanitize all user inputs
+- Use parameterized queries to prevent SQL injection
+
+### 7. AI Assistant Behavior Guidelines
+
+When AI assistant writes code, **MUST**:
+
+- Automatically detect and avoid hardcoding sensitive information
+- Prioritize storing sensitive information in environment variable files
+- Ensure configuration files only read from environment variables
+- Remind developers to check `.gitignore` configuration
+
+---
+
+## Error Message Handling
+
+### Backend (API Routes / server modules): Do Not Expose Error Details in Responses
+
+- **MUST NOT** return raw `error.message`, stack traces, or internal error details in HTTP responses to the client. These may leak schema, paths, or configuration.
+- **MUST** return generic user-facing messages only (e.g. "Internal server error", "Operation failed", "Failed to generate upload URL").
+- **MUST** log the full error server-side for debugging:
+  - Prefer the project logger `@/server/lib/logger` (it unwraps `Error` to
+    `{ message, stack, cause }` so stack traces survive Vercel's log
+    shipping).
+  - Plain `console.error(...)` is acceptable for short, ad-hoc logs in
+    Route Handlers — but use the logger for any structured context or for
+    `Error` objects.
+  - Use `debug` from `@/server/lib/logger` for diagnostic-only logs that are
+    suppressed on Vercel production (`VERCEL_ENV === 'production'`).
+  - Do not log secrets; do log enough to diagnose failures (request id,
+    user id, error code).
+
+```typescript
+// ✅ CORRECT: Next.js API Route
+} catch (error) {
+  console.error('[MyApi] Error:', error);
+  return new Response('Internal server error', { status: 500 });
+}
+```
+
+```typescript
+// ❌ WRONG: Exposing error.message to client
+} catch (error) {
+  return new Response(error instanceof Error ? error.message : 'Error', { status: 500 });
+}
+```
+
+---
+
+### Frontend: Never Display Backend Error Messages Directly
+
+**NEVER** directly display error messages from backend APIs to end users. Backend error messages may contain sensitive information such as:
+
+- Database schema details
+- Internal system paths
+- API keys or tokens (even partial)
+- Stack traces
+- Internal error codes
+- System configuration details
+- User data that shouldn't be exposed
+
+### Required Error Handling Pattern
+
+#### 1. Use Error Code Mapping
+
+Always map backend error codes to user-friendly messages:
+
+```typescript
+// ✅ CORRECT: Use error code mapping
+import { ErrorCode, ErrorMessages } from '@/lib/api/response';
+
+const handleApiError = (response: ApiResponse) => {
+  if (response.code !== 0) {
+    const userMessage =
+      ErrorMessages[response.code] || ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR];
+    toast.error(userMessage);
+  }
+};
+```
+
+#### 2. Development vs Production
+
+- **Production**: Only show user-friendly, generic error messages
+- **Development**: Can show detailed error information in collapsed sections
+
+```typescript
+// ✅ CORRECT: Show details only in development
+{process.env.NODE_ENV === 'development' && (
+  <details>
+    <summary>Error Details (Development Only)</summary>
+    <pre>{error.message}</pre>
+  </details>
+)}
+```
+
+### Error Handling Examples
+
+#### ❌ WRONG: Direct Error Message Display
+
+```typescript
+// ❌ NEVER DO THIS
+try {
+  const response = await fetch('/api/endpoint');
+  const data = await response.json();
+  if (data.code !== 0) {
+    toast.error(data.message); // ❌ Direct backend message
+  }
+} catch (error) {
+  toast.error(error.message); // ❌ Direct error message
+}
+```
+
+#### ✅ CORRECT: Error Code Mapping
+
+```typescript
+// ✅ CORRECT APPROACH
+import { ErrorCode, ErrorMessages } from '@/lib/api/response';
+
+try {
+  const response = await fetch('/api/endpoint');
+  const data: ApiResponse = await response.json();
+  
+  if (data.code !== 0) {
+    const userMessage =
+      ErrorMessages[data.code] || ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR];
+    toast.error(userMessage);
+    console.error('API Error:', data); // Log for debugging only
+  }
+} catch (error) {
+  console.error('Request failed:', error);
+  toast.error(
+    ErrorMessages[ErrorCode.NETWORK_ERROR] || ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR],
+  );
+}
+```
+
+### Network Error Handling
+
+```typescript
+// ✅ CORRECT: Generic network error messages
+try {
+  const response = await fetch('/api/endpoint');
+  if (!response.ok) {
+    throw new Error('Request failed');
+  }
+} catch (error) {
+  if (error instanceof TypeError && error.message.includes('fetch')) {
+    toast.error(
+      ErrorMessages[ErrorCode.NETWORK_ERROR] || ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR],
+    );
+  } else {
+    toast.error(ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR]);
+  }
+  console.error('Network error details:', error); // Log for debugging
+}
+```
+
+---
+
+## Violation Examples
+
+### ❌ Wrong Examples
+
+```typescript
+// Hardcoded literal
+const apiKey = 'sk_live_51N...';
+const dbPassword = 'myPassword123';
+
+// Using NEXT_PUBLIC_ for a secret (exposed to browser)
+const apiKey = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY; // ❌
+
+// Trying to access a server secret in a client component
+'use client';
+const apiKey = process.env.STRIPE_SECRET_KEY; // ❌ undefined in the browser
+```
+
+### ✅ Correct Examples
+
+```typescript
+// Server-only Route Handler reads `process.env` directly
+export async function POST() {
+  const apiKey = process.env.RESEND_API_KEY; // ✅
+}
+
+// Centralized typed accessor for repeated use
+import { stripeSecretKey } from '@/server/lib/secrets';
+const stripe = new Stripe(stripeSecretKey.value());
+
+// Client-side uses NEXT_PUBLIC_* only for non-sensitive config
+'use client';
+const r2PublicDomain = process.env.NEXT_PUBLIC_R2_PUBLIC_DOMAIN; // ✅
+```
+
+---
+
+## Security Checklist
+
+Before committing code:
+
+- [ ] No hardcoded sensitive information
+- [ ] All sensitive information stored in `.env` files (not in config files)
+- [ ] All `.env*` files in `.gitignore`
+- [ ] No API keys/secrets use `NEXT_PUBLIC_` prefix
+- [ ] Client-side code never directly accesses API keys
+- [ ] Logs do not contain sensitive information
+- [ ] **Backend (API Routes / Functions):** Do not return `error.message` or stack in HTTP responses; return generic messages only; log full error server-side for debugging
+- [ ] **Frontend:** Never directly display `error.message` or `response.message` from backend
+- [ ] Always use error code mapping (`ErrorMessages[code]`) for known API errors
+- [ ] Provide generic fallback messages for unknown errors
+- [ ] Show detailed error information only in development mode

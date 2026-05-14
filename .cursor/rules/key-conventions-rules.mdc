@@ -1,0 +1,448 @@
+---
+description: Enforce naming, imports, TypeScript, and project-wide coding conventions.
+globs: src/**/*.{ts,tsx}
+---
+
+# Key Conventions Rules
+
+## Precedence
+
+Default baseline for coding style and naming conventions.
+For global conflict order, see `rules-index.mdc`.
+
+## URL Search Parameter Management
+
+- Use 'nuqs' for URL search parameter state management.
+- Optimize Web Vitals (LCP, CLS, FID).
+- Limit 'use client':
+  - Favor server components and Next.js SSR.
+  - Use only for Web API access in small components.
+  - Avoid for data fetching or state management.
+
+---
+
+## Language: Use English in Code
+
+**MUST** use English for maintainability in source code internals:
+
+- **Comments** and JSDoc in source code
+- **Log messages** (e.g. `logger.info('...')`, `console.error('...')` in server modules)
+- **LLM/AI prompts** and system instructions
+
+User-facing UI text (labels, buttons, page content, toasts, validation messages) should use i18n keys and locale files (e.g. `messages/en.json`, `messages/zh.json`) instead of inline hardcoded copy.
+
+---
+
+## File Naming Conventions
+
+### Components
+
+- **Files**: Use kebab-case: `user-profile.tsx`, `task-list.tsx`, `delete-account-dialog.tsx`
+- **Component Names**: Use PascalCase: `UserProfile`, `TaskList`, `DeleteAccountDialog`
+- **Directories**: Use lowercase with dashes: `components/auth-wizard/`, `app/url-to-video/`
+
+### Utilities and Libraries
+
+- **Files**: Use kebab-case: `r2-utils.ts`, `api-response.ts`, `server-auth.ts`
+- **Functions**: Use camelCase: `getR2PublicUrl()`, `createResponse()`, `getCurrentUser()`
+
+### Types and Interfaces
+
+- **Files**: Use kebab-case: `user-types.ts`, `api-types.ts`
+- **Type Names**: Use PascalCase: `UserData`, `ApiResponse`, `GenTask`
+- **Interface Names**: Use PascalCase with descriptive names: `UserProfileProps`, `TaskListItem`
+
+### Configuration Files
+
+- **Config files**: Use kebab-case: `next.config.js`, `tailwind.config.js`, `jest.config.js`
+- **Environment files**: `.env`, `.env.local`, `.env.example`
+
+### Database schema (Drizzle / Neon)
+
+- **Schema modules**: under `packages/db/src/schema/` (table definitions shared by the app).
+- **Migrations**: `packages/db` scripts (`pnpm -F @app/db migrate`); keep column names aligned with the DB source of truth.
+
+---
+
+## Import Ordering
+
+### Standard Import Order
+
+1. **React and Next.js core**
+2. **Third-party libraries**
+3. **Internal utilities and types**
+4. **Components**
+5. **Relative imports**
+
+```typescript
+// ✅ GOOD: Proper import ordering
+// 1. React/Next.js
+import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import Image from 'next/image';
+
+// 2. Third-party
+import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button';
+
+// 3. Internal utilities
+import { getCurrentUser } from '@/lib/auth/server-session';
+import { getDbHttp } from '@app/db';
+import { projects } from '@app/db/schema';
+import { getR2PublicUrl } from '@/lib/utils/r2';
+
+// 4. Components
+import { ProjectLibrary } from '@/components/app/project-library';
+
+// 5. Relative imports (if any)
+import { ProjectDetail } from './project-detail';
+```
+
+### Import Grouping Rules
+
+- Group imports with blank lines between groups
+- Sort imports alphabetically within each group
+- Use absolute imports (`@/`) for internal modules
+- Use relative imports only for files in the same directory or nearby
+
+```typescript
+// ✅ GOOD: Grouped and sorted
+import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+
+import { getCurrentUser } from '@/lib/auth/server-session';
+import { listProductsWithMediaForSsr } from '@/server/loaders/ssr-products';
+
+// ❌ BAD: Mixed and unsorted
+import { Button } from '@/components/ui/button';
+import { Suspense } from 'react';
+import { getCurrentUser } from '@/lib/auth/server-session';
+import { redirect } from 'next/navigation';
+```
+
+---
+
+## TypeScript Conventions
+
+### Type vs Interface
+
+**Prefer interfaces over types** (except for unions, intersections, or utility types):
+
+```typescript
+// ✅ GOOD: Use interface for object shapes
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// ✅ GOOD: Use type for unions
+type Status = 'pending' | 'completed' | 'failed';
+
+// ✅ GOOD: Use type for utility types
+type UserProfilePartial = Partial<UserProfile>;
+```
+
+### Avoid Enums
+
+**Prefer const objects or `as const` assertions over enums by default.**
+Existing shared protocol enums (for example `ErrorCode`) are allowed when they are already core contracts used across layers.
+
+```typescript
+// ✅ GOOD: Const object
+export const ErrorCode = {
+  SUCCESS: 0,
+  UNAUTHORIZED: 2001,
+  NOT_FOUND: 4001,
+} as const;
+
+export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
+
+// ❌ BAD: Enum
+export enum ErrorCode {
+  SUCCESS = 0,
+  UNAUTHORIZED = 2001,
+}
+```
+
+### Naming Conventions
+
+- **Variables**: camelCase: `userName`, `isLoading`, `hasError`
+- **Constants**: UPPER_SNAKE_CASE: `MAX_FILE_SIZE`, `API_BASE_URL`
+- **Functions**: camelCase: `getUserData()`, `handleSubmit()`
+- **Components**: PascalCase: `UserProfile`, `TaskList`
+- **Types/Interfaces**: PascalCase: `UserData`, `ApiResponse`
+- **Files**: kebab-case: `user-profile.tsx`, `api-utils.ts`
+
+### Descriptive Variable Names
+
+**Use auxiliary verbs for boolean variables:**
+
+```typescript
+// ✅ GOOD: Descriptive with auxiliary verbs
+const isLoading = true;
+const hasError = false;
+const canEdit = true;
+const shouldRetry = false;
+
+// ❌ BAD: Unclear naming
+const loading = true;
+const error = false;
+const edit = true;
+```
+
+---
+
+## Environment Variable Naming
+
+If this section conflicts with `security-rules.mdc`, that file takes precedence.
+
+### Next.js Server Variables (No Prefix)
+
+**For API keys and secrets used only on the server:**
+
+```typescript
+// ✅ GOOD: Next.js server-only (API routes / server components)
+const apiKey = process.env.OPENAI_API_KEY;
+const dbUrl = process.env.DATABASE_URL;
+
+// ❌ BAD: Using NEXT_PUBLIC_ for secrets
+const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY; // Exposed to browser!
+```
+
+### Server secrets on the host platform
+
+Store production secrets in the deployment provider’s secret store (e.g. Vercel **Sensitive** environment variables). Never rely on `NEXT_PUBLIC_*` for secrets, and never commit real values.
+
+### Client-Side Variables (NEXT_PUBLIC_ Prefix)
+
+**Only for public, non-sensitive configuration:**
+
+```typescript
+// ✅ GOOD: Public configuration
+const domain = process.env.NEXT_PUBLIC_R2_PUBLIC_DOMAIN;
+const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+// ❌ BAD: Never use NEXT_PUBLIC_ for secrets
+const apiKey = process.env.NEXT_PUBLIC_API_KEY; // Security risk!
+```
+
+### Naming Patterns
+
+- **API Keys**: `{SERVICE}_API_KEY` (e.g., `OPENAI_API_KEY`, `RESEND_API_KEY`)
+- **Secrets**: `{SERVICE}_SECRET` (e.g., `FAL_WEBHOOK_TOKEN`)
+- **URLs**: `{SERVICE}_URL` or `{SERVICE}_ENDPOINT`
+- **Public Config**: `NEXT_PUBLIC_{SERVICE}_{CONFIG}` (e.g., `NEXT_PUBLIC_R2_PUBLIC_DOMAIN`)
+
+---
+
+## Git Branch Naming
+
+### Branch Naming Convention
+
+Use descriptive branch names with prefixes:
+
+- **Feature**: `feat/feature-name` (e.g., `feat/user-profile`)
+- **Fix**: `fix/bug-description` (e.g., `fix/login-error`)
+- **Refactor**: `refactor/component-name` (e.g., `refactor/auth-flow`)
+- **Chore**: `chore/task-description` (e.g., `chore/update-deps`)
+- **Docs**: `docs/documentation-name` (e.g., `docs/api-reference`)
+
+### Commit Messages
+
+Follow Conventional Commits format (see `gen-commit-message.md`):
+
+```
+<type>(<scope>): <subject>
+
+- <brief change 1>
+- <brief change 2>
+```
+
+**Types**: `feat`, `fix`, `refactor`, `style`, `chore`, `docs`, `perf`, `test`
+
+---
+
+## Code Organization
+
+### File Structure
+
+**Organize files in this order:**
+
+1. Imports (grouped and sorted)
+2. Type/Interface definitions
+3. Constants
+4. Helper functions
+5. Main component/function
+6. Exports
+
+```typescript
+// ✅ GOOD: Well-organized file structure
+// 1. Imports
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+
+// 2. Types
+interface ComponentProps {
+  title: string;
+}
+
+// 3. Constants
+const MAX_ITEMS = 10;
+
+// 4. Helpers
+function formatTitle(title: string): string {
+  return title.toUpperCase();
+}
+
+// 5. Main component
+export function Component({ title }: ComponentProps) {
+  return <div>{formatTitle(title)}</div>;
+}
+```
+
+### Function Organization
+
+**Within a file, organize functions:**
+
+1. Pure utility functions first
+2. Helper functions
+3. Main exported functions last
+
+---
+
+## Export Conventions
+
+### Named Exports (Preferred)
+
+**Use named exports for components and utilities:**
+
+```typescript
+// ✅ GOOD: Named export
+export function UserProfile() {
+  return <div>Profile</div>;
+}
+
+export function getUserData() {
+  // ...
+}
+
+// ❌ BAD: Default export (unless required by framework)
+export default function UserProfile() {
+  return <div>Profile</div>;
+}
+```
+
+### Barrel Exports
+
+**Use index files for clean imports:**
+
+```typescript
+// packages/db — schema tables are exported from `@app/db/schema`
+import { projects, users } from '@app/db/schema';
+```
+
+---
+
+## Path Aliases
+
+### Standard Aliases
+
+Use TypeScript path aliases for cleaner imports:
+
+```typescript
+// tsconfig.json paths
+{
+  "@/*": ["./src/*"],
+  "@/components/*": ["./src/components/*"],
+  "@/lib/*": ["./src/lib/*"],
+  "@/app/*": ["./src/app/*"]
+}
+
+// ✅ GOOD: Use path aliases
+import { Button } from '@/components/ui/button';
+import { getCurrentUser } from '@/lib/auth/server-session';
+
+// ❌ BAD: Relative paths for distant files
+import { Button } from '../../../components/ui/button';
+```
+
+---
+
+## Code Style
+
+### Functional Programming
+
+- Prefer functional and declarative patterns
+- Avoid classes (use functions and hooks)
+- Use iteration and modularization over duplication
+
+### Do not invent placeholder data
+
+Avoid writing fake fallback strings into data or models (e.g.
+`model: 'Unknown'`, `createdAt: 'Generating...'`, `name: p.name || 'Unknown
+Project'`). Missing data is a normal state — keep it as `null` / `undefined`
+(or empty) and handle the empty case at the UI / render layer. See
+`data-structure-consistency.mdc` for the full pattern.
+
+### Arrow Functions
+
+**Use arrow functions for components and handlers:**
+
+```typescript
+// ✅ GOOD: Arrow function component
+export const UserProfile = ({ name }: { name: string }) => {
+  return <div>{name}</div>;
+};
+
+// ✅ GOOD: Arrow function handler
+const handleClick = () => {
+  // ...
+};
+```
+
+### Conditional Rendering
+
+**Use concise syntax for simple conditionals:**
+
+```typescript
+// ✅ GOOD: Concise conditional
+{isLoading && <Skeleton />}
+{error && <ErrorMessage error={error} />}
+
+// ✅ GOOD: Ternary for two options
+{isLoading ? <Skeleton /> : <Content />}
+
+// ⚠️ AVOID: Unnecessary curly braces for simple statements
+if (isLoading) {
+  return <Skeleton />;
+}
+```
+
+---
+
+## Data Structure Consistency
+
+Follow `data-structure-consistency.mdc` as the single source of truth for this topic.
+Do not duplicate or override it here.
+
+---
+
+## Checklist
+
+Before committing code, verify:
+
+- [ ] File names use kebab-case
+- [ ] Component names use PascalCase
+- [ ] Imports are grouped and sorted
+- [ ] Path aliases used instead of long relative paths
+- [ ] Interfaces used instead of types (where appropriate)
+- [ ] No enums (use const objects)
+- [ ] Environment variables follow naming conventions
+- [ ] Git branch name follows convention
+- [ ] Commit message follows Conventional Commits
+- [ ] Code is organized logically within files
+- [ ] Named exports used (unless default required)

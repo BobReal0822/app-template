@@ -1,0 +1,241 @@
+---
+description: Enforce Next.js component placement, organization, and authoring conventions.
+globs: src/components/**/*.{ts,tsx}
+---
+
+# Next.js Component Creation Rules
+
+## Precedence
+
+Authoritative for component placement and authoring structure.
+For global conflict order, see `rules-index.mdc`.
+
+## Component Organization
+
+### Directory Structure
+
+**CRITICAL: Components directory (`/src/components/`) should ONLY contain reusable/shared components.**
+
+#### 1. UI Library Components (`/src/components/ui/`)
+
+- **ONLY** installed/third-party components (Shadcn UI, Radix UI, etc.)
+- Components installed via `npx shadcn-ui@latest add [component]`
+- Base UI primitives that are framework-agnostic
+
+#### 2. Simple Generic Components (Category-based directories)
+
+- **Location**: Directly under `/src/components/` with category names
+- **Examples**: `components/dialogs/`, `components/marketing/` (create category folders as needed; avoid documenting removed paths as canonical)
+- **Criteria**: Simple, reusable components that are:
+  - Self-assembled or based on UI library components
+  - Generic enough to be used across multiple features
+  - Have minimal business logic
+- **Naming**: Use plural category names (e.g., `buttons/`, not `button/`)
+
+#### 3. Complex Reusable Business Components (Domain-based directories)
+
+- **Location**: `/src/components/{domain}/` (e.g., `components/app/`, `components/auth/`, `components/ai-elements/`)
+- **Criteria**: Business-related components that are:
+  - Complex with business logic
+  - Reusable across multiple pages/features
+  - Used in 2+ different business contexts
+- **Examples**: `app/[locale]/app/(features)/image-generator/image-generator-panel.tsx`, `components/auth/login-form.tsx`
+
+#### 4. Non-Reusable Business Components
+
+- **Location**:
+  - **Option A (Recommended for 1-3 components)**: Directly in page directory alongside `page.tsx`
+    - Example: `app/[locale]/(marketing)/blog/blog-page-content.tsx`
+  - **Option B (For 4+ components)**: Use `_components/` subdirectory
+    - Example: `app/[locale]/app/profile/_components/profile-page-content.tsx`
+- **Criteria**: Components that are:
+  - Specific to a single page or feature
+  - Not reusable elsewhere
+  - Tightly coupled to business logic
+- **Decision Rule**:
+  - **1-3 components**: Place directly in page directory (simpler, cleaner)
+  - **4+ components**: Use `_components/` subdirectory (better organization)
+- **Note**: Next.js App Router only routes special files (`page.tsx`, `layout.tsx`, etc.), so regular `.tsx` files in page directories are safe and won't be routed. The `_components/` prefix is a convention for clarity, not a technical requirement.
+
+### Reusability Decision Guide
+
+**Place in `/src/components/` if:**
+
+- ✅ Used in 2+ different pages/features
+- ✅ Generic enough for reuse
+- ✅ Minimal business-specific logic
+
+**Place in page directory (with or without `_components/`) if:**
+
+- ❌ Only used in one specific page/feature
+- ❌ Contains page-specific business logic
+- ❌ Tightly coupled to a single route
+- **Use `_components/` subdirectory only if you have 4+ components** (for better organization)
+
+### File Naming Conventions
+
+- Use kebab-case for component files: `quiz-detail.tsx`, `user-dashboard.tsx`
+- Use PascalCase for component names: `QuizDetail`, `UserDashboard`
+- Use descriptive names that clearly indicate the component's purpose
+
+## Component Structure
+
+### Basic Component Template
+
+```tsx
+import React from 'react';
+import { cn } from '@/lib/utils';
+
+interface ComponentNameProps {
+  // Define props with TypeScript
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export function ComponentName({
+  className,
+  children,
+  ...props
+}: ComponentNameProps) {
+  return (
+    <div className={cn('base-styles', className)} {...props}>
+      {children}
+    </div>
+  );
+}
+```
+
+### Component Guidelines
+
+- Always use TypeScript with proper prop interfaces
+- Include `className` prop for styling flexibility
+- Use `cn()` utility for conditional class merging
+- Export components as named exports
+- Include JSDoc comments for complex components
+
+## Styling and UI
+
+### UI Library Usage
+
+- **Primary**: Use Shadcn UI components as the foundation
+- **Radix**: Leverage Radix UI primitives for complex interactions
+- **Tailwind CSS**: Use Tailwind for all styling and responsive design
+
+### Styling Best Practices
+
+- Implement mobile-first responsive design
+- Use Tailwind's utility classes for consistent spacing and colors
+- Create reusable style variants using `cn()` utility
+- Follow the design system established by Shadcn UI
+
+### Component Composition
+
+- Prefer composition over inheritance
+- Use compound components pattern for complex UI elements
+- Create wrapper components that combine multiple UI primitives
+- Keep components focused on a single responsibility
+
+## Performance and Optimization
+
+### React Best Practices
+
+- Use `React.memo()` for expensive components
+- Implement proper key props for lists
+- Avoid inline object/function creation in render methods
+- Use `useCallback` and `useMemo` when appropriate
+
+### Next.js Specific
+
+- Use dynamic imports for code splitting when needed
+- Implement proper loading and error states
+- Follow Next.js App Router conventions
+- Use Server Components when possible, Client Components when necessary
+
+## File Organization Examples
+
+```
+src/
+├── components/                    # ONLY reusable/shared components
+│   ├── ui/                        # Third-party UI library components
+│   │   ├── button.tsx
+│   │   ├── input.tsx
+│   │   └── dialog.tsx
+│   │
+│   ├── dialogs/                 # Simple generic components (category-based)
+│   │   └── delete-dialog.tsx
+│   │
+│   ├── marketing/                 # Marketing shell (nav, footer, etc.)
+│   │   └── navbar.tsx
+│   │
+│   ├── brand/                     # Logos and brand assets
+│   │   └── brand-logo.tsx
+│   │
+│   ├── app/                       # Complex reusable business components
+│   │   └── studio-results-panel.tsx
+│   │
+│   ├── providers/                 # App-wide providers
+│   │   ├── query-client-provider.tsx
+│   │   └── error-handler-provider.tsx
+│   │
+│   └── ai-elements/               # Complex reusable business components
+│       ├── message.tsx
+│       └── conversation.tsx
+│
+└── app/
+    └── [locale]/
+        ├── (marketing)/
+        │   ├── blog/
+        │   │   ├── page.tsx
+        │   │   └── blog-page-content.tsx  # 1 component: directly in page directory
+        │   │
+        │   └── _components/                # 8 components: use _components/ directory
+        │       ├── hero-section.tsx
+        │       └── features-section.tsx
+        │
+        └── app/
+            └── profile/
+                ├── page.tsx
+                └── _components/            # 8 components: use _components/ directory
+                    ├── profile-page-content.tsx
+                    └── profile-info-tab.tsx
+```
+
+### Component Placement Rules
+
+**✅ CORRECT:**
+
+- `components/ui/button.tsx` - Third-party component
+- `components/dialogs/delete-dialog.tsx` - Simple reusable dialog
+- `app/[locale]/app/(features)/image-generator/image-generator-panel.tsx` - Feature-scoped generator panel (co-located with `page.tsx`)
+- `app/[locale]/(marketing)/blog/blog-page-content.tsx` - Single page component (1-3 components: directly in page directory)
+- `app/[locale]/app/profile/_components/profile-page-content.tsx` - Multiple page components (4+ components: use `_components/`)
+
+**❌ WRONG:**
+
+- `components/profile-tab.tsx` - Should be in page directory (with or without `_components/`)
+- `components/marketing/hero-section.tsx` - Should be in `app/[locale]/(marketing)/_components/` (if reusable) or page directory (if not reusable)
+- `components/shared/dialogs/delete-dialog.tsx` - Too nested; prefer `components/dialogs/`
+- `app/[locale]/(marketing)/blog/_components/blog-page-content.tsx` - Only 1 component, should be directly in `blog/` directory
+
+## Code Quality
+
+### TypeScript
+
+- Define comprehensive prop interfaces
+- Use proper typing for event handlers
+- Implement generic components when appropriate
+- Avoid `any` type usage
+
+### Accessibility
+
+- Include proper ARIA attributes
+- Ensure keyboard navigation support
+- Use semantic HTML elements
+- Test with screen readers
+
+### Testing Considerations
+
+- Write testable components with clear interfaces
+- Avoid tight coupling with external dependencies
+- Use data-testid attributes for testing
+- Keep components pure when possible

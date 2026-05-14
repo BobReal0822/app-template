@@ -1,0 +1,341 @@
+---
+description: Rules specific to the Next.js App Router, covering data fetching, API routes, error handling, loading states, and metadata.
+globs: src/app/**/*.{ts,tsx}
+---
+
+# Next.js App Router Rules
+
+## API Routes Guidelines
+
+- Use Next.js App Router conventions for data fetching and API routes.
+- Implement efficient caching and revalidation strategies using Next.js built-in features.
+- Use route handlers (`route.ts`) for API routes in the App Router.
+- Follow Next.js docs for Data Fetching, Rendering, and Routing.
+
+## When to Use Next.js API Routes
+
+**See `architecture-decision-rules.mdc` for detailed decision framework.**
+
+Use Next.js API Routes (`/app/api/**/route.ts`) for:
+
+- **Frontend integration**: Tight integration with Next.js features (caching, middleware, Server Components)
+- **AI/Streaming**: Vercel AI SDK integration for streaming responses (see `src/app/api/chat/route.ts`)
+- **Simple third-party GET queries**: Third-party API calls that only serve the current Next.js frontend (use `process.env.API_KEY` with non-`NEXT_PUBLIC_` prefix)
+- **Simple operations**: Basic CRUD scoped to the signed-in user via Drizzle (`@app/db`) in Route Handlers or Server Actions
+- **SEO/Metadata**: Dynamic generation of sitemap, robots.txt, or metadata
+
+**Prefer a separate worker or queue** (instead of a Route Handler) when **all** of the following apply: long-running CPU work beyond platform timeouts, always-on background consumers, or strict isolation from the web tier. Otherwise implement in `src/app/api/**` or `src/server/handlers/**` with `maxDuration` and idempotency as needed.
+
+**DO NOT use Next.js API Routes when:**
+
+- The workload consistently exceeds the host’s maximum execution time — use a durable job system or external worker.
+- You need a always-on TCP/WebSocket server — use a dedicated service.
+
+**Webhooks** (Stripe, Fal, etc.) **do** live in Route Handlers today: keep raw body handling, signature verification, and idempotency keys in `src/server/handlers/webhooks/*`.
+
+## Error Handling & Loading States
+
+- Implement error boundaries and `error.tsx` files for error handling.
+- Use `loading.tsx` files for managing loading states.
+- Use Next.js 15's metadata API for SEO optimization.
+
+## API Route Best Practices
+
+- Keep API routes focused on frontend integration and Next.js-specific features
+- Use Drizzle + `@app/db` for database access from Route Handlers (enforce ownership in code)
+- Auth at the route boundary via `requireAuth` / `tryAuth` from `@/server/api/auth`
+- Leverage Next.js caching strategies (`revalidate`, `cache`, `fetch` options)
+- Export `maxDuration` for long-running operations (e.g., `export const maxDuration = 30`)
+
+### Response Format Standardization
+
+**App JSON APIs SHOULD return responses in the standardized format** (shared `code` / `message` / `data` envelope):
+
+```json
+{
+  "code": 0, // Custom status code: 0 for success, non-zero for errors
+  "message": "return message", // Response message in English
+  "data": {} // Response data
+}
+```
+
+**Status Code Guidelines:**
+
+- `0`: Success
+- `1xxx`: Parameter/Request related errors (e.g., 1001 = Missing parameter)
+- `2xxx`: User/Authentication related errors (e.g., 2001 = Unauthorized)
+- `3xxx`: Task/Operation related errors (e.g., 3001 = Task not found)
+- `4xxx`: Resource/Data related errors (e.g., 4001 = Resource not found)
+- `5xxx`: System/Server related errors (e.g., 5001 = Internal server error)
+
+**Error Code Mapping to HTTP Status:**
+
+- Custom error codes are automatically mapped to appropriate HTTP status codes:
+  - 1xxx → 400 Bad Request
+  - 2xxx → 401 Unauthorized / 403 Forbidden
+  - 3xxx → 400 Bad Request / 409 Conflict
+  - 4xxx → 404 Not Found / 409 Conflict
+  - 5xxx → 500 Internal Server Error / 503 Service Unavailable
+
+**Shared Response Utilities:**
+
+`ErrorCode` / `ErrorMessages` / `ApiResponse` live in `@/lib/api/response`
+(client + server). The `NextResponse`-returning helpers live in
+`@/server/api/response`. Prefer the short helpers (`ok`, `fail`) for new Route
+Handlers:
+
+```typescript
+import { requireAuth } from '@/server/api/auth';
+import { ok, fail, ErrorCode } from '@/server/api/response';
+
+export async function GET(req: Request) {
+  const auth = await requireAuth(req);
+  if (!auth.ok) return auth.response;
+
+  try {
+    const data = await fetchData(auth.user.uid);
+    return ok({ data });
+  } catch (error) {
+    console.error('[GET /api/example] failed:', error);
+    return fail(ErrorCode.INTERNAL_SERVER_ERROR);
+  }
+}
+```
+
+`@/server/api/response` also exports `jsonOk`, `buildSuccess`, `buildError`,
+`buildQuotaExceeded`, and `createResponse` — use the longer form when you need
+to build an envelope ahead of time or set a non-200 status (rare; only auth
+401s do this).
+
+**Exceptions:**
+
+- **Streaming responses** (Vercel AI SDK): use the framework's own response
+  helpers (e.g., `streamText().toUIMessageStreamResponse()`).
+- **Special Next.js features** (`redirect()`, `notFound()`) are exempt.
+- **Third-party API proxies**: when directly proxying without modification.
+
+### Third-Party API Integration
+
+When calling third-party APIs from Next.js API Routes:
+
+- **Use environment variables** with **non-`NEXT_PUBLIC_` prefix** for API keys (e.g., `THIRD_PARTY_API_KEY`)
+- These environment variables are **server-only** and never exposed to the client
+- Example:
+
+  ```typescript
+  // ✅ CORRECT - Server-only environment variable
+  const apiKey = process.env.THIRD_PARTY_API_KEY;
+
+  // ❌ WRONG - Exposed to client
+  const apiKey = process.env.NEXT_PUBLIC_THIRD_PARTY_API_KEY;
+  ```
+
+- **Extract a shared npm package or HTTP microservice** when multiple heterogeneous clients (mobile, partner API) need the **same** contract outside this Next.js deployment.
+
+## API Route Testing
+
+**All Next.js API Routes MUST have comprehensive test coverage.**
+
+### Test Framework & Setup
+
+- **Jest**: Use Jest for unit testing API Routes
+- **Test Environment**: Node.js environment (for server-side code)
+- **Test File Location**: Place test files next to the route file: `route.test.ts`
+- **Test Configuration**: Use `jest.config.js` with `testEnvironment: 'node'` for API route tests
+
+### Test Structure Template
+
+```typescript
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  jest,
+} from '@jest/globals';
+import { GET } from './route';
+import { ErrorCode } from '@/lib/api/response';
+
+// Helper function to create a Request object for testing
+function createTestRequest(url: string): Request {
+  return new Request(url, {
+    method: 'GET',
+  });
+}
+
+describe('GET /api/example', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Set up test environment variables
+    process.env = {
+      ...originalEnv,
+      API_KEY: 'test-api-key',
+    };
+    // Mock global fetch
+    global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;
+  });
+
+  afterEach(() => {
+    // Restore original environment
+    process.env = originalEnv;
+    jest.restoreAllMocks();
+  });
+
+  // Test cases here
+});
+```
+
+### Required Test Categories
+
+**Every API Route test suite MUST include tests for:**
+
+#### 1. Parameter Validation Tests
+
+Test all required and optional parameters:
+
+```typescript
+describe('Parameter Validation', () => {
+  it('should return error when required parameter is missing', async () => {
+    const req = createTestRequest('http://localhost/api/example');
+    const response = await GET(req);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.code).toBe(ErrorCode.MISSING_PARAMETER);
+    expect(data.message).toContain('required');
+  });
+
+  it('should return error when parameter is invalid', async () => {
+    const req = createTestRequest('http://localhost/api/example?page=invalid');
+    const response = await GET(req);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.code).toBe(ErrorCode.INVALID_PARAMETER);
+  });
+
+  it('should return error when parameter is out of range', async () => {
+    const req = createTestRequest('http://localhost/api/example?page=-1');
+    const response = await GET(req);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.code).toBe(ErrorCode.INVALID_PARAMETER);
+  });
+});
+```
+
+#### 2. Environment Variable / Configuration Tests
+
+Test API key and configuration validation:
+
+```typescript
+describe('API Key Validation', () => {
+  it('should return error when API key is not configured', async () => {
+    delete process.env.API_KEY;
+
+    const req = createTestRequest('http://localhost/api/example?page=1');
+    const response = await GET(req);
+    const data = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(data.code).toBe(ErrorCode.INTERNAL_SERVER_ERROR);
+    expect(data.message).toContain('configuration');
+  });
+});
+```
+
+#### 3. Error Handling Tests
+
+Test different error scenarios (network errors, parsing errors, generic errors):
+
+```typescript
+describe('Error Handling', () => {
+  it('should handle network errors', async () => {
+    (global.fetch as jest.MockedFunction<typeof fetch>).mockRejectedValueOnce(
+      new TypeError('Failed to fetch'),
+    );
+
+    const req = createTestRequest('http://localhost/api/example?page=1');
+    const response = await GET(req);
+    const data = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(data.code).toBe(ErrorCode.NETWORK_ERROR);
+  });
+});
+```
+
+#### 4. Response Format Tests
+
+Verify standardized response format:
+
+```typescript
+describe('Response Format', () => {
+  it('should return standardized response format', async () => {
+    const req = createTestRequest('http://localhost/api/example?page=1');
+    const response = await GET(req);
+    const data = await response.json();
+
+    expect(data).toHaveProperty('code');
+    expect(data).toHaveProperty('message');
+    expect(data).toHaveProperty('data');
+    expect(typeof data.code).toBe('number');
+    expect(typeof data.message).toBe('string');
+  });
+});
+```
+
+### Mocking Best Practices
+
+Mock `global.fetch` and environment variables as needed:
+
+```typescript
+// Mock fetch
+(global.fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
+  ok: true,
+  json: async () => ({ data: [] }),
+} as unknown as Response);
+
+// Mock environment variables
+beforeEach(() => {
+  process.env = { ...originalEnv, API_KEY: 'test-key' };
+});
+```
+
+### Test Coverage Goals
+
+- **Parameter validation**: 100% coverage of all parameters
+- **Error handling**: All error paths tested
+- **Success scenarios**: At least one happy path test
+- **Response format**: Verify standardized format
+
+### Running Tests
+
+```bash
+# Run all jest suites
+pnpm test:jest
+
+# Run a specific test file
+pnpm test:jest src/app/api/queues/persist-media-to-r2/__tests__/persist-media-to-r2.test.ts
+
+# Watch mode
+pnpm test:jest --watch
+```
+
+### Example Test File
+
+See `src/app/api/queues/persist-media-to-r2/__tests__/persist-media-to-r2.test.ts`
+for an example of a Route Handler test in this codebase.
+
+### Notes
+
+- Co-locate tests in a sibling `__tests__` directory or alongside the route
+  as `route.test.ts`.
+- Use `createTestRequest()` (or `new Request(...)`) to build request objects.
+- Mock `global.fetch` for all external API calls.
+- Verify both HTTP status codes and the custom envelope `code`.
+- Use `as unknown as Response` for mock Response objects to avoid TS errors.

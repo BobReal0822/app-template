@@ -1,0 +1,273 @@
+---
+description: Conventions for Vercel Queues, Cron, Webhooks, and Server-Sent Events Route Handlers (auth, idempotency, raw bodies, runtime config).
+globs: src/app/api/{queues,cron,webhooks,realtime}/**/*.ts
+---
+
+# Server Runtime Conventions
+
+Authoritative for the four server-runtime-flavored Route Handler families in
+this codebase. For when to choose between them, see
+`architecture-decision-rules.mdc`. For secrets and error exposure, follow
+`security-rules.mdc`.
+
+All four shapes share these defaults:
+
+```typescript
+export const runtime = 'nodejs';        // ✅ never 'edge'
+export const dynamic = 'force-dynamic'; // ✅ no static caching of side-effect endpoints
+// `maxDuration` is required when the work can exceed the platform default.
+export const maxDuration = 60;
+```
+
+---
+
+## 1. Vercel Queues
+
+### Producers
+
+All Vercel queue producers must go through the typed entry point at
+`src/server/queue/enqueue.ts`. Don't call `@vercel/queue#send` directly —
+the wrapper enforces:
+
+- topic name typo → compile error (`QueueTopic` union)
+- payload shape → compile error (`QueuePayloads[topic]`)
+- structured logging on success/failure
+- best-effort semantics (failed enqueue throws; producer decides whether to
+  surface)
+
+```typescript
+import { enqueue } from '@/server/queue/enqueue';
+
+await enqueue(
+  'persist-media-to-r2',
+  { mediaType: 'image', itemId, mediaUrl, keyPrefix: 'gen-image', taskId },
+  { idempotencyKey: `persist-media-to-r2:item:${itemId}` },
+);
+```
+
+To add a new topic:
+
+1. Define the payload interface in `src/server/queue/enqueue.ts`.
+2. Add a key/value entry to `QueuePayloads`.
+3. Create the consumer route under `src/app/api/queues/<topic>/route.ts`.
+4. Register the trigger in `vercel.json` `experimentalTriggers`.
+
+### Consumers
+
+Consumer routes are **private** — no public URL is exposed; Vercel Queues
+invokes them via `experimentalTriggers`. They follow this exact shape:
+
+```typescript
+// src/app/api/queues/<topic>/route.ts
+import { handleCallback } from '@vercel/queue';
+
+import { withIdempotency } from '@/server/lib/idempotency';
+import { handleMyTopic } from '@/server/handlers/<topic>';
+import type { MyTopicPayload } from '@/server/queue/enqueue';
+
+export const runtime = 'nodejs';
+
+const handler = handleCallback<MyTopicPayload>(async (payload) => {
+  await withIdempotency(
+    `queue:<topic>:item:${payload.itemId}`, // logical key, not messageId
+    'queue:<topic>',
+    async () => {
+      await handleMyTopic(payload);
+    },
+  );
+});
+
+export async function POST(request: Request) {
+  return handler(request);
+}
+```
+
+**Required:**
+
+- [ ] `runtime = 'nodejs'`
+- [ ] `handleCallback<PayloadType>` — type the payload, never `any`
+- [ ] Wrap the body in `withIdempotency()` keyed on a **logical** id (item /
+      task / user), not the queue messageId. The `idempotencyKeys` Postgres
+      table has a 7-day TTL; this is the second dedup layer on top of
+      Vercel Queues' built-in (≤24h) `idempotencyKey`.
+- [ ] Heavy lifting lives in `src/server/handlers/<topic>.ts`, not in the
+      route file
+- [ ] Throw on transient failures so Vercel retries; throw nothing if the
+      idempotency wrapper deduped
+
+**Forbidden:**
+
+- ❌ Reading `req.json()` directly (use `handleCallback` to parse)
+- ❌ Returning a custom envelope (`handleCallback` owns the response)
+- ❌ Side effects outside `withIdempotency` (will replay on retries)
+
+---
+
+## 2. Vercel Cron
+
+Cron handlers live at `src/app/api/cron/<job>/route.ts` and are scheduled
+in `vercel.json` (or `vercel.ts`).
+
+```typescript
+// src/app/api/cron/<job>/route.ts
+import { requireCronAuth } from '@/server/api/auth';
+import { ok, fail, ErrorCode } from '@/server/api/response';
+import * as logger from '@/server/lib/logger';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 300;
+
+export async function GET(req: Request) {
+  const auth = requireCronAuth(req);
+  if (!auth.ok) return auth.response;
+
+  try {
+    const result = await runMyCronJob();
+    logger.info('[cron:<job>] completed', result);
+    return ok(result);
+  } catch (error) {
+    logger.error('[cron:<job>] failed', error);
+    return fail(ErrorCode.INTERNAL_SERVER_ERROR);
+  }
+}
+```
+
+**Required:**
+
+- [ ] `requireCronAuth(req)` at the top — verifies `Authorization: Bearer
+      <CRON_SECRET>` (Vercel sets this automatically)
+- [ ] The job body is idempotent (`withIdempotency` keyed on date if
+      partial-failure restart matters)
+- [ ] Use `logger.info`/`logger.error` (Vercel ships these to platform logs)
+- [ ] Schedule entry exists in `vercel.json` / `vercel.ts`
+
+**Forbidden:**
+
+- ❌ Skipping auth ("it's only invoked by Vercel" is wrong — anyone can hit
+     the URL)
+- ❌ Long-running work that exceeds `maxDuration` — break into smaller jobs
+     or fan out via a queue
+
+---
+
+## 3. Webhooks (Stripe, Fal, …)
+
+Webhooks live under `src/app/api/webhooks/<provider>/[<event>/]route.ts`.
+
+### Stripe — raw body required
+
+Stripe signature verification needs the **untouched** request body. Use
+`req.text()`, not `req.json()`. Body parsing happens inside the server
+handler.
+
+```typescript
+// src/app/api/webhooks/stripe/route.ts
+import { NextResponse } from 'next/server';
+
+import { handleStripeWebhook } from '@/server/handlers/webhooks/stripe-webhook';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
+export async function POST(req: Request): Promise<Response> {
+  const signature = req.headers.get('stripe-signature');
+  const rawBody = await req.text(); // ⚠️ MUST be text, not json
+
+  const result = await handleStripeWebhook({ rawBody, signature });
+  return NextResponse.json(result.body, { status: result.status });
+}
+```
+
+### Fal callbacks
+
+Fal callbacks include a token in the URL or header — verify against
+`FAL_WEBHOOK_TOKEN` before doing anything. Like Stripe, dedupe by event id /
+request id with `withIdempotency`.
+
+### Required for every webhook
+
+- [ ] Signature / token verified before reading payload
+- [ ] Idempotency by external event id via `withIdempotency`
+- [ ] Always return HTTP 200 on durably accepted events (so the provider
+      doesn't keep retrying); use 4xx only for genuinely malformed input
+      that will never succeed
+- [ ] Heavy work delegated to `src/server/handlers/webhooks/<provider>-webhook.ts`;
+      the route file only owns auth, raw-body extraction, and response
+      shaping
+- [ ] Never log the raw signing secret or the full payload if it contains
+      PII
+
+### Forbidden
+
+- ❌ `req.json()` for Stripe (breaks signature verification)
+- ❌ Returning 500 for a payload you've already persisted (the provider
+     will replay; you get duplicate side effects)
+- ❌ Long-running work in the webhook handler — fan out to a queue and
+     return 200 fast
+
+---
+
+## 4. Realtime SSE
+
+SSE handlers live under `src/app/api/realtime/<feature>/[<id>/]route.ts`
+and use `createSseStream` from `@/server/realtime/sse` for the wire shape.
+The bus is regular Redis (`REDIS_URL`, ioredis), not Upstash — Upstash REST
+doesn't support pub/sub.
+
+```typescript
+// src/app/api/realtime/<feature>/[id]/route.ts
+import { requireAuth } from '@/server/api/auth';
+import { createSseStream } from '@/server/realtime/sse';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const { id } = await params;
+
+  // Authorize the resource before subscribing
+  await assertOwnership(auth.user.uid, id);
+
+  return createSseStream({
+    channels: [`feature:${id}`],
+    signal: req.signal,
+    onConnect: async () => JSON.stringify(await loadInitialSnapshot(id)),
+    onMessage: (_channel, message) => message, // forward verbatim, or filter
+  });
+}
+```
+
+**Required:**
+
+- [ ] Auth at the route boundary (`requireAuth` or page-level equivalent)
+- [ ] Authorize the specific resource before subscribing — channel names
+      are predictable; never trust them
+- [ ] Pass `req.signal` to `createSseStream` so client-disconnect tears
+      down the Redis subscription
+- [ ] `runtime = 'nodejs'` and `dynamic = 'force-dynamic'`
+- [ ] Producers publish via `redis.publish(channel, JSON.stringify(...))`
+      from server handlers / queue consumers, never from the route file
+
+**Forbidden:**
+
+- ❌ Edge runtime (ioredis won't work)
+- ❌ Custom heartbeat logic — `createSseStream` already sends `: hb\n\n`
+- ❌ Unbounded `onMessage` handlers that allocate per-message — keep them
+     pure and tight
+
+---
+
+## Quick reference
+
+| Family | Auth helper | Idempotency | Body shape | Notes |
+| --- | --- | --- | --- | --- |
+| Queues | (none — invoked privately by Vercel) | `withIdempotency` mandatory | `handleCallback` parses | `runtime = 'nodejs'` |
+| Cron | `requireCronAuth` | optional, on per-day key if needed | typically empty `GET` | `Authorization: Bearer <CRON_SECRET>` |
+| Webhooks | provider signature / token | `withIdempotency` by external event id | `req.text()` for Stripe | Always 200 on accept |
+| SSE | `requireAuth` + resource check | n/a | streaming `Response` | `req.signal` + ioredis |
+
+For the broader pattern selection, see `architecture-decision-rules.mdc`.

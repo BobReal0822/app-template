@@ -1,0 +1,311 @@
+---
+description: Rules for integrating Vercel AI SDK v6 + AI Gateway in Route Handlers and React clients (streaming, structured output, error handling, security).
+globs: src/app/**/*.{ts,tsx}
+---
+
+# Vercel AI SDK v6 + AI Gateway Integration Rules
+
+## Stack
+
+- **Server**: `ai` (v6) — `streamText`, `generateText`, `streamObject`,
+  `generateObject`, `convertToModelMessages`.
+- **Client**: `@ai-sdk/react` — `useChat`, `useCompletion`, `useObject`.
+- **Provider routing**: **Vercel AI Gateway** via plain `"provider/model"`
+  strings (e.g. `"anthropic/claude-sonnet-4"`, `"perplexity/sonar"`,
+  `"openai/gpt-5-mini"`). The gateway resolves the provider, handles
+  failover, and centralizes observability and billing.
+- **Secret**: `process.env.AI_GATEWAY_API_KEY` (server-only). Set via Vercel
+  env (Sensitive) — never `NEXT_PUBLIC_*`. Use the typed accessor
+  `aiGatewayApiKey` from `@/server/lib/secrets` when reading in more than one
+  place.
+
+> Do **not** install or import provider-specific packages
+> (`@ai-sdk/openai`, `@ai-sdk/anthropic`, `@ai-sdk/perplexity`, etc.) unless
+> the user explicitly asks for direct provider wiring. The Gateway is the
+> default.
+
+---
+
+## When to Use Vercel AI SDK in a Route Handler
+
+### ✅ Use a Route Handler with `streamText` / `generateText` for
+
+- **AI chat interfaces** with real-time streaming
+- **Text generation** that streams to the browser
+- **Structured output** (`generateObject` / `streamObject`) that the browser
+  consumes
+- **Tool calling** orchestrated within a single request
+
+### Push to a queue / worker when
+
+- Work consistently exceeds the Route Handler `maxDuration` budget
+- Multi-step pipelines persist credits, write to DB, or fan out to other
+  services — implement the pipeline in `src/server/handlers/**` and dispatch
+  via Vercel Queues. Stream tokens only from the Route Handler.
+
+For credits, DB writes, and webhooks see `architecture-decision-rules.mdc`.
+
+---
+
+## Streaming Setup
+
+### Minimal chat handler
+
+```typescript
+// src/app/api/chat/route.ts
+import { streamText, convertToModelMessages, type UIMessage } from 'ai';
+
+export const maxDuration = 30;
+
+export async function POST(req: Request) {
+  const { messages, model, webSearch }: {
+    messages: UIMessage[];
+    model: string;
+    webSearch?: boolean;
+  } = await req.json();
+
+  const result = streamText({
+    model: webSearch ? 'perplexity/sonar' : model, // e.g. 'anthropic/claude-sonnet-4'
+    system: 'You are a helpful assistant.',
+    messages: await convertToModelMessages(messages),
+  });
+
+  return result.toUIMessageStreamResponse({
+    sendSources: webSearch,
+    sendReasoning: webSearch,
+  });
+}
+```
+
+### Non-chat streaming text
+
+```typescript
+import { streamText } from 'ai';
+
+export const maxDuration = 30;
+
+export async function POST(req: Request) {
+  const { prompt } = await req.json();
+  const result = streamText({
+    model: 'openai/gpt-5-mini',
+    prompt,
+  });
+  return result.toTextStreamResponse();
+}
+```
+
+---
+
+## Structured Output
+
+```typescript
+import { generateObject } from 'ai';
+import { z } from 'zod';
+
+const productSchema = z.object({
+  name: z.string(),
+  price: z.number(),
+  description: z.string(),
+  category: z.string(),
+});
+
+export async function POST(req: Request) {
+  const { prompt } = await req.json();
+
+  const { object } = await generateObject({
+    model: 'openai/gpt-5-mini',
+    schema: productSchema,
+    prompt,
+  });
+
+  return Response.json(object);
+}
+```
+
+For streamed structured output use `streamObject` and
+`result.toTextStreamResponse()`.
+
+---
+
+## Error Handling
+
+```typescript
+import { streamText } from 'ai';
+import { ErrorCode } from '@/lib/api/response';
+
+export const maxDuration = 30;
+
+export async function POST(req: Request) {
+  try {
+    const { messages } = await req.json();
+
+    if (!Array.isArray(messages)) {
+      return Response.json(
+        { code: ErrorCode.INVALID_REQUEST_BODY, message: 'Invalid messages', data: null },
+        { status: 200 },
+      );
+    }
+
+    const result = streamText({
+      model: 'anthropic/claude-sonnet-4',
+      messages,
+      system: 'You are a helpful assistant.',
+    });
+
+    return result.toUIMessageStreamResponse();
+  } catch (error) {
+    console.error('[POST /api/chat] failed:', error);
+    // Generic message only — see security-rules.mdc.
+    return Response.json(
+      { code: ErrorCode.INTERNAL_SERVER_ERROR, message: 'AI request failed', data: null },
+      { status: 500 },
+    );
+  }
+}
+```
+
+Streaming responses cannot use the `ok`/`fail` envelope helpers because the
+body is consumed by the AI SDK. Pre-stream validation and post-error
+fallbacks should still return the standard envelope as JSON.
+
+---
+
+## Client Integration
+
+### `useChat` from `@ai-sdk/react`
+
+```typescript
+'use client';
+
+import { useChat } from '@ai-sdk/react';
+
+export function ChatInterface() {
+  const { messages, sendMessage, status, regenerate } = useChat();
+
+  return (
+    <div>
+      {messages.map((m) => (
+        <div key={m.id}>
+          <strong>{m.role}:</strong>
+          {m.parts.map((part, i) =>
+            part.type === 'text' ? <span key={i}>{part.text}</span> : null,
+          )}
+        </div>
+      ))}
+      <button
+        disabled={status === 'submitted' || status === 'streaming'}
+        onClick={() => sendMessage({ text: 'Hello' })}
+      >
+        Send
+      </button>
+    </div>
+  );
+}
+```
+
+### Imports
+
+```typescript
+// ✅ Correct (AI SDK v6)
+import { useChat, useCompletion, useObject } from '@ai-sdk/react';
+
+// ❌ Old paths — do not use
+import { useChat } from 'ai/react';
+```
+
+---
+
+## Long-running AI with Side Effects
+
+Implement credit reservation, persistence, and webhook fan-out in
+`src/server/handlers/**` + `src/server/services/**`. The Route Handler is the
+auth + streaming boundary; never put DB writes or external webhook side
+effects directly in `streamText` callbacks unless they're idempotent and
+small.
+
+Pattern:
+
+1. Route Handler authenticates and validates
+2. Server Handler reserves credits / creates a task row
+3. Route Handler streams tokens via `streamText`
+4. On finish, Server Handler finalizes credit usage / writes the result
+5. Errors → Server Handler refunds credits
+
+See `architecture-decision-rules.mdc` for the full pattern.
+
+---
+
+## Best Practices
+
+### 1. Always set `maxDuration`
+
+```typescript
+export const maxDuration = 30; // up to 300s on Vercel Fluid Compute
+```
+
+### 2. Validate input
+
+```typescript
+const { messages } = await req.json();
+if (!Array.isArray(messages)) {
+  return Response.json(
+    { code: 1003, message: 'Invalid request', data: null },
+    { status: 200 },
+  );
+}
+
+if (messages.some((m) => typeof m.content === 'string' && m.content.length > 10_000)) {
+  return Response.json(
+    { code: 1002, message: 'Message too long', data: null },
+    { status: 200 },
+  );
+}
+```
+
+### 3. Keep keys server-side
+
+```typescript
+// ✅ Server only
+const apiKey = process.env.AI_GATEWAY_API_KEY;
+
+// ❌ Never
+const apiKey = process.env.NEXT_PUBLIC_AI_GATEWAY_API_KEY;
+```
+
+See `security-rules.mdc` for the full secret-handling policy.
+
+### 4. Use AI Gateway model strings
+
+```typescript
+// ✅ Gateway model strings — no provider package needed
+streamText({ model: 'anthropic/claude-sonnet-4', /* ... */ });
+streamText({ model: 'openai/gpt-5-mini',         /* ... */ });
+streamText({ model: 'perplexity/sonar',          /* ... */ });
+
+// ❌ Direct provider imports (only if explicitly required)
+import { openai } from '@ai-sdk/openai';
+streamText({ model: openai('gpt-4o'), /* ... */ });
+```
+
+### 5. Rate limit at the boundary
+
+For unauthenticated or high-frequency endpoints, add rate limiting at the
+Route Handler (Upstash Redis token bucket, middleware, or
+`@vercel/firewall`). Do not rely on the AI Gateway for per-user rate limits.
+
+---
+
+## Checklist
+
+- [ ] Streaming endpoint is a Next.js Route Handler under `src/app/api/**`
+- [ ] `maxDuration` is set
+- [ ] Model string uses an AI Gateway prefix (`provider/model`)
+- [ ] Provider-specific packages NOT imported (unless explicitly required)
+- [ ] Inputs validated; oversize messages rejected
+- [ ] `AI_GATEWAY_API_KEY` is server-only (no `NEXT_PUBLIC_*` for AI keys)
+- [ ] Errors are caught; generic envelope returned for non-stream failures
+- [ ] Client uses `@ai-sdk/react` (not `ai/react`)
+- [ ] Credit/DB/webhook side effects live in `src/server/handlers/**`,
+      not inline in the streaming callback
+- [ ] Frontend never displays raw provider error text — see
+      `security-rules.mdc`

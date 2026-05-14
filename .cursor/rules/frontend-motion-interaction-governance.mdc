@@ -1,0 +1,88 @@
+---
+description: Enforce motion, interaction semantics, and accessibility baselines for frontend UI.
+globs: src/{app,components}/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Frontend Motion & Interaction Governance
+
+## Precedence
+
+Authoritative for motion and interaction semantics.
+For global conflict order, see `rules-index.mdc`.
+
+## 1) Transition & Easing Rules
+
+- Do not use `transition-all`.
+- Always scope transitions to target properties:
+  `transition-colors` / `transition-opacity` / `transition-shadow` / `transition-[...]`.
+- **Tailwind CSS v4 (this repo):** transition the CSS property that Tailwind actually changes. Check DevTools → Computed when unsure.
+  - `translate-x-*` / `translate-y-*` change CSS **`translate`**. Use `transition-[opacity,translate]` or `transition-[translate,...]`, not `transition-transform`.
+  - `scale-*` changes CSS **`scale`**. Use `transition-[scale,...]` when scale is the moving part.
+  - `rotate-*` changes CSS **`rotate`**. Use `transition-[rotate,...]` when rotation is the moving part.
+  - Use `transition-transform` / `transition-[transform,...]` only when the actual `transform` shorthand changes.
+- Recommended mappings:
+  - Dropdown / popover slide: `transition-[opacity,translate]`
+  - Card lift with `translate-*`: `transition-[translate,box-shadow]`
+  - Card lift with `scale-*`: `transition-[scale,box-shadow]`
+  - Button state: `transition-[background-color,color,box-shadow]`
+  - Collapsible panels: `transition-[grid-template-rows,opacity]`
+  - Progress bars: prefer `origin-left scale-x-*` with `transition-[scale]` (Tailwind v4); keep `transition-transform` only when the element animates the real CSS `transform` shorthand (e.g. inline `style={{ transform: ... }}`). Use `transition-[width]` only for intentional layout-width animation and document why.
+
+### Easing
+
+- Prefer exponential ease-out (`ease-out`, or custom `cubic-bezier` quart/quint) for natural deceleration on enters and state changes.
+- Avoid bounce and elastic easing — they feel dated; real objects decelerate smoothly.
+- For height/collapse animations, use `grid-template-rows` transitions (e.g. `0fr` → `1fr`) instead of animating `height` directly.
+
+```tsx
+// ❌ BAD
+className="transition-all hover:scale-105 hover:shadow-lg"
+
+// ✅ GOOD — Tailwind v4 + `translate-*`: list `translate` in `transition-[...]` (see DevTools → Computed).
+className="transition-[opacity,translate] opacity-0 translate-y-1 data-[state=open]:opacity-100 data-[state=open]:translate-y-0"
+```
+
+## 2) Interaction Semantics
+
+- Only interactive elements may use `cursor-pointer`, hover interactions, or click feedback.
+- Decorative elements must remove interaction affordances; add `aria-hidden` and/or `pointer-events-none` when appropriate.
+- Avoid any UI that looks clickable but is not actually interactive.
+- Use progressive disclosure — start simple, reveal complexity through interaction (basic options visible, advanced behind expandable sections; hover states that reveal secondary actions).
+- Every interactive surface should feel responsive — provide immediate visual feedback on press/click.
+
+## 3) Accessibility Baseline
+
+- Interactive controls must provide at least a `44x44` touch target on mobile.
+- Do not rely on `group-hover` alone for critical actions; touch and keyboard users must also access them.
+- New motion must support `prefers-reduced-motion`.
+- **Skip to main**: `src/app/[locale]/layout.tsx` renders `SkipToMainLink` first; every primary content shell must expose exactly one `main` with `id="main-content"` and `tabIndex={-1}`. Full-page fallbacks (`404`, `error`, `ProfileDataLoadError`) that render without a nested layout must wrap content in that same `main`.
+
+## 4) Color & Hero Gradient Rules
+
+- Do not hardcode long-lived business UI colors (for example `#hex`, `purple-*`, `green-*` semantic leakage).
+- Prefer semantic design tokens first (`primary`, `accent`, `success`, `chart-*`).
+- Feature hero gradients must use preset/config-driven definitions, not scattered inline combinations.
+
+### Headline emphasis (accessibility)
+
+- **Do not** use `background-clip: text` / `bg-clip-text text-transparent` with gradients for primary headline copy (`h1`–`h2` text users read). Per-pixel contrast is uneven and hard to verify for WCAG 1.4.3.
+- **Do** use solid semantic text colors for emphasized spans: **`text-primary`** (or `text-foreground` for the non-emphasized part). `FEATURE_HERO_GRADIENTS.highlight` must be a text utility such as `text-primary`, not a `bg-linear-to-*` + clip pair.
+- **May** keep gradients on **non-text** surfaces: section backgrounds (`section`), glow orbs, borders, decorative meshes — still token-driven.
+- **Exception**: purely decorative non-headline effects (e.g. loading shimmer) may use clip techniques; they must not carry sole semantic meaning for titles.
+
+## 5) Media & Performance Rules
+
+- Prefer `next/image` for presentational images and provide correct `sizes`.
+- Animate compositor-friendly properties only (`opacity`, plus `translate` / `scale` / `rotate` / `transform` depending on what Tailwind emits — see §1 Tailwind v4 note). Do not animate layout properties (`width`, `height`, `padding`, `margin`) unless the layout change is intentional and localized.
+- For orchestrated page loads, use staggered reveals (`animation-delay`) — one well-sequenced entrance creates more impact than scattered micro-interactions.
+
+## 6) PR Self-check
+
+- [ ] `transition-all` count is 0 within changed scope
+- [ ] No pseudo-clickable elements
+- [ ] Touch target and non-hover accessibility requirements are met
+- [ ] Color and gradient usage follow token/preset rules
+- [ ] Animations use `opacity` plus the same motion properties Tailwind actually sets (`translate` / `scale` / `rotate` / `transform`) — no layout property animations unless explicitly justified
+- [ ] No bounce/elastic easing; easing feels smooth and natural
+- [ ] Lint passes

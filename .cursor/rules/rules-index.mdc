@@ -1,0 +1,172 @@
+---
+description: Index of Cursor rules with scope, precedence, and conflict-resolution order.
+alwaysApply: true
+---
+
+# Rules Index
+
+This file is the single entry point for rule precedence and conflict
+resolution. Use it to decide which rule wins when multiple rules apply.
+
+## Global Precedence Order
+
+Apply rules from top to bottom:
+
+1. **Security**
+   - `security-rules.mdc`
+2. **Architecture & data**
+   - `architecture-decision-rules.mdc`
+   - `data-structure-consistency.mdc`
+3. **Domain / runtime rules**
+   - `next-js-app-router-rules.mdc`
+   - `server-runtime-conventions.mdc`
+   - `vercel-ai-sdk-integration-rules.mdc`
+   - `api-request-state-management.mdc`
+   - `i18n-next-intl-rules.mdc`
+   - `performance-optimization-rules.mdc`
+   - `ui-styling-rules.mdc`
+   - `frontend-motion-interaction-governance.mdc`
+4. **Structural / process rules**
+   - `clarification-before-action.mdc`
+   - `create-nextjs-components.mdc`
+   - `create-markdown-docs.mdc`
+5. **Baseline coding conventions**
+   - `key-conventions-rules.mdc`
+6. **Reference-only guidance**
+   - `ui-styling-playbook.mdc`
+
+If two rules conflict, keep the higher-priority rule and ignore the
+conflicting part of the lower-priority rule.
+
+## Rule Map
+
+### `security-rules.mdc`
+
+- Scope: `src` TypeScript code (App Router, Route Handlers, shared server modules).
+- Owns: secret handling, client/server error exposure policy, server logger
+  guidance, security-first behavior.
+- Wins over: all other rules on security-related decisions.
+
+### `architecture-decision-rules.mdc`
+
+- Scope: data access and backend logic across `src/server/**` and `src/app/api/**`.
+- Owns: choice between RSC + Server Loader, Route Handler, Server Handler,
+  Queue worker, Cron, Webhook, and SSE; auth boundary helpers; response
+  envelope conventions; stack overview.
+- Defers to: `security-rules.mdc` for secret/error handling;
+  `server-runtime-conventions.mdc` for the per-pattern conventions.
+
+### `data-structure-consistency.mdc`
+
+- Scope: any TypeScript file moving data between DB, server, and client.
+- Owns: database schema as source of truth; no field renaming or wrapper objects.
+- Defers to: `key-conventions-rules.mdc` for general TS style.
+
+### `next-js-app-router-rules.mdc`
+
+- Scope: `src/app/**` — App Router-specific concerns.
+- Owns: Route Handler shape, response envelope helpers, test conventions.
+- Defers to: `architecture-decision-rules.mdc` for pattern selection,
+  `server-runtime-conventions.mdc` for queue/cron/webhook/SSE specifics,
+  `security-rules.mdc` for error exposure.
+
+### `server-runtime-conventions.mdc`
+
+- Scope: `src/app/api/{queues,cron,webhooks,realtime}/**`.
+- Owns: per-family conventions — `withIdempotency`, raw-body handling,
+  `requireCronAuth`, `createSseStream`, runtime/maxDuration defaults.
+- Defers to: `architecture-decision-rules.mdc` for pattern selection,
+  `security-rules.mdc` for signing/secret policy.
+
+### `vercel-ai-sdk-integration-rules.mdc`
+
+- Scope: AI features in Route Handlers and React clients.
+- Owns: AI SDK v6 + AI Gateway usage, model strings, streaming, structured
+  output, client hooks (`@ai-sdk/react`).
+- Defers to: `architecture-decision-rules.mdc` for credit/DB side effects,
+  `security-rules.mdc` for keys.
+
+### `api-request-state-management.mdc`
+
+- Scope: client request-state handling in app/components/hooks.
+- Owns: loading/error/success lifecycle, duplicate-request prevention,
+  `callApi` + `ApiError` usage, hook placement.
+- Defers to: `security-rules.mdc` for error-message exposure constraints.
+
+### `i18n-next-intl-rules.mdc`
+
+- Scope: any user-facing copy, translation keys, locale-aware navigation.
+- Owns: `useTranslations` vs `getTranslations`, key naming, locale-file
+  parity (en/zh), `@/i18n/routing` helpers.
+- Defers to: `key-conventions-rules.mdc` for "logs/comments stay in
+  English".
+
+### `performance-optimization-rules.mdc`
+
+- Scope: Next.js / React / Drizzle code authoring.
+- Owns: RSC-first defaults, image optimization, bounded DB reads, caching.
+- Defers to: `architecture-decision-rules.mdc` for which layer owns the work.
+
+### `ui-styling-rules.mdc`
+
+- Scope: composition / token usage in `src/app`, `src/components`, `src/styles`.
+- Owns: UI primitives, token usage, loading-state composition guidance.
+- Defers to: `frontend-motion-interaction-governance.mdc` for motion / interaction specifics.
+
+### `frontend-motion-interaction-governance.mdc`
+
+- Scope: motion and interaction semantics in frontend UI files.
+- Owns: transition scoping, pseudo-clickable rules, reduced-motion,
+  touch-target baseline, **Tailwind v4 motion properties** (`translate` vs
+  `transform` in `transition-[...]`).
+- Defers to: `security-rules.mdc` when security constraints intersect.
+
+### `create-nextjs-components.mdc`
+
+- Scope: component placement and authoring under `src/components`.
+- Owns: component organization and reusability placement rules.
+- Defers to: security/UI governance rules for behavior and styling.
+
+### `create-markdown-docs.mdc`
+
+- Scope: any `.md` file the agent might create.
+- Owns: documentation placement (`/docs/`) and "do not auto-generate docs"
+  policy.
+
+### `clarification-before-action.mdc`
+
+- Scope: process rule for ambiguity handling.
+- Owns: ask-first behavior when requirements are unclear.
+- Defers to: explicit user instructions when unambiguous.
+
+### `key-conventions-rules.mdc`
+
+- Scope: baseline TypeScript conventions in `src`.
+- Owns: naming/import conventions, general style defaults, "no placeholder
+  data", English-only logs/comments.
+- Defers to: domain-specific and security rules on conflict.
+
+### `ui-styling-playbook.mdc`
+
+- Scope: reference guidance only (non-authoritative).
+- Owns: examples / checklists for UI authoring.
+- Always defer to: `ui-styling-rules.mdc`,
+  `frontend-motion-interaction-governance.mdc`, and `security-rules.mdc`.
+
+## Skills
+
+`.cursor/skills/` hosts user-invoked skills that are not auto-attached:
+
+- `code-review-checklist` — review skill with a Fast Pass and full P0/P1/P2
+  sections (replaces the older `light-review-existing-diffs` skill,
+  which has been merged in).
+- `gen-commit-message` — Conventional Commits message generator with
+  vendor-name sanitization.
+
+## Maintenance Notes
+
+- Keep this file short and stable.
+- When adding a new rule, update:
+  1. Global precedence order
+  2. Rule map ownership and defer targets
+- Avoid duplicating detailed rule content here; link ownership only.

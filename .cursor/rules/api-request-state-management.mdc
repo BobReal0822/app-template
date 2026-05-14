@@ -1,0 +1,305 @@
+---
+description: Enforce loading/error/success request-state handling for client-side API calls.
+globs: src/{app,components,hooks}/**/*.{ts,tsx}
+---
+
+# API Request State Management Rules
+
+## Precedence
+
+Authoritative for client request-state lifecycle (loading/error/success).
+For global conflict order, see `rules-index.mdc`.
+
+## Critical Requirements
+
+When making API requests from client components, you **MUST**:
+
+1. **Manage loading state** — disable interactive elements; show feedback.
+2. **Handle error states** — surface a user-friendly message, never the
+   raw backend payload.
+3. **Handle success states** — update UI, reset form / loading.
+4. **Reset loading state in `finally`** — never let it stick.
+5. **Prevent duplicate submits** — early-return when `isLoading` is true.
+6. **Check the API envelope** — `code !== 0` means failure even on HTTP 200.
+
+### Security alignment
+
+- Never display backend error payloads (`err.message`, `response.message`)
+  directly. Map known codes to user copy and use a generic fallback for
+  unknown errors.
+- For UI copy, prefer i18n keys (`t('...')`) first; fall back to
+  `ErrorMessages[ErrorCode.*]`.
+- Detailed errors go to `console`/server logger only.
+- Conflicts with this rule defer to `security-rules.mdc`.
+
+---
+
+## Canonical Pattern: `callApi` + `ApiError`
+
+For same-origin Next.js Route Handlers, use `callApi` from
+`@/lib/api/client`. It returns the parsed `ApiResponse<T>` and throws
+`ApiError` on `code !== 0` or HTTP failure. **All hooks must be called at
+the component top level — never inside an event handler.**
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { Loader2, AlertCircle } from 'lucide-react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { ApiError, callApi } from '@/lib/api/client';
+import { ErrorCode, ErrorMessages } from '@/lib/api/response';
+
+export function MyAction() {
+  // ✅ Hooks at the top of the component, never in handlers
+  const t = useTranslations('errors');
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    if (isLoading) return; // dedupe
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const result = await callApi<{ taskId: string }>('/my-endpoint', {
+        /* request body */
+      });
+      toast.success(t('operationCompleted'));
+      router.push(`/tasks/${result.data.taskId}`);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // ApiError is thrown for HTTP non-2xx AND for envelope `code !== 0`
+        switch (err.code) {
+          case ErrorCode.UNAUTHORIZED:
+            router.push('/auth/login');
+            break;
+          case ErrorCode.INSUFFICIENT_CREDITS:
+            setError(t('insufficientCredits'));
+            break;
+          default:
+            setError(
+              ErrorMessages[err.code] ?? ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR],
+            );
+        }
+      } else {
+        // TypeError / aborted / DNS / offline → network error bucket
+        setError(
+          ErrorMessages[ErrorCode.NETWORK_ERROR] ?? ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR],
+        );
+      }
+      console.error('[MyAction] request failed:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+      <Button onClick={handleSubmit} disabled={isLoading}>
+        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        {isLoading ? t('loading') : t('submit')}
+      </Button>
+    </div>
+  );
+}
+```
+
+> **Use `ErrorCode.*` enum members in `switch` statements, not magic
+> numbers.** Magic numbers like `2001` drift over time; the enum is the
+> single source of truth (`@/lib/api/response`).
+
+---
+
+## Fallback: raw `fetch` (when `callApi` cannot be used)
+
+Only when targeting cross-origin or non-envelope endpoints. The handler must
+still check the envelope manually.
+
+```typescript
+const response = await fetch('/api/endpoint', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(requestData),
+});
+
+if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+const result: ApiResponse<ResponseType> = await response.json();
+if (result.code !== 0) {
+  setError(ErrorMessages[result.code] ?? ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR]);
+  return;
+}
+setData(result.data);
+```
+
+---
+
+## Form submission with field-level errors
+
+Backends may return `data: { fields: Record<string, string> }` for
+`VALIDATION_ERROR`. Surface those next to the inputs.
+
+```tsx
+const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+try {
+  await callApi('/submit-form', formData);
+} catch (err) {
+  if (err instanceof ApiError && err.code === ErrorCode.VALIDATION_ERROR) {
+    const fields = (err.data as { fields?: Record<string, string> } | null)?.fields;
+    if (fields) {
+      setFieldErrors(fields);
+      return;
+    }
+  }
+  setError(
+    err instanceof ApiError
+      ? (ErrorMessages[err.code] ?? ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR])
+      : ErrorMessages[ErrorCode.NETWORK_ERROR],
+  );
+}
+
+// Render
+{fieldErrors.email && (
+  <p className="text-sm text-destructive">{fieldErrors.email}</p>
+)}
+```
+
+---
+
+## Loading-state best practices
+
+```tsx
+// ✅ Disable interactive elements during loading
+<Button onClick={handleSubmit} disabled={isLoading}>
+  {isLoading ? t('loading') : t('submit')}
+</Button>
+
+<form onSubmit={handleSubmit}>
+  <Input disabled={isLoading} />
+  <Button type="submit" disabled={isLoading}>
+    {isLoading ? t('processing') : t('submit')}
+  </Button>
+</form>
+
+// ✅ Skeleton-first for data fetching (see ui-styling-rules.mdc)
+{isLoading ? <DataSkeleton count={5} /> : <DataList data={data} />}
+```
+
+---
+
+## Error display patterns
+
+### Inline alert
+
+```tsx
+{error && (
+  <Alert variant="destructive">
+    <AlertCircle className="h-4 w-4" />
+    <AlertTitle>{t('errorTitle')}</AlertTitle>
+    <AlertDescription>{error}</AlertDescription>
+  </Alert>
+)}
+```
+
+### Toast
+
+```typescript
+import { toast } from 'sonner';
+
+try {
+  await callApi('/endpoint', data);
+  toast.success(t('operationCompleted'));
+} catch (err) {
+  const message =
+    err instanceof ApiError
+      ? (ErrorMessages[err.code] ?? ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR])
+      : ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR];
+  toast.error(message);
+}
+```
+
+---
+
+## Integration with TanStack Query
+
+For list endpoints, the query hook handles loading/error states; you only
+need explicit handlers around mutations.
+
+```typescript
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+export function TaskList() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['gen-tasks', 'history', { limit: 20, offset: 0 }],
+    queryFn: () => callApi<{ genTasks: GenTask[] }>('/api/gen-tasks/history?limit=20', undefined, { method: 'GET' }),
+  });
+
+  if (isLoading) return <HistorySkeleton count={8} />;
+  if (error)     return <ErrorState />;
+  if (!data?.data.genTasks.length) return <EmptyState />;
+
+  return <TaskListContent tasks={data.data.genTasks} />;
+}
+```
+
+For mutations, manage `isLoading` locally **or** use `useMutation` and
+`mutation.isPending`; either way, error/duplicate handling stays the same.
+
+---
+
+## Common mistakes
+
+```typescript
+// ❌ Hook called inside an event handler
+const handleAction = async () => {
+  const t = useTranslations('errors'); // 🚫 Rules of Hooks violation
+};
+
+// ❌ Loading not reset on error
+setIsLoading(true);
+try { await callApi(...); }
+catch { /* missing finally */ }
+
+// ❌ Treating `code !== 0` as success (using raw fetch)
+const data = await response.json();
+setData(data.data); // ignores `data.code`
+
+// ❌ Showing the backend message verbatim
+toast.error(err.message);
+
+// ❌ Magic numbers in switch cases
+switch (err.code) {
+  case 2001: ...   // use ErrorCode.UNAUTHORIZED
+}
+```
+
+---
+
+## Checklist
+
+- [ ] Hooks (`useTranslations`, `useRouter`, …) called at the top of the component
+- [ ] `isLoading` set before request and reset in `finally`
+- [ ] `error` reset before each request
+- [ ] Early-return when `isLoading` is already true
+- [ ] `callApi` used by default; raw `fetch` only when justified
+- [ ] `ApiError` branch handles known `ErrorCode.*` cases
+- [ ] Network/unknown errors fall back to `ErrorCode.NETWORK_ERROR`
+- [ ] No backend `error.message` shown directly to users
+- [ ] Loading uses skeleton/spinner appropriately
+- [ ] Interactive controls disabled while pending
+- [ ] Magic error code numbers replaced with `ErrorCode.*` enum members

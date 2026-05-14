@@ -1,0 +1,233 @@
+---
+description: i18n conventions with next-intl — translation-key authoring, locale-file parity (en/zh), and server vs client usage.
+globs: src/{app,components,hooks}/**/*.{ts,tsx}
+---
+
+# i18n / next-intl Rules
+
+This project ships with **English + 简体中文** via
+[`next-intl`](https://next-intl.dev). Locale files live at
+`messages/en.json` and `messages/zh.json`. Routing config lives in
+`src/i18n/routing.ts` (`defaultLocale: 'en'`). Pages live under
+`src/app/[locale]/...`.
+
+---
+
+## Core Rules
+
+1. **No hardcoded user-facing strings.** Every label, heading, button text,
+   placeholder, toast, and validation message uses a translation key.
+2. **Server vs client APIs differ — pick the right one:**
+   - Server Components / Route Handlers / metadata: `getTranslations(...)` from `next-intl/server`
+   - Client Components: `useTranslations(...)` from `next-intl`
+3. **Hook placement.** `useTranslations` is a React hook and must be called
+   at the top of the component, **never** inside an event handler. See
+   `api-request-state-management.mdc`.
+4. **Key parity is mandatory.** Every key in `messages/en.json` must also
+   exist in `messages/zh.json` (same path, same shape). A missing key in
+   `zh.json` will fall back silently and ship raw `{key.path}` to users.
+5. **Use the typed navigation helpers** from `src/i18n/routing.ts` for any
+   client-side route change between locales:
+   ```typescript
+   import { Link, useRouter, usePathname } from '@/i18n/routing';
+   ```
+   The Next.js `next/link` / `next/navigation` exports do not preserve the
+   `[locale]` segment correctly.
+6. **Internal logs / comments / LLM prompts stay in English** (per
+   `key-conventions-rules.mdc`). i18n is for user-visible strings only.
+
+---
+
+## Server Components
+
+```tsx
+// src/app/[locale]/app/(features)/projects/page.tsx
+import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
+
+import { getCurrentUser } from '@/lib/auth/server-session';
+
+export default async function ProjectsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect('/auth/login');
+
+  const t = await getTranslations('projects');
+
+  return (
+    <div>
+      <h1>{t('title')}</h1>
+      <p>{t('description')}</p>
+    </div>
+  );
+}
+```
+
+For dynamic metadata:
+
+```tsx
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'projects' });
+  return { title: t('metaTitle'), description: t('metaDescription') };
+}
+```
+
+---
+
+## Client Components
+
+```tsx
+'use client';
+
+import { useTranslations } from 'next-intl';
+
+export function MyButton() {
+  const t = useTranslations('buttons'); // ✅ at the top of the component
+
+  return <Button>{t('save')}</Button>;
+}
+```
+
+---
+
+## Translation Keys
+
+### Naming convention
+
+- Group by feature/scope: `projects.title`, `auth.login.submit`,
+  `errors.insufficientCredits`.
+- Match the namespace argument: `useTranslations('projects')` →
+  `projects.*`.
+- Lower camelCase for leaf keys: `metaTitle`, not `meta_title`.
+- Use plural `xxxList` / `xxxItem` patterns when grouping list copy.
+
+### Interpolation
+
+```jsonc
+// messages/en.json
+{
+  "credits": {
+    "remaining": "You have {count} credits left."
+  }
+}
+```
+
+```typescript
+const t = useTranslations('credits');
+t('remaining', { count: 42 });
+```
+
+### Pluralization
+
+```jsonc
+{
+  "items": {
+    "count": "{count, plural, =0 {No items} =1 {1 item} other {# items}}"
+  }
+}
+```
+
+### Rich text (links, bold, etc.)
+
+```typescript
+t.rich('terms.accept', {
+  link: (chunks) => <Link href="/terms">{chunks}</Link>,
+});
+```
+
+---
+
+## Pairing with API errors
+
+For toast / inline error copy, prefer i18n keys first; fall back to
+`ErrorMessages[code]` only when no key exists for that error.
+
+```typescript
+import { useTranslations } from 'next-intl';
+import { ApiError } from '@/lib/api/client';
+import { ErrorCode, ErrorMessages } from '@/lib/api/response';
+
+const t = useTranslations('errors'); // top of component
+
+try {
+  await callApi('/endpoint', body);
+} catch (err) {
+  if (err instanceof ApiError) {
+    const localized =
+      err.code === ErrorCode.INSUFFICIENT_CREDITS
+        ? t('insufficientCredits')
+        : (ErrorMessages[err.code] ?? ErrorMessages[ErrorCode.INTERNAL_SERVER_ERROR]);
+    toast.error(localized);
+  }
+}
+```
+
+See `api-request-state-management.mdc` for the full lifecycle.
+
+---
+
+## Routing
+
+`src/i18n/routing.ts` exports typed `Link`, `useRouter`, `usePathname`,
+`getPathname`, and `redirect`. Use these wherever you'd otherwise import
+from `next/link` or `next/navigation` for **internal** navigation.
+
+```typescript
+// ✅ Locale-aware
+import { Link, useRouter } from '@/i18n/routing';
+
+<Link href="/app/projects">My Projects</Link>;
+const router = useRouter();
+router.push('/app/projects');
+
+// ❌ Drops the [locale] segment
+import Link from 'next/link';
+<Link href="/app/projects">...</Link>;
+```
+
+External links (`https://...`) and same-document anchors (`#section`) are
+fine via plain `<a>` / `next/link`.
+
+---
+
+## Locale-file parity
+
+When you add a key to `messages/en.json`, you MUST add the same key path
+to `messages/zh.json` in the same edit. If a translation isn't ready,
+ship the English copy as the placeholder so the user sees something
+intelligible — never leave the key missing.
+
+```jsonc
+// messages/en.json
+{ "projects": { "title": "Projects", "newButton": "New project" } }
+
+// messages/zh.json — same shape, translated values
+{ "projects": { "title": "项目",     "newButton": "新建项目" } }
+```
+
+A grep is enough to catch one-side drift before committing:
+
+```bash
+# Quick parity smoke (top-level keys only)
+diff <(jq 'paths(scalars) | join(".")' messages/en.json | sort) \
+     <(jq 'paths(scalars) | join(".")' messages/zh.json | sort)
+```
+
+---
+
+## Checklist
+
+- [ ] No hardcoded user-facing English / 中文 in JSX or toasts
+- [ ] `useTranslations` (client) or `getTranslations` (server) chosen correctly
+- [ ] Hook called at the top of the component, never in handlers
+- [ ] Internal navigation uses helpers from `@/i18n/routing` (not `next/link`)
+- [ ] Every new key exists in both `messages/en.json` and `messages/zh.json`
+- [ ] Comments, logs, and LLM prompts remain in English
+- [ ] Dynamic metadata uses `getTranslations({ locale, namespace })`

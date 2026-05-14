@@ -1,0 +1,389 @@
+---
+description: Rules for deciding between RSC Server Loaders, Next.js Route Handlers, server-side handler modules, queues, and cron when building data access and backend logic. Request this rule when making architecture decisions about data access patterns.
+---
+
+# Architecture Decision Rules: Data Access & Backend Logic
+
+You are an expert in Next.js App Router (RSC), Drizzle on Neon Postgres, Better
+Auth, and Vercel runtime primitives. Use these guidelines to choose the right
+pattern for any new data access or backend logic.
+
+## Stack at a glance
+
+| Layer | Tech |
+| --- | --- |
+| Rendering | Next.js App Router, React Server Components |
+| Auth | Better Auth — Route Handlers via `@/server/api/auth`, RSC via `@/lib/auth/server-session` |
+| DB | Drizzle ORM on Neon Postgres (`@app/db`) |
+| Storage | Cloudflare R2 (`@/server/lib/r2`); GCS (`@/server/lib/gcs`) for Gemini video-insight only |
+| AI | Vercel AI SDK v6 + AI Gateway (`@ai-sdk/react`, `ai`) |
+| Cache / rate-limit / idempotency | Upstash Redis via `@/server/lib/redis` (REST) |
+| Background work | Vercel Queues (`/api/queues/*`), Vercel Cron (`/api/cron/*`) |
+| Realtime | SSE under `/api/realtime/*` backed by ioredis (`REDIS_URL`) for pub/sub |
+| Hosting | Vercel Functions (Fluid Compute, Node.js runtime) |
+
+## The four primary patterns
+
+| Pattern | Path | Use case | Latency | Complexity |
+| --- | --- | --- | --- | --- |
+| **RSC + Server Loader** | `src/server/loaders/*.ts` | Server-rendered reads of the user's own data | Lowest | Lowest |
+| **Route Handler** | `src/app/api/**/route.ts` | Client-callable APIs, AI streaming, webhooks, cron, queues, SSE | Medium | Medium |
+| **Server Handler module** | `src/server/handlers/*.ts` | Business logic shared by routes/queues; transactions, side effects | Medium | Higher |
+| **Queue / Cron Worker** | `src/app/api/queues/*` and `src/app/api/cron/*` | Async / scheduled / long-running work | N/A (async) | Higher |
+
+A typical request fans out: **Route Handler** (auth + parse) → **Server Handler**
+(business logic / transactions) → **Drizzle** (DB) → **Server Loader** (only on
+the next render to read back state).
+
+---
+
+## Pattern 1: RSC + Server Loader
+
+`src/server/loaders/*.ts` exports plain async functions that run inside Server
+Components and SSR pages, read directly from Drizzle, and return DTOs.
+
+### Use when
+
+1. **User reads their own data on a server-rendered page**
+2. **Listing / detail views with no side effects**
+3. **You can place ownership / soft-delete checks at the page level**
+
+```typescript
+// src/server/loaders/gen-task-history.ts
+import { and, desc, eq, isNull } from 'drizzle-orm';
+import { getDbHttp } from '@app/db';
+import { genTasks } from '@app/db/schema';
+import { genTaskRowToDto } from '@/server/dto/gen-task';
+
+export async function listGenTasksForHistory(input: {
+  uid: string;
+  limit: number;
+  offset: number;
+}) {
+  const db = getDbHttp();
+  const rows = await db
+    .select()
+    .from(genTasks)
+    .where(and(eq(genTasks.uid, input.uid), isNull(genTasks.deletedAt)))
+    .orderBy(desc(genTasks.createdAt))
+    .limit(input.limit)
+    .offset(input.offset);
+  return rows.map(genTaskRowToDto);
+}
+```
+
+```typescript
+// src/app/[locale]/app/(features)/projects/page.tsx (RSC)
+import { redirect } from 'next/navigation';
+import { getCurrentUser } from '@/lib/auth/server-session';
+import { listGenTasksForHistory } from '@/server/loaders/gen-task-history';
+
+export default async function Page() {
+  const user = await getCurrentUser();
+  if (!user) redirect('/auth/login');
+
+  const tasks = await listGenTasksForHistory({ uid: user.uid, limit: 20, offset: 0 });
+  return <TaskList tasks={tasks} />;
+}
+```
+
+### Don't use when
+
+- The browser needs to call it directly (use a Route Handler).
+- It writes data or has side effects (use a Server Handler behind a Route
+  Handler).
+- It crosses users / needs admin scope without explicit gating.
+
+---
+
+## Pattern 2: Route Handler
+
+`src/app/api/**/route.ts` — the only HTTP entry point for the browser, external
+services, and the Vercel runtime (cron / queues / webhooks).
+
+### Use when
+
+#### Client-callable JSON APIs
+
+```typescript
+// src/app/api/gen-tasks/route.ts
+import { NextRequest } from 'next/server';
+import { requireAuth } from '@/server/api/auth';
+import { ok, fail, ErrorCode } from '@/server/api/response';
+import { listGenTasksForHistory } from '@/server/loaders/gen-task-history';
+
+export async function GET(req: NextRequest) {
+  const auth = await requireAuth(req);
+  if (!auth.ok) return auth.response;
+  try {
+    const tasks = await listGenTasksForHistory({ uid: auth.user.uid, limit: 20, offset: 0 });
+    return ok({ tasks });
+  } catch (error) {
+    console.error('[gen-tasks] Error:', error);
+    return fail(ErrorCode.INTERNAL_SERVER_ERROR);
+  }
+}
+```
+
+#### AI / streaming responses
+
+Use the AI SDK and Vercel AI Gateway. Prefer `"provider/model"` strings through
+the Gateway over direct provider packages.
+
+```typescript
+// src/app/api/chat/route.ts
+import { streamText } from 'ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+  const result = streamText({ model: 'anthropic/claude-sonnet-4', messages });
+  return result.toUIMessageStreamResponse();
+}
+```
+
+#### Webhooks (`/api/webhooks/*`)
+
+Verify the signature, log, then dispatch to a Server Handler. Always return a
+200 once the event is durably accepted (idempotency keys live in the DB).
+
+#### Cron (`/api/cron/*`)
+
+Listed in `vercel.json` (or `vercel.ts`). Verify the cron header / secret, then
+delegate to a Server Handler.
+
+#### Queues (`/api/queues/*`)
+
+Vercel Queues delivery target. Verify, dedupe by idempotency key, run a Server
+Handler.
+
+#### Realtime SSE (`/api/realtime/*`)
+
+Publish via Redis, subscribe per-connection. Auth at the route boundary.
+
+### Don't use when
+
+- It's just a server-rendered read (use a Server Loader instead — saves a hop).
+- The work is long-running and can outlive the HTTP timeout (push to a queue).
+
+---
+
+## Pattern 3: Server Handler module
+
+`src/server/handlers/*.ts` and `src/server/services/*.ts` hold the business
+logic the Route Handlers call into.
+
+### Use when
+
+1. **Multi-step transactions** (deduct credits → create task → enqueue work)
+2. **External API integration** (Fal, Stripe, Resend, Gemini, etc.)
+3. **Logic shared across routes / queues / cron**
+
+```typescript
+// src/server/handlers/gen-image.ts
+import { reserveCredits, finalizeCreditUsage } from '@/server/services/credits';
+import { createGenTask } from '@/server/services/gen-tasks';
+import { enqueueGenImage } from '@/server/queue/enqueue';
+
+export async function genImageHandler(input: { uid: string; prompt: string; cost: number }) {
+  const reservation = await reserveCredits({ uid: input.uid, amount: input.cost });
+  try {
+    const task = await createGenTask({ uid: input.uid, type: 'image', prompt: input.prompt });
+    await enqueueGenImage({ taskId: task.id });
+    await finalizeCreditUsage(reservation, { taskId: task.id });
+    return { taskId: task.id };
+  } catch (error) {
+    await reservation.refund();
+    throw error;
+  }
+}
+```
+
+Server handlers are pure server-side functions: they take typed input, throw or
+return typed output, and never touch `Request`/`Response`. The Route Handler
+maps that to the JSON envelope.
+
+---
+
+## Pattern 4: Queue / Cron worker
+
+Long-running, async, or scheduled work goes to **Vercel Queues** (event-driven,
+at-least-once) or **Vercel Cron** (time-driven). Their handlers live under
+`/api/queues/*` and `/api/cron/*` and follow the Route Handler shape.
+
+### Use when
+
+- Work outruns a normal request (large media downloads, multi-stage AI pipelines)
+- Fan-out from a webhook (Stripe → grant credits → email)
+- Periodic jobs (idempotency-key cleanup, monthly credit grants)
+
+Keep workers idempotent: the same message may arrive twice. Use
+`idempotency_keys` and `created_at` filters to dedupe.
+
+---
+
+## Decision flowchart
+
+```
+Need to implement data access or backend logic?
+│
+├─ Server-rendered page reading the user's own data?
+│   └─ Yes → RSC + Server Loader (`src/server/loaders/*`) ✅
+│
+├─ Browser fetches JSON from an endpoint?
+│   ├─ Read-only with no side effects → Route Handler that calls a Server Loader
+│   └─ Write / side effects        → Route Handler that calls a Server Handler ✅
+│
+├─ AI streaming?
+│   └─ Route Handler using `ai` + AI Gateway ✅
+│
+├─ Webhook from a third party (Stripe, Fal, …)?
+│   └─ `/api/webhooks/<provider>/route.ts` → verify → Server Handler ✅
+│
+├─ Scheduled job?
+│   └─ `/api/cron/<task>/route.ts` listed in vercel.json/ts ✅
+│
+├─ Async / long-running work triggered by another event?
+│   └─ Push to Vercel Queue, handle in `/api/queues/<topic>/route.ts` ✅
+│
+└─ Realtime push to a connected client?
+    └─ SSE under `/api/realtime/*` backed by Redis ✅
+```
+
+---
+
+## Quick reference
+
+| Operation | Pattern | Notes |
+| --- | --- | --- |
+| List my projects (page render) | RSC + Server Loader | `getCurrentUser()` + `redirect()` + domain loader (e.g. `listProductsWithMediaForSsr`) |
+| List my projects (client polling) | Route Handler → Server Loader | Wrap loader in `ok({ ... })` |
+| Update my profile | Route Handler → Server Handler | Validate, transact, return DTO |
+| Generate image / video | Route Handler → Server Handler → Queue | Reserve credits, enqueue, return task id |
+| AI chat streaming | Route Handler with `streamText` | Use AI Gateway model strings |
+| Stripe webhook | `/api/webhooks/stripe/route.ts` | Verify signature, dispatch handler |
+| Fal callback | `/api/webhooks/fal/<event>/route.ts` | Token-verify, write status, publish SSE |
+| Free monthly credits grant | `/api/cron/grant-free-monthly-credits/route.ts` | Vercel Cron schedule in `vercel.ts` |
+| Persist media to R2 (async) | `/api/queues/persist-media-to-r2/route.ts` | Queue worker, idempotent |
+| Realtime task progress | `/api/realtime/<feature>/[id]/route.ts` | SSE + Redis pub/sub |
+| Admin / cross-user query | Server Handler called from a guarded Route Handler | Explicit `requireAdmin` check |
+
+---
+
+## Auth boundaries
+
+### Route Handlers — `@/server/api/auth`
+
+- **`requireAuth(request)`** — Returns `{ ok: true, user }` or
+  `{ ok: false, response }` (401 envelope). Use at the top of every authed
+  Route Handler.
+- **`tryAuth(request)`** — Returns `AuthUser | null`. Use when auth is optional
+  (e.g. `/api/feedback` accepts anonymous submissions).
+- **`requireInternalAuth(request)`** — Verifies `x-internal-secret` for trusted
+  internal callers.
+- **`requireCronAuth(request)`** — Verifies `Authorization: Bearer
+  <CRON_SECRET>` for `/api/cron/*` invocations.
+
+### Server Components / Loaders — `@/lib/auth/server-session`
+
+- **`getCurrentUser()`** — Reads the Better Auth session via
+  `next/headers`. Returns `ServerAuthUser | null`. Pair with
+  `redirect('/auth/login')` for protected pages.
+
+Never read cookies directly in a loader; go through these helpers so session
+validity is handled consistently.
+
+```typescript
+// ✅ Route Handler
+import { requireAuth } from '@/server/api/auth';
+
+const auth = await requireAuth(req);
+if (!auth.ok) return auth.response;
+const uid = auth.user.uid;
+
+// ✅ RSC / Server Component
+import { redirect } from 'next/navigation';
+import { getCurrentUser } from '@/lib/auth/server-session';
+
+const user = await getCurrentUser();
+if (!user) redirect('/auth/login');
+const tasks = await listGenTasksForHistory({ uid: user.uid, limit: 20, offset: 0 });
+```
+
+---
+
+## Environment variables
+
+- **Server-only secrets** (Stripe key, R2 secret, etc.): plain `process.env.X`.
+  No `NEXT_PUBLIC_` prefix, never imported into client components.
+- **Public config** (account ids, public domains, feature flags): `NEXT_PUBLIC_X`.
+  Safe in client bundles.
+- Centralized typed access lives in `src/server/lib/secrets.ts`. Prefer that
+  module over scattered `process.env` reads when a value is consumed in more
+  than one place.
+
+```typescript
+// ✅ Route Handler reading a server-only secret
+const apiKey = process.env.OPENAI_API_KEY;
+
+// ✅ Centralized typed access (preferred for repeated use)
+import { stripeSecretKey } from '@/server/lib/secrets';
+const stripe = new Stripe(stripeSecretKey.value());
+
+// ❌ NEVER expose a secret to the browser
+const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+```
+
+See `security-rules.mdc` for the full secret-handling policy.
+
+---
+
+## Response envelope
+
+Every Route Handler returns the unified envelope:
+
+```typescript
+interface ApiResponse<T> { code: number; message: string; data: T }
+```
+
+- Always HTTP 200 (sole exception: 401 from `requireAuth` so browsers can
+  short-circuit on session expiry).
+- Helpers in `@/server/api/response`: `ok`, `fail`, `jsonOk`, `buildSuccess`,
+  `buildError`, `buildQuotaExceeded`, `createResponse`.
+- Error codes / messages are the single source in `@/lib/api/response`
+  (`ErrorCode`, `ErrorMessages`) — both server and client read from there.
+
+```typescript
+import { ok, fail, jsonOk, buildSuccess, ErrorCode } from '@/server/api/response';
+
+return ok({ taskId });                                 // shorthand for jsonOk(buildSuccess(...))
+return jsonOk(buildSuccess({ products }));             // when you already built the envelope
+return fail(ErrorCode.INSUFFICIENT_CREDITS);
+return fail(ErrorCode.VALIDATION_ERROR, 'videoUrl is required');
+```
+
+> **Note.** Older code may still import `successResponse`/`errorResponse` from
+> `@/lib/api/response`. New Route Handlers should prefer the
+> `@/server/api/response` helpers above; they wrap `NextResponse` directly.
+
+---
+
+## Summary
+
+**Default recommendations**
+
+1. **User's own data, server-rendered** → RSC + Server Loader
+2. **Browser-callable JSON read** → Route Handler that calls a Server Loader
+3. **Browser-callable write / side effect** → Route Handler → Server Handler
+4. **AI streaming** → Route Handler with `ai` + AI Gateway
+5. **Third-party webhook** → `/api/webhooks/*`
+6. **Scheduled job** → `/api/cron/*`
+7. **Async / long-running** → Vercel Queue worker under `/api/queues/*`
+8. **Realtime push** → SSE under `/api/realtime/*`
+
+**Priority order for new code**
+
+1. Reach for a Server Loader first (cheapest, simplest).
+2. Add a Route Handler when the browser or an external system needs to call in.
+3. Extract logic into a Server Handler / Service the moment it's used by more
+   than one entry point or has non-trivial transactional logic.
+4. Push to a queue when the work outruns a request.

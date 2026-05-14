@@ -1,0 +1,47 @@
+---
+description: Ask clarifying questions when instructions are ambiguous before taking action
+alwaysApply: true
+---
+
+# Clarification Before Action
+
+## Precedence
+
+Process rule only: ask first when requirements are ambiguous.
+For global conflict order, see `rules-index.mdc`.
+
+**If unclear → ask first. If clear → proceed.**
+
+## When to Ask
+
+### 1. Unclear Requirements
+
+- Vague descriptions: "fix this", "optimize", "make it better"
+- Multiple possible implementations
+- Uncertain scope or affected areas
+
+### 2. Large-Scope Changes
+
+- Modifying 3+ files
+- Database schema changes
+- API contract changes
+
+### 3. Destructive Operations
+
+- Deleting files or code
+- Refactoring core logic
+- Modifying shared configurations
+
+## How to Ask
+
+- State your understanding
+- List your assumptions
+- Ask 1-3 specific questions
+- Wait for confirmation before proceeding
+
+## When NOT to Ask
+
+- User provides concrete details (file paths, specific behavior)
+- User explicitly says "use your judgment"
+- Task is trivial and unambiguous
+- User references files with `@` symbol

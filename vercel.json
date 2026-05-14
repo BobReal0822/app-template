@@ -1,0 +1,43 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "buildCommand": "pnpm run build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "functions": {
+    "src/app/api/webhooks/**/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/queues/email-notification/route.ts": {
+      "maxDuration": 60,
+      "experimentalTriggers": [
+        {
+          "type": "queue/v2beta",
+          "topic": "email-notification",
+          "retryAfterSeconds": 60
+        }
+      ]
+    },
+    "src/app/api/cron/**/route.ts": {
+      "maxDuration": 300
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/grant-free-monthly-credits",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/grant-yearly-monthly-credits",
+      "schedule": "30 1 * * *"
+    },
+    {
+      "path": "/api/cron/cleanup-idempotency-keys",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/cleanup-pending-registrations",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}

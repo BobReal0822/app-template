@@ -1,0 +1,495 @@
+---
+description: Rules for maintaining data structure consistency across database, backend (Route Handlers / server modules), and frontend. The database schema is the source of truth.
+globs: src/**/*.{ts,tsx}
+alwaysApply: true
+---
+
+# Data Structure Consistency Rules
+
+## Critical Principle
+
+**The database schema is the source of truth.** All data structures (backend responses, frontend components, TypeScript types) MUST match the database schema unless transformation is absolutely necessary for display purposes.
+
+---
+
+## Golden Rules
+
+1. **Database schema is authoritative** - All other layers must align with it
+2. **Minimize transformations** - Only transform when necessary for display (e.g., date formatting)
+3. **Preserve types** - Pass TypeScript types from database → backend → frontend
+4. **No wrapper objects** - Don't create unnecessary wrapper objects
+5. **Direct mapping** - Map database fields directly to component props
+
+---
+
+## Data Flow
+
+```
+Database Schema (Source of Truth)
+    ↓
+Drizzle schema (`@app/db/schema`) / SQL migrations
+    ↓
+Backend Response (Route Handlers + `src/server/**`)
+    ↓
+Frontend Component Props
+```
+
+**Each layer should preserve the structure from the previous layer.**
+
+---
+
+## Correct Patterns
+
+### Pattern 1: Direct Data Passing (Recommended)
+
+```typescript
+// ✅ GOOD: Direct data passing from DB query to component
+// Database: projects table with fields: id, name, status, createdAt
+// Backend: Drizzle row shape matches the table
+// Frontend: Uses same structure
+
+// Server Component (illustrative)
+import { getDbHttp } from '@app/db';
+import { projects } from '@app/db/schema';
+import { desc } from 'drizzle-orm';
+
+export default async function ProjectsPage() {
+  const db = getDbHttp();
+  const rows = await db
+    .select()
+    .from(projects)
+    .orderBy(desc(projects.createdAt))
+    .limit(20);
+
+  return <ProjectList projects={rows} />;
+}
+
+// Component receives data in database format
+interface ProjectListProps {
+  projects: Array<{
+    id: string;
+    name: string;
+    status: string;
+    createdAt: string; // ISO date string from database
+  }>;
+}
+
+export function ProjectList({ projects }: ProjectListProps) {
+  return (
+    <div>
+      {projects.map((project) => (
+        <div key={project.id}>
+          <h3>{project.name}</h3>
+          <p>Status: {project.status}</p>
+          {/* ✅ GOOD: Format only for display, not in data structure */}
+          <p>Created: {formatDate(project.createdAt)}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Pattern 2: Minimal Transformation (Only for Display)
+
+```typescript
+// ✅ GOOD: Transform only for display, keep original data structure
+export function ProjectCard({ project }: { project: Project }) {
+  // ✅ GOOD: Format date only in render, not in data
+  const formattedDate = formatDate(project.createdAt);
+  
+  // ✅ GOOD: Keep original data structure intact
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{project.name}</CardTitle>
+        <CardDescription>
+          Created: {formattedDate} {/* Display formatting only */}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Badge>{project.status}</Badge>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+### Pattern 3: Using inferred types from Drizzle selects
+
+```typescript
+// ✅ GOOD: Infer row types from `@app/db/schema` + queries
+import { projects } from '@app/db/schema';
+import type { InferSelectModel } from 'drizzle-orm';
+
+type Project = InferSelectModel<typeof projects>;
+
+export function ProjectList({ projects }: { projects: Project[] }) {
+  return <div>{/* ... */}</div>;
+}
+```
+
+---
+
+## Incorrect Patterns
+
+### ❌ BAD: Unnecessary Data Transformation
+
+```typescript
+// ❌ WRONG: Creating wrapper objects
+export default async function ProjectsPage() {
+  const { data } = await listProjects(dc, { limit: 20 });
+  
+  // ❌ BAD: Unnecessary transformation
+  const transformedProjects = data.projects.map((project) => ({
+    id: project.id,
+    title: project.name, // Renaming field
+    currentStatus: project.status, // Renaming field
+    created: project.createdAt, // Renaming field
+    // ... other fields
+  }));
+  
+  return <ProjectList projects={transformedProjects} />;
+}
+```
+
+**Why this is wrong:**
+- Creates unnecessary mapping code
+- Loses type safety
+- Makes it harder to track data flow
+- Database schema changes require updates in multiple places
+
+### ❌ BAD: Wrapper Objects
+
+```typescript
+// ❌ WRONG: Wrapping data in unnecessary objects
+const wrappedData = {
+  items: data.projects,
+  count: data.projects.length,
+  metadata: {
+    fetchedAt: new Date().toISOString(),
+  },
+};
+
+return <ProjectList data={wrappedData} />;
+```
+
+**Why this is wrong:**
+- Adds unnecessary nesting
+- Makes data access more complex
+- Doesn't match database structure
+
+### ❌ BAD: Changing Field Names
+
+```typescript
+// ❌ WRONG: Changing field names to match "frontend conventions"
+const frontendProjects = data.projects.map((p) => ({
+  projectId: p.id, // ❌ Changed from 'id'
+  projectName: p.name, // ❌ Changed from 'name'
+  projectStatus: p.status, // ❌ Changed from 'status'
+}));
+```
+
+**Why this is wrong:**
+- Database uses `id`, not `projectId`
+- Creates confusion about data source
+- Makes debugging harder
+- Type safety is lost
+
+### ❌ BAD: Adding Placeholder Data
+
+```typescript
+// ❌ WRONG: Adding fake/placeholder data
+const projectsWithDefaults = data.projects.map((p) => ({
+  ...p,
+  name: p.name || 'Unknown Project', // ❌ Should be null/undefined
+  status: p.status || 'pending', // ❌ Should be null/undefined
+}));
+```
+
+**Why this is wrong:**
+- Hides missing data issues
+- Makes it unclear what data is real vs placeholder
+- Missing data is normal — keep `null` / `undefined` and handle it at the
+  render layer (see `key-conventions-rules.mdc` § "Do not invent placeholder
+  data")
+
+---
+
+## When Transformation IS Acceptable
+
+### ✅ Acceptable: Display Formatting
+
+```typescript
+// ✅ GOOD: Format for display only
+function ProjectCard({ project }: { project: Project }) {
+  // Format date for display
+  const displayDate = formatDate(project.createdAt);
+  
+  // Format status for display
+  const statusLabel = getStatusLabel(project.status);
+  
+  return (
+    <div>
+      <h3>{project.name}</h3>
+      <p>Created: {displayDate}</p>
+      <Badge>{statusLabel}</Badge>
+    </div>
+  );
+}
+```
+
+### ✅ Acceptable: Computed/Derived Values
+
+```typescript
+// ✅ GOOD: Add computed values without changing structure
+function ProjectCard({ project }: { project: Project }) {
+  // Compute derived value
+  const isOverdue = project.dueDate && new Date(project.dueDate) < new Date();
+  
+  return (
+    <div>
+      <h3>{project.name}</h3>
+      {isOverdue && <Alert>This project is overdue</Alert>}
+    </div>
+  );
+}
+```
+
+### ✅ Acceptable: Filtering/Selecting Fields
+
+```typescript
+// ✅ GOOD: Select only needed fields (but keep same names)
+const projectSummaries = projects.map((p) => ({
+  id: p.id, // ✅ Same name
+  name: p.name, // ✅ Same name
+  status: p.status, // ✅ Same name
+  // Excluded: createdAt, updatedAt, etc. (not needed for this view)
+}));
+```
+
+---
+
+## Database Schema as Source of Truth
+
+### Example: Projects Table
+
+```sql
+-- Database schema (PostgreSQL via Neon)
+CREATE TABLE projects (
+  id UUID PRIMARY KEY,
+  uid TEXT NOT NULL,
+  name TEXT NOT NULL,
+  status TEXT NOT NULL,
+  prod_id UUID,
+  config JSONB,
+  result_media_id UUID,
+  output_key TEXT,
+  thumbnail_key TEXT,
+  duration INTEGER,
+  cost DECIMAL,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP,
+  deleted_at TIMESTAMP
+);
+```
+
+### Drizzle schema (must match SQL)
+
+```typescript
+// packages/db/src/schema/projects.ts — columns must mirror SQL 1:1
+import { pgTable, uuid, text, integer, timestamp, jsonb, numeric } from 'drizzle-orm/pg-core';
+
+export const projects = pgTable('projects', {
+  id: uuid('id').primaryKey(),
+  uid: text('uid').notNull(),
+  name: text('name').notNull(),
+  status: text('status').notNull(),
+  // …remaining fields align with the CREATE TABLE above
+});
+```
+
+### Backend Response (Must Match)
+
+```typescript
+// Route Handler / server handler JSON envelope (example)
+return successResponse({
+  projects: [
+    {
+      id: 'uuid',
+      uid: 'user-id',
+      name: 'Project Name',
+      status: 'completed',
+      prodId: 'product-id',
+      // ... all fields match database
+    },
+  ],
+});
+```
+
+### Frontend Component (Must Match)
+
+```typescript
+// ✅ GOOD: Component uses same structure
+interface Project {
+  id: string;
+  uid: string;
+  name: string;
+  status: string;
+  prodId: string | null;
+  // ... all fields match database
+}
+
+export function ProjectList({ projects }: { projects: Project[] }) {
+  return <div>{/* Use projects directly */}</div>;
+}
+```
+
+---
+
+## Type Safety Across Layers
+
+### Using inferred types
+
+```typescript
+// ✅ GOOD: Infer row types from Drizzle table objects
+import { projects } from '@app/db/schema';
+import type { InferSelectModel } from 'drizzle-orm';
+
+type Project = InferSelectModel<typeof projects>;
+
+export function ProjectCard({ project }: { project: Project }) {
+  return <div>{project.name}</div>;
+}
+```
+
+### Type Definitions Should Match Database
+
+```typescript
+// ✅ GOOD: Type definition matches database schema
+interface Project {
+  id: string; // UUID in DB → string in TS
+  name: string; // TEXT in DB → string in TS
+  status: string; // TEXT in DB → string in TS
+  createdAt: string; // TIMESTAMP in DB → ISO string in TS
+  deletedAt: string | null; // TIMESTAMP in DB → ISO string | null in TS
+}
+
+// ❌ BAD: Type doesn't match database
+interface Project {
+  projectId: string; // ❌ DB uses 'id', not 'projectId'
+  projectName: string; // ❌ DB uses 'name', not 'projectName'
+}
+```
+
+---
+
+## Migration Guidelines
+
+### When Database Schema Changes
+
+1. **Update SQL / migration** (source of truth)
+2. **Update Drizzle schema** in `packages/db/src/schema/*`
+3. **Run `pnpm -F @app/db generate` (or project migrate workflow)** so migrations stay ordered
+4. **Update backend + frontend** to use the new column names as-is
+5. **No transformation layer needed** — direct mapping
+
+### Example: Adding a New Field
+
+```sql
+-- 1. Database: Add field
+ALTER TABLE projects ADD COLUMN description TEXT;
+```
+
+```typescript
+// 2. Drizzle: add matching column on `projects` table object
+// description: text('description'),
+```
+
+```typescript
+// 3. Frontend: Use new field directly
+export function ProjectCard({ project }: { project: Project }) {
+  return (
+    <div>
+      <h3>{project.name}</h3>
+      {project.description && <p>{project.description}</p>}
+    </div>
+  );
+}
+```
+
+---
+
+## Checklist
+
+Before submitting code, verify:
+
+- [ ] Data structure matches database schema
+- [ ] No unnecessary field renaming
+- [ ] No wrapper objects created
+- [ ] Types are generated from schema (or match exactly)
+- [ ] Transformations only for display (date formatting, etc.)
+- [ ] No placeholder/fake data added
+- [ ] Direct data passing from query → component
+- [ ] TypeScript types match database schema
+
+---
+
+## Common Mistakes
+
+### ❌ Mistake 1: Renaming Fields
+
+```typescript
+// ❌ WRONG
+const frontendData = dbData.map((item) => ({
+  itemId: item.id, // Don't rename!
+  itemName: item.name, // Don't rename!
+}));
+```
+
+### ❌ Mistake 2: Creating Wrapper Objects
+
+```typescript
+// ❌ WRONG
+const wrapped = {
+  data: projects,
+  meta: { count: projects.length },
+};
+```
+
+### ❌ Mistake 3: Unnecessary Mapping
+
+```typescript
+// ❌ WRONG
+const mapped = projects.map((p) => ({
+  id: p.id,
+  name: p.name,
+  // ... mapping all fields unnecessarily
+}));
+```
+
+### ❌ Mistake 4: Changing Data Structure
+
+```typescript
+// ❌ WRONG: Flattening nested structure
+const flattened = {
+  projectId: project.id,
+  productName: project.product.name, // Should keep nested
+};
+```
+
+---
+
+## Summary
+
+**Key Principles:**
+
+1. **Database schema is authoritative** - All layers must align
+2. **Minimize transformations** - Only for display formatting
+3. **Preserve structure** - Pass data directly through layers
+4. **Use generated types** - Ensure type safety
+5. **No renaming** - Keep field names consistent
+6. **No wrappers** - Avoid unnecessary object nesting
+7. **Direct mapping** - Map database → backend → frontend directly
+
+**Remember:** If you find yourself transforming data "to match frontend conventions," you're probably doing it wrong. The frontend should adapt to the database structure, not the other way around.
